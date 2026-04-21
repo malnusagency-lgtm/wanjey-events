@@ -107,3 +107,4 @@ const UpcomingEventSection = () => {
 };
 
 export default UpcomingEventSection;
+// Finalized UpcomingEventSection
