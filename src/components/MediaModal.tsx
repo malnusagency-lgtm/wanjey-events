@@ -62,16 +62,23 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0 }: Props) => {
             </button>
           </div>
 
-          {/* Main Media Player - Full Height/Width */}
-          <div className="relative flex-1 flex items-center justify-center">
+          {/* Main Media Player - Full Height/Width with Swiping */}
+          <div className="relative flex-1 flex items-center justify-center overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div 
                 key={currentIndex}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.02 }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x > 100) prev();
+                  else if (info.offset.x < -100) next();
+                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="relative h-full w-full flex items-center justify-center"
+                className="relative h-full w-full flex items-center justify-center touch-none"
               >
                 {currentItem.type === 'video' ? (
                   <video 
@@ -97,16 +104,16 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0 }: Props) => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Hidden/Subtle Navigation for Desktop */}
+            {/* Navigation Arrows - Visible on Desktop, Subtle on Mobile */}
             <button 
               onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 hidden md:flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-white hover:bg-white/15 transition-all"
+              className="absolute left-4 top-1/2 -translate-y-1/2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[120]"
             >
               <ChevronLeft className="h-8 w-8" />
             </button>
             <button 
               onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 hidden md:flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-white hover:bg-white/15 transition-all"
+              className="absolute right-4 top-1/2 -translate-y-1/2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[120]"
             >
               <ChevronRight className="h-8 w-8" />
             </button>

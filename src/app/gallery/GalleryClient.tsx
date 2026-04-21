@@ -245,8 +245,15 @@ export default function GalleryClient() {
                 initial="enter"
                 animate="center"
                 exit="exit"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x > 80) goPrev();
+                  else if (info.offset.x < -80) goNext();
+                }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="relative max-h-[80vh] max-w-[85vw]"
+                className="relative max-h-[80vh] max-w-[85vw] touch-none"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Image
@@ -254,7 +261,7 @@ export default function GalleryClient() {
                   alt={filtered[selectedIndex].alt}
                   width={1200}
                   height={900}
-                  className="max-h-[80vh] max-w-[85vw] rounded-xl object-contain"
+                  className="max-h-[80vh] max-w-[85vw] rounded-xl object-contain pointer-events-none"
                   quality={90}
                   priority
                 />
