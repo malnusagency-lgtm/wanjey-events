@@ -26,11 +26,13 @@ const ParallaxImageBreakout = ({ src, alt }: Props) => {
           src={src}
           alt={alt}
           fill
+          sizes="100vw"
           className="object-cover"
-          quality={90}
+          quality={100}
           priority={false}
         />
-        <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
+        {/* Cinematic blend overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-background/90 mix-blend-multiply" />
       </motion.div>
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
         {/* Optional overlaying content could go here, e.g. a large minimal logo */}
