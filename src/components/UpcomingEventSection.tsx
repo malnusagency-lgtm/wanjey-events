@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import MagneticButton from "./MagneticButton";
-import { ArrowRight, Play, LayoutGrid } from "lucide-react";
+import { ArrowRight, LayoutGrid } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import MediaModal from "./MediaModal";
 
@@ -41,7 +41,7 @@ const UpcomingEventSection = () => {
   return (
     <>
       <section ref={ref} className="relative h-[80vh] md:h-[90vh] w-full overflow-hidden bg-black">
-        {/* Parallax Background Media */}
+        {/* Sharp Background Media - No Blur, High Opacity */}
         <motion.div 
           className="absolute inset-0 z-0 h-[120%] w-full" 
           style={{ y, top: "-10%" }}
@@ -52,55 +52,47 @@ const UpcomingEventSection = () => {
             muted
             loop
             playsInline
-            className="h-full w-full object-cover opacity-60"
+            className="h-full w-full object-cover opacity-80" 
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80" />
-          <div className="absolute inset-0 bg-black/20 mix-blend-overlay" />
+          {/* Minimal gradient to ensure text readability without blurring the video */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/40" />
         </motion.div>
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
           <AnimatedSection delay={0.2}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Festival Reveal</span>
-            </div>
-          </AnimatedSection>
-
-          <AnimatedSection delay={0.4}>
-            <h2 className="mt-8 font-serif text-5xl font-bold leading-tight text-white md:text-7xl lg:text-[7.5rem] tracking-tighter">
-              BIGVOICES <em className="italic font-light text-accent/90">FEST</em>
+            <h2 className="font-serif text-6xl font-black leading-tight text-white md:text-8xl lg:text-[9rem] tracking-tighter drop-shadow-2xl">
+              BIGVOICES <em className="italic font-light text-accent">FEST</em>
             </h2>
-            <p className="mt-4 font-sans text-lg font-medium uppercase tracking-[0.3em] text-white/80 md:text-xl">
+          </AnimatedSection>
+          
+          <AnimatedSection delay={0.4}>
+            <p className="mt-4 font-sans text-xl font-black uppercase tracking-[0.4em] text-white md:text-2xl drop-shadow-md">
               Season 2: Millennial Edition
             </p>
           </AnimatedSection>
 
+          <AnimatedSection delay={0.5}>
+            <div className="mt-10 mb-2 py-2 px-8 border-y border-white/20">
+              <p className="font-sans text-3xl font-black uppercase tracking-[0.2em] text-accent md:text-4xl">
+                6th June
+              </p>
+            </div>
+          </AnimatedSection>
+
           <AnimatedSection delay={0.6}>
-            <div className="mt-12">
+            <div className="mt-8">
               <MagneticButton intensity={30}>
                 <Button 
                   onClick={() => setIsModalOpen(true)}
                   size="lg" 
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 px-10 h-16 text-base font-bold shadow-2xl shadow-accent/20 transition-all duration-500 group"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 px-14 h-16 text-lg font-black uppercase tracking-widest shadow-[0_0_40px_-5px_rgba(202,163,101,0.4)] transition-all duration-500 group"
                 >
-                  <LayoutGrid className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
-                  Explore Event Media
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Explore More
+                  <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </MagneticButton>
             </div>
-          </AnimatedSection>
-        </div>
-
-        {/* Floating Meta Details */}
-        <div className="absolute bottom-12 right-12 z-20 hidden lg:block">
-          <AnimatedSection delay={0.8} className="text-right">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-accent mb-1">Status</p>
-            <p className="text-sm font-medium text-white/60">Tickets Live Soon</p>
           </AnimatedSection>
         </div>
       </section>
@@ -113,5 +105,7 @@ const UpcomingEventSection = () => {
     </>
   );
 };
+
+export default UpcomingEventSection;
 
 export default UpcomingEventSection;
