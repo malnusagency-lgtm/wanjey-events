@@ -10,10 +10,10 @@ export default function HeroBackground() {
       transition={{ duration: 20, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
     >
       <Image
-        src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=90&auto=format&fit=crop"
+        src="/assets/hero-bg.jpg"
         alt="Miss Wanjey Events hero"
         fill
-        className="object-cover object-center"
+        className="object-cover object-top"
         priority
         quality={90}
       />
