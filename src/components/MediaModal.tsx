@@ -19,12 +19,10 @@ interface Props {
 const MediaModal = ({ isOpen, onClose, items, initialIndex = 0 }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-  // Sync index when opening with a specific one
   useEffect(() => {
     if (isOpen) setCurrentIndex(initialIndex);
   }, [isOpen, initialIndex]);
 
-  // Handle escape key to close
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -51,42 +49,38 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0 }: Props) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex flex-col bg-black/95 backdrop-blur-2xl"
+          className="fixed inset-0 z-[100] flex flex-col bg-black/98"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <h3 className="font-serif text-xl text-white">BIGVOICES <span className="italic font-light text-accent">Festival</span></h3>
-              <span className="hidden md:block h-4 w-px bg-white/20" />
-              <p className="hidden md:block text-xs font-medium uppercase tracking-widest text-white/40">
-                Media Item {currentIndex + 1} / {items.length}
-              </p>
-            </div>
+          {/* Header - Minimalized */}
+          <div className="absolute top-0 left-0 right-0 z-[110] flex items-center justify-between p-6 bg-gradient-to-b from-black/60 to-transparent">
+            <h3 className="font-serif text-xl font-bold text-white tracking-tight uppercase">BIGVOICES</h3>
             <button 
               onClick={onClose}
-              className="group flex h-12 w-12 items-center justify-center rounded-full border border-white/10 hover:bg-white/10 transition-all duration-300"
+              className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
             >
               <X className="h-6 w-6 text-white group-hover:rotate-90 transition-transform duration-300" />
             </button>
           </div>
 
-          {/* Main Media Player Area */}
-          <div className="relative flex-1 flex items-center justify-center p-4 md:p-12">
+          {/* Main Media Player - Full Height/Width */}
+          <div className="relative flex-1 flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div 
                 key={currentIndex}
-                initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 1.05, opacity: 0, y: -20 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="relative aspect-video w-full max-w-6xl rounded-2xl border border-white/10 bg-black/40 shadow-[0_0_100px_-20px_rgba(202,163,101,0.2)] overflow-hidden"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+                className="relative h-full w-full flex items-center justify-center"
               >
                 {currentItem.type === 'video' ? (
                   <video 
                     src={currentItem.src} 
                     controls 
                     autoPlay 
-                    className="h-full w-full object-contain"
+                    playsInline
+                    preload="auto"
+                    className="h-full w-full object-contain md:max-h-[85vh]"
                   />
                 ) : (
                   <div className="relative h-full w-full">
@@ -94,50 +88,49 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0 }: Props) => {
                       src={currentItem.src} 
                       alt="BigVoices Media" 
                       fill 
-                      className="object-contain"
+                      className="object-contain md:max-h-[85vh]"
                       quality={100}
+                      priority
                     />
                   </div>
                 )}
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation Arrows */}
+            {/* Hidden/Subtle Navigation for Desktop */}
             <button 
               onClick={prev}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white hover:bg-white/10 hover:border-white/30 transition-all group"
+              className="absolute left-4 top-1/2 -translate-y-1/2 hidden md:flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-white hover:bg-white/15 transition-all"
             >
-              <ChevronLeft className="h-8 w-8 group-hover:-translate-x-1 transition-transform" />
+              <ChevronLeft className="h-8 w-8" />
             </button>
             <button 
               onClick={next}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white hover:bg-white/10 hover:border-white/30 transition-all group"
+              className="absolute right-4 top-1/2 -translate-y-1/2 hidden md:flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-white hover:bg-white/15 transition-all"
             >
-              <ChevronRight className="h-8 w-8 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="h-8 w-8" />
             </button>
           </div>
 
-          {/* Thumbnails Strip Navigation */}
-          <div className="p-8 bg-black/50 border-t border-white/5 backdrop-blur-md">
-            <div className="flex gap-4 max-w-7xl mx-auto px-4 overflow-x-auto pb-4 scrollbar-hide">
+          {/* Thumbnails Strip - Hidden on small mobile to maximize space, scrollable on larger */}
+          <div className="hidden sm:block p-4 bg-black border-t border-white/10">
+            <div className="flex gap-3 max-w-5xl mx-auto overflow-x-auto pb-2 scrollbar-hide">
               {items.map((item, idx) => (
-                <motion.button
+                <button
                   key={idx}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`relative h-16 w-28 shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                    currentIndex === idx ? 'border-accent shadow-[0_0_15px_rgba(202,163,101,0.5)]' : 'border-transparent opacity-40 hover:opacity-100'
+                  className={`relative h-14 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-all duration-300 ${
+                    currentIndex === idx ? 'border-accent' : 'border-transparent opacity-40'
                   }`}
                 >
                   {item.type === 'video' ? (
                     <div className="h-full w-full bg-accent/20 flex items-center justify-center">
-                      <Play className="h-4 w-4 text-accent fill-accent" />
+                      <Play className="h-3 w-3 text-accent fill-accent" />
                     </div>
                   ) : (
                     <Image src={item.src} alt="thumbnail" fill className="object-cover" />
                   )}
-                </motion.button>
+                </button>
               ))}
             </div>
           </div>

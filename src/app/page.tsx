@@ -24,10 +24,10 @@ export const metadata: Metadata = {
 };
 
 const services = [
-  { icon: Calendar, title: "Corporate Events", desc: "Product launches, conferences, corporate dinners, and networking events executed with precision." },
-  { icon: Megaphone, title: "Brand Activations", desc: "Experiential marketing, in-store activations, and promotional campaigns that captivate audiences." },
-  { icon: BarChart3, title: "Digital Marketing", desc: "Social media strategy, content production, campaign management, and influencer collaborations." },
-  { icon: Zap, title: "Event Amplification", desc: "Live social coverage, influencer integration, and post-event marketing for maximum reach." },
+  { icon: Calendar, title: "Corporate Events", desc: "Product launches, conferences, corporate dinners, and networking events executed with precision.", image: "/assets/gallery/event-12.jpg" },
+  { icon: Megaphone, title: "Brand Activations", desc: "Experiential marketing, in-store activations, and promotional campaigns that captivate audiences.", image: "/assets/gallery/event-31.jpg" },
+  { icon: BarChart3, title: "Digital Marketing", desc: "Social media strategy, content production, campaign management, and influencer collaborations.", image: "/assets/gallery/event-64.jpg" },
+  { icon: Zap, title: "Event Amplification", desc: "Live social coverage, influencer integration, and post-event marketing for maximum reach.", image: "/assets/gallery/event-50.jpg" },
 ];
 
 const differentiators = [
@@ -54,19 +54,19 @@ export default function HomePage() {
         <div className="container relative z-10 py-24 md:py-32">
           <div className="max-w-2xl">
             <AnimatedSection delay={0.1}>
-              <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-accent">
-                Miss Wanjey Events &amp; Marketing
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent">
+                Miss Wanjey Events & Marketing
               </p>
             </AnimatedSection>
             
             <AnimatedSection delay={0.25}>
               <h1 className="mt-6 font-serif text-5xl font-bold leading-[1.05] text-primary-foreground md:text-6xl lg:text-[4.5rem] tracking-tight text-balance">
-                Strategic Events &amp; Marketing That <em className="italic text-accent/95 font-light">Elevate</em> Your Brand
+                Strategic Events & Marketing That Elevate Your Brand
               </h1>
             </AnimatedSection>
 
             <AnimatedSection delay={0.4}>
-              <p className="mt-8 max-w-lg text-[16px] leading-[1.7] text-primary-foreground/80 md:text-lg opacity-90">
+              <p className="mt-8 max-w-lg text-[16px] leading-[1.7] text-primary-foreground/80 md:text-lg opacity-90 font-medium">
                 We plan, execute, and amplify impactful corporate and lifestyle events that drive visibility, engagement, and measurable growth.
               </p>
             </AnimatedSection>
@@ -75,7 +75,7 @@ export default function HomePage() {
               <div className="mt-12 flex flex-col gap-4 sm:flex-row">
                 <Link href="/contact">
                   <MagneticButton intensity={30}>
-                    <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-sans px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       Book a Consultation
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -83,7 +83,7 @@ export default function HomePage() {
                 </Link>
                 <Link href="/packages">
                   <MagneticButton intensity={20}>
-                    <Button size="lg" variant="outline" className="border-primary-foreground/70 text-primary-foreground bg-primary-foreground/5 hover:bg-primary-foreground/10 hover:border-primary-foreground font-sans px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" variant="outline" className="border-primary-foreground/70 text-primary-foreground bg-primary-foreground/5 hover:bg-primary-foreground/10 hover:border-primary-foreground font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       View Our Packages
                     </Button>
                   </MagneticButton>
@@ -104,7 +104,7 @@ export default function HomePage() {
                   <stat.icon className="h-6 w-6 text-accent" />
                 </div>
                 <p className="font-serif text-3xl font-bold text-foreground md:text-4xl">{stat.value}</p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -116,23 +116,33 @@ export default function HomePage() {
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center">
-            <p className="section-label">What We Do</p>
-            <h2 className="section-heading">Comprehensive Event &amp; Marketing Solutions</h2>
-            <p className="section-subtext">
+            <p className="section-label font-bold">What We Do</p>
+            <h2 className="section-heading font-bold">Comprehensive Event & Marketing Solutions</h2>
+            <p className="section-subtext font-medium">
               Professional event execution and strategic brand marketing solutions for businesses that want to stand out.
             </p>
           </AnimatedSection>
 
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 0.08}>
-                <div className="premium-card group p-8 bg-accent/5 backdrop-blur-md border border-accent/10 hover:bg-accent/10 hover:border-accent/20 transition-all duration-500 rounded-2xl relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay" />
-                  <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/8 border border-accent/20 transition-transform duration-500 group-hover:scale-110">
-                    <s.icon className="h-6 w-6 text-accent" />
+                <div className="premium-card group bg-accent/5 backdrop-blur-md border border-accent/10 hover:bg-accent/10 hover:border-accent/20 transition-all duration-500 rounded-2xl relative overflow-hidden flex flex-col h-full">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image 
+                      src={s.image} 
+                      alt={s.title} 
+                      fill 
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
                   </div>
-                  <h3 className="relative z-10 mt-6 font-serif text-xl font-semibold tracking-wide group-hover:text-accent transition-colors duration-300">{s.title}</h3>
-                  <p className="relative z-10 mt-3 text-[15px] leading-[1.7] text-muted-foreground">{s.desc}</p>
+                  <div className="p-8">
+                    <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/8 border border-accent/20 transition-transform duration-500 group-hover:scale-110">
+                      <s.icon className="h-6 w-6 text-accent" />
+                    </div>
+                    <h3 className="relative z-10 mt-6 font-serif text-xl font-bold tracking-wide transition-colors duration-300">{s.title}</h3>
+                    <p className="relative z-10 mt-3 text-[15px] leading-[1.7] text-muted-foreground font-medium">{s.desc}</p>
+                  </div>
                 </div>
               </AnimatedSection>
             ))}
@@ -152,13 +162,13 @@ export default function HomePage() {
           <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
             <div>
               <AnimatedSection delay={0.1}>
-                <p className="section-label">Why Choose Us</p>
+                <p className="section-label font-bold">Why Choose Us</p>
               </AnimatedSection>
               <AnimatedSection delay={0.2}>
-                <h2 className="section-heading tracking-tight leading-[1.1]">Built on Trust, Driven by <em className="italic text-accent font-light">Excellence</em></h2>
+                <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
               </AnimatedSection>
               <AnimatedSection delay={0.3}>
-                <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg">
+                <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
                   With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
                 </p>
               </AnimatedSection>
@@ -166,9 +176,9 @@ export default function HomePage() {
             <div className="grid gap-3">
               {differentiators.map((d, i) => (
                 <AnimatedSection key={d} delay={i * 0.06}>
-                  <div className="premium-card flex items-center gap-4 p-5">
+                  <div className="premium-card flex items-center gap-4 p-5 bg-accent/5">
                     <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
-                    <span className="text-[15px] font-medium">{d}</span>
+                    <span className="text-[15px] font-bold">{d}</span>
                   </div>
                 </AnimatedSection>
               ))}
@@ -178,22 +188,33 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-primary py-24 md:py-32">
-        <div className="container text-center">
+      <section className="relative bg-primary py-24 md:py-32 overflow-hidden">
+        {/* Background Image for CTA */}
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/assets/gallery/event-69.jpg" 
+            alt="Event success" 
+            fill 
+            className="object-cover opacity-20 grayscale"
+          />
+          <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
+        </div>
+
+        <div className="container relative z-10 text-center">
           <AnimatedSection delay={0.1}>
-            <h2 className="font-serif text-4xl font-bold text-primary-foreground md:text-5xl lg:text-[4rem] text-balance tracking-tight" style={{ lineHeight: "1.1" }}>
-              Let&apos;s Build Something <em className="italic font-light text-accent/90">Impactful</em>
+            <h2 className="font-serif text-4xl font-bold text-primary-foreground md:text-5xl lg:text-[4rem] text-balance tracking-tight leading-[1.1]">
+              Let&apos;s Build Something Impactful
             </h2>
           </AnimatedSection>
           <AnimatedSection delay={0.2}>
-            <p className="mx-auto mt-6 max-w-md text-[16px] leading-[1.7] text-primary-foreground/80">
+            <p className="mx-auto mt-6 max-w-md text-[16px] leading-[1.7] text-primary-foreground/90 font-bold">
               Ready to create events and campaigns that resonate? Let&apos;s start with a conversation.
             </p>
           </AnimatedSection>
           <AnimatedSection delay={0.3}>
             <Link href="/contact">
               <MagneticButton intensity={25} className="mt-10">
-                <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-sans px-10 h-14 text-[15px] transition-all duration-300">
+                <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 h-14 text-[15px] transition-all duration-300">
                   Schedule Your Strategy Call
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
