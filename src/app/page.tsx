@@ -9,6 +9,7 @@ import InfiniteMarquee from "@/components/InfiniteMarquee";
 import AmbientGlow from "@/components/AmbientGlow";
 import MagneticButton from "@/components/MagneticButton";
 import HeroBackground from "@/components/HeroBackground";
+import UpcomingEventSection from "@/components/UpcomingEventSection";
 import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -142,6 +143,8 @@ export default function HomePage() {
       <ParallaxImageBreakout src="/assets/gallery/event-30.jpg" alt="Premium Event Setup" />
 
       <InfiniteMarquee text="PREMIUM EVENTS • STRATEGIC MARKETING • BRAND ACTIVATIONS • " />
+
+      <UpcomingEventSection />
 
       {/* Why Choose Us */}
       <section className="py-24 md:py-32">
