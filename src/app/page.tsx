@@ -139,7 +139,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <ParallaxImageBreakout src="/assets/gallery/event-11.jpg" alt="Premium Event Setup" />
+      <ParallaxImageBreakout src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=1920&q=90&auto=format&fit=crop" alt="Premium Event Setup" />
 
       <InfiniteMarquee text="PREMIUM EVENTS • STRATEGIC MARKETING • BRAND ACTIVATIONS • " />
 

@@ -32,7 +32,7 @@ export default function AboutPage() {
             <AnimatedSection>
               <div className="relative mx-auto max-w-md lg:mx-0">
                 <Image
-                  src="/assets/wanjey-portrait.jpg"
+                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=90&auto=format&fit=crop"
                   alt="Miss Wanjey"
                   width={600}
                   height={700}

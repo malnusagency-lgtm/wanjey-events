@@ -10,12 +10,12 @@ export default function HeroBackground() {
       transition={{ duration: 20, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
     >
       <Image
-        src="/assets/hero-bg.jpg"
+        src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=90&auto=format&fit=crop"
         alt="Miss Wanjey Events hero"
         fill
-        className="object-cover object-top"
+        className="object-cover object-center"
         priority
-        quality={100}
+        quality={90}
       />
       {/* Cinematic gradient vignette overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-primary/60 to-primary/95" />
