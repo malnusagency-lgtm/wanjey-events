@@ -4,10 +4,8 @@ import { motion } from "framer-motion";
 
 export default function HeroBackground() {
   return (
-    <motion.div
+    <div
       className="absolute inset-0 z-0 h-full w-full"
-      animate={{ scale: [1, 1.05] }}
-      transition={{ duration: 20, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
     >
       <Image
         src="/assets/hero-bg.jpg"
@@ -19,6 +17,6 @@ export default function HeroBackground() {
       />
       {/* Cinematic gradient vignette overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-primary/60 to-primary/95" />
-    </motion.div>
+    </div>
   );
 }

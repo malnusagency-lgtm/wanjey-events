@@ -262,11 +262,7 @@ export default function GalleryClient() {
                           className="object-cover"
                           priority
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        <div className="absolute bottom-8 left-8 right-8">
-                          <p className="text-sm font-medium text-white/70">Image {carouselIndex + 1} of {images.length}</p>
-                          <h3 className="mt-2 font-serif text-xl font-bold text-white md:text-2xl">{images[carouselIndex].alt}</h3>
-                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                       </motion.div>
                     </AnimatePresence>
 
@@ -317,7 +313,6 @@ export default function GalleryClient() {
             onClick={closeLightbox}
           >
             <button onClick={closeLightbox} className="absolute right-4 top-12 sm:top-4 z-10 p-3 text-white"><X className="h-6 w-6" /></button>
-            <div className="absolute left-1/2 top-12 sm:top-5 -translate-x-1/2 text-sm text-white/60">{selectedIndex + 1} / {images.length}</div>
             
             <button onClick={(e) => { e.stopPropagation(); goPrev(); }} className="absolute left-6 top-1/2 -translate-y-1/2 p-3 text-white hidden md:block"><ChevronLeft className="h-8 w-8" /></button>
             <button onClick={(e) => { e.stopPropagation(); goNext(); }} className="absolute right-6 top-1/2 -translate-y-1/2 p-3 text-white hidden md:block"><ChevronRight className="h-8 w-8" /></button>
