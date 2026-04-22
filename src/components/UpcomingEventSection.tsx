@@ -93,7 +93,7 @@ const UpcomingEventSection = () => {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
           <AnimatedSection delay={0.2}>
             <h2 className="font-serif text-4xl font-black leading-tight text-white sm:text-6xl md:text-8xl lg:text-[9rem] tracking-tighter drop-shadow-2xl">
-              BIGVOICES <em className="italic font-light text-accent">FEST</em>
+              BIGVOICES <em className="italic font-light text-white">FEST</em>
             </h2>
           </AnimatedSection>
           
@@ -113,10 +113,10 @@ const UpcomingEventSection = () => {
                 { val: countdown.seconds, label: 'Sec' },
               ].map((unit) => (
                 <div key={unit.label} className="flex flex-col items-center">
-                  <span className="font-sans text-3xl font-black text-accent tabular-nums sm:text-5xl md:text-6xl drop-shadow-lg">
+                  <span className="font-sans text-3xl font-black text-white tabular-nums sm:text-5xl md:text-6xl drop-shadow-lg">
                     {String(unit.val).padStart(2, '0')}
                   </span>
-                  <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 sm:text-xs">
+                  <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 sm:text-xs">
                     {unit.label}
                   </span>
                 </div>

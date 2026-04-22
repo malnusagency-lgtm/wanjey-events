@@ -9,10 +9,10 @@ import { Heart, Shield, Lightbulb, Award, Users, ArrowRight, ExternalLink } from
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn about Wanjey Events & Marketing — a brand under the Miss Wanjey umbrella, alongside Toto Kingdom. Discover our mission, vision, and values.",
+    "Learn about Miss Wanjey Digital Consultant and Toto Kingdom — brands under the Miss Wanjey umbrella dedicated to excellence in Kenya.",
   openGraph: {
-    title: "About Wanjey Events & Marketing",
-    description: "Mission, vision, and values behind Kenya's premium events agency.",
+    title: "About Miss Wanjey Brands",
+    description: "Mission, vision, and values behind the Miss Wanjey brand ecosystem.",
     url: "https://misswanjey.co.ke/about",
   },
 };
@@ -75,7 +75,7 @@ export default function AboutPage() {
         <div className="container">
           <AnimatedSection className="text-center">
             <p className="section-label">The Brand Family</p>
-            <h2 className="section-heading">Powered by Miss Wanjey</h2>
+            <h2 className="section-heading">Miss Wanjey Brand Family</h2>
             <p className="section-subtext">
               Miss Wanjey is a personal brand that champions excellence across multiple ventures. Here&apos;s what we&apos;re building.
             </p>
@@ -88,7 +88,7 @@ export default function AboutPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 mb-5">
                   <Award className="h-6 w-6 text-accent" />
                 </div>
-                <h3 className="font-serif text-xl font-bold">Wanjey Events &amp; Marketing</h3>
+                <h3 className="font-serif text-xl font-bold">Miss Wanjey Digital Consultant</h3>
                 <p className="mt-3 flex-1 text-sm leading-[1.7] text-muted-foreground">
                   Premium corporate events management, brand activations, and strategic digital marketing for businesses that want to stand out.
                 </p>
