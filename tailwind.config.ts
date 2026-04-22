@@ -17,7 +17,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["var(--font-playfair)", "Georgia", "serif"],
+        serif: ["var(--font-poppins)", "system-ui", "sans-serif"],
         sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
       },
       colors: {
