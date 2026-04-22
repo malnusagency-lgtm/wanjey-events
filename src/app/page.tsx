@@ -166,10 +166,10 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        {/* Background Image for CTA - Fixed position */}
+      <section className="relative py-24 md:py-32 overflow-hidden w-full">
+        {/* Background Image for CTA - Fixed position stabilized */}
         <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-fixed opacity-100"
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-100 w-full"
           style={{ backgroundImage: 'url("/assets/lets-build.jpg")' }}
         />
         <div className="absolute inset-0 z-[1] bg-white/20" />
