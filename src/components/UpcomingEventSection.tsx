@@ -1,6 +1,5 @@
 'use client';
 import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import MagneticButton from "./MagneticButton";
 import { ArrowRight } from "lucide-react";
@@ -33,45 +32,48 @@ const UpcomingEventSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   
-  // Background rotation for "eye-catching" advertising look
   useEffect(() => {
     const timer = setInterval(() => {
       setBgIndex((prev) => (prev + 1) % mediaItems.length);
-    }, 4000); // Rotate every 4 seconds
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
   return (
     <>
       <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-black">
-        {/* Dynamic Background Slideshow */}
+        {/* Dynamic Background Slideshow - Double Buffered to prevent gray flicker */}
         <div className="absolute inset-0 z-0 h-full w-full">
-          <div className="absolute inset-0 h-full w-full">
-            {mediaItems[bgIndex].type === 'video' ? (
-              <video
-                key={mediaItems[bgIndex].src}
-                src={mediaItems[bgIndex].src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="h-full w-full object-cover opacity-90" 
-              />
-            ) : (
-              <Image
-                key={mediaItems[bgIndex].src}
-                src={mediaItems[bgIndex].src}
-                alt="Background"
-                fill
-                className="object-cover opacity-90"
-              />
-            )}
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/80 mix-blend-multiply" />
+          {mediaItems.map((item, idx) => (
+            <div 
+              key={item.src} 
+              className={`absolute inset-0 h-full w-full transition-opacity duration-[100ms] ${idx === bgIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            >
+              {item.type === 'video' ? (
+                <video
+                  src={item.src}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-full w-full object-cover" 
+                />
+              ) : (
+                <Image
+                  src={item.src}
+                  alt="Background"
+                  fill
+                  className="object-cover"
+                  priority={idx === 0}
+                />
+              )}
+            </div>
+          ))}
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/90 via-transparent to-background/90 mix-blend-multiply" />
         </div>
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
           <AnimatedSection delay={0.2}>
             <h2 className="font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl">
               BIGVOICES <em className="italic font-light text-white">FEST</em>
@@ -89,8 +91,8 @@ const UpcomingEventSection = () => {
             <div className="mt-10 flex flex-col items-center">
               <div className="h-px w-24 bg-accent mb-6" />
               <div className="flex flex-col items-center gap-2">
-                <span className="font-serif text-6xl font-black text-white sm:text-8xl md:text-[8rem] tracking-tighter drop-shadow-2xl">
-                  06 JUNE
+                <span className="font-serif text-6xl font-black text-white sm:text-8xl md:text-[8rem] tracking-tighter drop-shadow-2xl uppercase">
+                  6TH JUNE
                 </span>
                 <span className="text-sm font-bold uppercase tracking-[0.5em] text-accent sm:text-lg">SAVE THE DATE</span>
               </div>

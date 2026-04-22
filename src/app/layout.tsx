@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
+    <html lang="en" className={`dark ${playfair.variable} ${poppins.variable}`}>
       <body>
         <FilmGrain />
         <SmoothScroll />
