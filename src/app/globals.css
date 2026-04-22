@@ -5,25 +5,25 @@
 @layer base {
   :root {
     --background: 20 60% 98%;
-    --foreground: 20 20% 15%;
+    --foreground: 20 30% 10%;
 
     --card: 20 40% 99%;
-    --card-foreground: 20 20% 15%;
+    --card-foreground: 20 30% 10%;
 
     --popover: 20 60% 98%;
-    --popover-foreground: 20 20% 15%;
+    --popover-foreground: 20 30% 10%;
 
-    --primary: 20 15% 15%;
+    --primary: 20 20% 10%;
     --primary-foreground: 20 60% 98%;
 
     --secondary: 20 30% 95%;
-    --secondary-foreground: 20 20% 15%;
+    --secondary-foreground: 20 30% 10%;
 
-    --muted: 20 20% 94%;
-    --muted-foreground: 20 10% 45%;
+    --muted: 20 20% 90%;
+    --muted-foreground: 20 20% 15%;
 
     --accent: 43 45% 55%;
-    --accent-foreground: 30 10% 10%;
+    --accent-foreground: 30 10% 5%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -37,22 +37,22 @@
 
   .dark {
     --background: 30 10% 6%;
-    --foreground: 40 15% 92%;
+    --foreground: 40 15% 96%;
 
     --card: 30 10% 10%;
-    --card-foreground: 40 15% 92%;
+    --card-foreground: 40 15% 96%;
 
     --popover: 30 10% 6%;
-    --popover-foreground: 40 15% 92%;
+    --popover-foreground: 40 15% 96%;
 
     --primary: 40 15% 92%;
     --primary-foreground: 30 10% 6%;
 
     --secondary: 30 10% 14%;
-    --secondary-foreground: 40 15% 92%;
+    --secondary-foreground: 40 15% 96%;
 
     --muted: 30 10% 14%;
-    --muted-foreground: 38 10% 65%;
+    --muted-foreground: 38 10% 75%;
 
     --accent: 43 45% 48%;
     --accent-foreground: 30 10% 6%;
@@ -118,22 +118,22 @@
 
 @layer components {
   .section-label {
-    @apply font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent;
+    @apply font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-accent;
   }
 
   .section-heading {
-    @apply mt-5 font-serif text-3xl font-bold md:text-4xl lg:text-[2.75rem] text-balance;
+    @apply mt-3 font-serif text-3xl font-bold md:text-4xl lg:text-[2.5rem] text-balance;
     letter-spacing: -0.03em;
     line-height: 1.12;
   }
 
   .section-subtext {
-    @apply mx-auto mt-6 max-w-xl text-muted-foreground leading-[1.7] text-[15px] md:text-base;
+    @apply mx-auto mt-4 max-w-xl text-muted-foreground leading-[1.7] text-[15px] md:text-base;
   }
 
   .premium-card {
-    @apply rounded-2xl border border-white bg-white/40 backdrop-blur-xl transition-all duration-500 shadow-[0_8px_32px_-4px_rgba(255,218,185,0.3)];
-    @apply hover:border-accent/40 hover:bg-white/60 hover:shadow-[0_12px_48px_-8px_rgba(255,160,122,0.4)];
+    @apply rounded-2xl border-2 border-accent/20 bg-white transition-all duration-500 shadow-xl;
+    @apply hover:border-accent/50 hover:shadow-[0_20px_50px_-12px_rgba(255,160,122,0.3)];
   }
 
   .gradient-separator {

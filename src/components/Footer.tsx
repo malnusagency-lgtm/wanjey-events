@@ -43,12 +43,12 @@ const Footer = () => {
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/assets/gallery/event-12.jpg" 
+          src="/assets/gallery/event-29.jpg" 
           alt="Elegant decor setup" 
           fill 
-          className="object-cover opacity-40"
+          className="object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[#FFF5F0]/90" />
       </div>
 
       <div className="container relative z-10 py-20 md:py-24">

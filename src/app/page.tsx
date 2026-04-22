@@ -170,22 +170,22 @@ export default function HomePage() {
         {/* Background Image for CTA */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/assets/gallery/event-27.jpg" 
+            src="/assets/gallery/event-48.jpg" 
             alt="Premium decor setup" 
             fill 
-            className="object-cover opacity-40"
+            className="object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-[#FFF5F0]/80" />
         </div>
 
         <div className="container relative z-10 text-center">
           <AnimatedSection delay={0.1}>
-            <h2 className="font-serif text-4xl font-bold text-primary-foreground md:text-5xl lg:text-[4rem] text-balance tracking-tight leading-[1.1]">
+            <h2 className="font-serif text-4xl font-bold text-foreground md:text-5xl lg:text-[4rem] text-balance tracking-tight leading-[1.1]">
               Let&apos;s Build Something Impactful
             </h2>
           </AnimatedSection>
           <AnimatedSection delay={0.2}>
-            <p className="mx-auto mt-6 max-w-md text-[16px] leading-[1.7] text-primary-foreground/90 font-bold">
+            <p className="mx-auto mt-6 max-w-md text-[16px] leading-[1.7] text-foreground/80 font-bold">
               Ready to create events and campaigns that resonate? Let&apos;s start with a conversation.
             </p>
           </AnimatedSection>
