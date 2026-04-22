@@ -29,7 +29,7 @@ export default function AboutPage() {
   return (
     <PageTransition>
       {/* Hero About */}
-      <section className="py-24 md:py-32">
+      <section className="py-12 md:py-16">
         <div className="container">
           <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
             <AnimatedSection>
@@ -53,7 +53,7 @@ export default function AboutPage() {
               <p className="mt-4 text-[15px] leading-[1.7] text-muted-foreground md:text-base">
                 We are a proud brand under the <strong className="text-foreground">Miss Wanjey</strong> umbrella — a dynamic personal brand built on passion, excellence, and entrepreneurship. Miss Wanjey is more than a name — it&apos;s a movement that powers multiple ventures dedicated to elevating communities and experiences across Kenya.
               </p>
-              <div className="mt-10 space-y-3">
+              <div className="mt-8 space-y-3">
                 <div className="premium-card p-6">
                   <h3 className="font-serif text-lg font-semibold">Our Mission</h3>
                   <p className="mt-2 text-sm leading-[1.7] text-muted-foreground">To create impactful events and marketing campaigns that elevate brands and connect audiences.</p>
@@ -71,7 +71,7 @@ export default function AboutPage() {
       <div className="gradient-separator" />
 
       {/* The Miss Wanjey Brand Family */}
-      <section className="py-24 md:py-32">
+      <section className="py-12 md:py-16">
         <div className="container">
           <AnimatedSection className="text-center">
             <p className="section-label">The Brand Family</p>
@@ -81,7 +81,7 @@ export default function AboutPage() {
             </p>
           </AnimatedSection>
 
-          <div className="mt-14 grid gap-6 md:grid-cols-2 max-w-3xl mx-auto">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 max-w-3xl mx-auto">
             {/* Wanjey Events Card */}
             <AnimatedSection delay={0.08}>
               <div className="premium-card group p-8 h-full flex flex-col bg-accent/[0.03] border-accent/20">
@@ -120,13 +120,13 @@ export default function AboutPage() {
       <div className="gradient-separator" />
 
       {/* Our Values */}
-      <section className="py-24 md:py-32">
+      <section className="py-12 md:py-16">
         <div className="container text-center">
           <AnimatedSection>
             <p className="section-label">Our Values</p>
             <h2 className="section-heading">What Guides Us</h2>
           </AnimatedSection>
-          <div className="mx-auto mt-14 grid max-w-3xl gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {values.map((v, i) => (
               <AnimatedSection key={v.label} delay={i * 0.06}>
                 <div className="premium-card flex flex-col items-center gap-3 p-6">

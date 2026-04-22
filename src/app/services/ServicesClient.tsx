@@ -45,7 +45,7 @@ const testimonials = [
 export default function ServicesClient() {
   return (
     <PageTransition>
-      <section className="relative py-24 overflow-hidden md:py-32">
+      <section className="relative py-12 md:py-16 overflow-hidden">
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center">
@@ -61,11 +61,9 @@ export default function ServicesClient() {
               <AnimatedSection key={s.title} delay={i * 0.08}>
                 <div className="premium-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full">
                   <div className="relative h-48 w-full md:h-auto md:w-2/5 overflow-hidden">
-                    <Image 
-                      src={s.image} 
-                      alt={s.title} 
-                      fill 
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed w-full h-full"
+                      style={{ backgroundImage: `url("${s.image}")` }}
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
                   </div>
@@ -90,7 +88,7 @@ export default function ServicesClient() {
             ))}
           </div>
 
-          <AnimatedSection className="mt-20 text-center">
+          <AnimatedSection className="mt-12 text-center">
             <Link href="/contact">
               <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 h-14 text-[15px] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-accent/20">
                 Request a Custom Proposal
@@ -104,7 +102,7 @@ export default function ServicesClient() {
       <InfiniteMarquee text="END-TO-END CORPORATE EXCELLENCE • STRATEGIC BRANDING • " />
 
       {/* Testimonials — Auto-scrolling Marquee */}
-      <section className="py-20 md:py-28 overflow-hidden">
+      <section className="py-12 md:py-16 overflow-hidden">
         <div className="container">
           <AnimatedSection className="text-center mb-16">
             <p className="section-label">Testimonials</p>
@@ -112,7 +110,7 @@ export default function ServicesClient() {
           </AnimatedSection>
         </div>
 
-        <div className="relative flex overflow-hidden py-10">
+        <div className="relative flex overflow-hidden py-6">
           <div className="flex animate-marquee whitespace-nowrap gap-6 px-6">
             {/* Double the items for seamless loop */}
             {[...testimonials, ...testimonials].map((t, i) => (
