@@ -60,7 +60,7 @@ const Footer = () => {
           src={bgImage} 
           alt="Elegant event background" 
           fill 
-          className="object-cover opacity-90 transition-opacity duration-700"
+          className="object-cover opacity-[0.98] transition-opacity duration-700"
         />
         <div className="absolute inset-0 bg-[#FFF5F0]/90" />
       </div>
