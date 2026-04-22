@@ -46,44 +46,33 @@ const UpcomingEventSection = () => {
       <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-black">
         {/* Dynamic Background Slideshow */}
         <div className="absolute inset-0 z-0 h-full w-full">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={bgIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.5 }}
-              className="absolute inset-0 h-full w-full"
-            >
-              {mediaItems[bgIndex].type === 'video' ? (
-                <video
-                  src={mediaItems[bgIndex].src}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="h-full w-full object-cover" 
-                />
-              ) : (
-                <Image
-                  src={mediaItems[bgIndex].src}
-                  alt="Background"
-                  fill
-                  className="object-cover"
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-background/90 mix-blend-multiply" />
-          <div className="absolute inset-0 bg-primary/20 mix-blend-color" />
+          <div className="absolute inset-0 h-full w-full">
+            {mediaItems[bgIndex].type === 'video' ? (
+              <video
+                key={mediaItems[bgIndex].src}
+                src={mediaItems[bgIndex].src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="h-full w-full object-cover opacity-90" 
+              />
+            ) : (
+              <Image
+                key={mediaItems[bgIndex].src}
+                src={mediaItems[bgIndex].src}
+                alt="Background"
+                fill
+                className="object-cover opacity-90"
+              />
+            )}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/80 mix-blend-multiply" />
         </div>
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
           <AnimatedSection delay={0.2}>
-            <div className="inline-block rounded-full border border-white/20 bg-white/10 px-6 py-2 backdrop-blur-md mb-8">
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/90">Advertorial Spotlight</p>
-            </div>
             <h2 className="font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl">
               BIGVOICES <em className="italic font-light text-white">FEST</em>
             </h2>
