@@ -69,7 +69,7 @@ const UpcomingEventSection = () => {
               )}
             </div>
           ))}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/90 via-transparent to-background/90 mix-blend-multiply" />
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/60 via-transparent to-background/60 mix-blend-multiply" />
         </div>
 
         {/* Content Overlay */}
@@ -91,7 +91,7 @@ const UpcomingEventSection = () => {
             <div className="mt-10 flex flex-col items-center">
               <div className="h-px w-24 bg-accent mb-6" />
               <div className="flex flex-col items-center gap-2">
-                <span className="font-serif text-6xl font-black text-white sm:text-8xl md:text-[8rem] tracking-tighter drop-shadow-2xl uppercase">
+                <span className="font-serif text-6xl font-black text-accent sm:text-8xl md:text-[8rem] tracking-tighter drop-shadow-2xl uppercase">
                   6TH JUNE
                 </span>
                 <span className="text-sm font-bold uppercase tracking-[0.5em] text-accent sm:text-lg">SAVE THE DATE</span>

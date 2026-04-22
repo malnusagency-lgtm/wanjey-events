@@ -26,8 +26,8 @@ export default function HeroBackground() {
           quality={90}
         />
       </motion.div>
-      {/* Cinematic gradient vignette overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-primary/60 to-primary/95" />
+      {/* Cinematic gradient vignette overlay with peach tint */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#FFF5F0]/40 to-background/90" />
     </div>
   );
 }

@@ -4,23 +4,23 @@
 
 @layer base {
   :root {
-    --background: 30 10% 6%;
-    --foreground: 40 15% 92%;
+    --background: 20 60% 98%;
+    --foreground: 20 20% 15%;
 
-    --card: 30 10% 10%;
-    --card-foreground: 40 15% 92%;
+    --card: 20 40% 99%;
+    --card-foreground: 20 20% 15%;
 
-    --popover: 30 10% 6%;
-    --popover-foreground: 40 15% 92%;
+    --popover: 20 60% 98%;
+    --popover-foreground: 20 20% 15%;
 
-    --primary: 40 15% 92%;
-    --primary-foreground: 30 10% 6%;
+    --primary: 20 15% 15%;
+    --primary-foreground: 20 60% 98%;
 
-    --secondary: 30 10% 14%;
-    --secondary-foreground: 40 15% 92%;
+    --secondary: 20 30% 95%;
+    --secondary-foreground: 20 20% 15%;
 
-    --muted: 30 10% 14%;
-    --muted-foreground: 38 10% 65%;
+    --muted: 20 20% 94%;
+    --muted-foreground: 20 10% 45%;
 
     --accent: 43 45% 55%;
     --accent-foreground: 30 10% 10%;
@@ -28,8 +28,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 8% 18%;
-    --input: 30 8% 18%;
+    --border: 20 15% 90%;
+    --input: 20 15% 90%;
     --ring: 43 45% 55%;
 
     --radius: 0.75rem;
@@ -72,7 +72,7 @@
   }
 
   html, body {
-    background-color: #050505 !important;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F0 50%, #FFEFD5 100%) fixed !important;
   }
 
   body {
@@ -132,8 +132,8 @@
   }
 
   .premium-card {
-    @apply rounded-2xl border-2 border-accent/20 bg-card/60 backdrop-blur-xl transition-all duration-500 shadow-xl;
-    @apply hover:border-accent/40 hover:bg-card/80 hover:shadow-[0_8px_32px_-8px_hsl(43_45%_55%/0.15)];
+    @apply rounded-2xl border border-white bg-white/40 backdrop-blur-xl transition-all duration-500 shadow-[0_8px_32px_-4px_rgba(255,218,185,0.3)];
+    @apply hover:border-accent/40 hover:bg-white/60 hover:shadow-[0_12px_48px_-8px_rgba(255,160,122,0.4)];
   }
 
   .gradient-separator {

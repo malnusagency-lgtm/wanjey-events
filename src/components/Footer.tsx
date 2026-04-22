@@ -39,7 +39,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="relative border-t border-border bg-primary text-primary-foreground overflow-hidden">
+    <footer className="relative border-t border-border bg-white/20 text-foreground overflow-hidden">
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <Image 
@@ -58,7 +58,7 @@ const Footer = () => {
             <h3 className="font-serif text-xl font-bold">
               Wanjey Events<span className="text-accent">.</span>
             </h3>
-            <p className="mt-5 max-w-xs text-sm leading-[1.7] opacity-50">
+            <p className="mt-5 max-w-xs text-sm leading-[1.7] text-foreground/70">
               Strategic events management and brand marketing that elevate your business in Kenya and beyond.
             </p>
             <div className="mt-8 flex gap-3">
@@ -69,7 +69,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10 transition-all duration-300 hover:bg-primary-foreground/20 hover:scale-105"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 transition-all duration-300 hover:bg-accent/20 hover:scale-105"
                 >
                   <Icon className="h-5 w-5" />
                 </a>
@@ -85,7 +85,7 @@ const Footer = () => {
                 <Link
                   key={label}
                   href={`/${label.toLowerCase()}`}
-                  className="text-sm opacity-50 transition-opacity duration-300 hover:opacity-80"
+                  className="text-sm text-foreground/70 transition-colors duration-300 hover:text-accent"
                 >
                   {label}
                 </Link>
@@ -98,7 +98,7 @@ const Footer = () => {
             <h4 className="text-[11px] font-medium uppercase tracking-[0.2em] text-accent">Services</h4>
             <ul className="mt-6 flex flex-col gap-3">
               {["Corporate Events", "Brand Activations", "Digital Marketing", "Event Amplification"].map((s) => (
-                <li key={s} className="text-sm opacity-50">{s}</li>
+                <li key={s} className="text-sm text-foreground/70">{s}</li>
               ))}
             </ul>
           </div>
@@ -107,22 +107,22 @@ const Footer = () => {
           <div>
             <h4 className="text-[11px] font-medium uppercase tracking-[0.2em] text-accent">Contact</h4>
             <ul className="mt-6 flex flex-col gap-4">
-              <li className="flex items-center gap-3 text-sm opacity-50">
+              <li className="flex items-center gap-3 text-sm text-foreground/70">
                 <MapPin className="h-4 w-4 shrink-0 text-accent" /> Nairobi, Kenya
               </li>
-              <li className="flex items-center gap-3 text-sm opacity-50">
+              <li className="flex items-center gap-3 text-sm text-foreground/70">
                 <Phone className="h-4 w-4 shrink-0 text-accent" /> +254 790 381039
               </li>
-              <li className="flex items-center gap-3 text-sm opacity-50">
+              <li className="flex items-center gap-3 text-sm text-foreground/70">
                 <Mail className="h-4 w-4 shrink-0 text-accent" /> hello@misswanjey.co.ke
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-16 h-px w-full bg-primary-foreground/10" />
+        <div className="mt-16 h-px w-full bg-foreground/10" />
         <div className="pt-8 text-center">
-          <p className="text-xs opacity-30">
+          <p className="text-xs text-foreground/40">
             © {new Date().getFullYear()} Wanjey Events & Marketing. All rights reserved.
           </p>
         </div>
