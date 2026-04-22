@@ -9,7 +9,7 @@ const InfiniteMarquee = ({ text }: Props) => {
   return (
     <div className="relative flex w-full overflow-hidden border-y border-border/40 bg-accent/5 py-4 md:py-6">
       <motion.div
-        className="flex whitespace-nowrap font-serif text-3xl font-bold tracking-widest text-accent/80 opacity-60 mix-blend-multiply md:text-5xl"
+        className="flex whitespace-nowrap font-serif text-xl font-bold tracking-widest text-accent/80 opacity-60 mix-blend-multiply sm:text-3xl md:text-5xl"
         initial={{ x: "0%" }}
         animate={{ x: "-50%" }}
         transition={{

@@ -104,22 +104,34 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0 }: Props) => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation Arrows - Visible on Desktop, Subtle on Mobile */}
+            {/* Navigation Arrows — smaller on mobile */}
             <button 
               onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[120]"
+              className="absolute left-2 top-1/2 -translate-y-1/2 flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[120]"
             >
-              <ChevronLeft className="h-8 w-8" />
+              <ChevronLeft className="h-5 w-5 md:h-8 md:w-8" />
             </button>
             <button 
               onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[120]"
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[120]"
             >
-              <ChevronRight className="h-8 w-8" />
+              <ChevronRight className="h-5 w-5 md:h-8 md:w-8" />
             </button>
           </div>
 
-          {/* Thumbnails Strip - Hidden on small mobile to maximize space, scrollable on larger */}
+          {/* Dot indicators on mobile, Thumbnails on sm+ */}
+          <div className="sm:hidden p-3 bg-black border-t border-white/10">
+            <div className="flex justify-center gap-1.5 overflow-x-auto">
+              {items.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'w-6 bg-accent' : 'w-2 bg-white/30'}`}
+                  aria-label={`Go to item ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
           <div className="hidden sm:block p-4 bg-black border-t border-white/10">
             <div className="flex gap-3 max-w-5xl mx-auto overflow-x-auto pb-2 scrollbar-hide">
               {items.map((item, idx) => (

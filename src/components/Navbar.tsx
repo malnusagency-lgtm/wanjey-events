@@ -12,7 +12,6 @@ const navLinks = [
   { label: "Services", path: "/services" },
   { label: "Packages", path: "/packages" },
   { label: "Gallery", path: "/gallery" },
-  { label: "Testimonials", path: "/testimonials" },
   { label: "Contact", path: "/contact" },
 ];
 

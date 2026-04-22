@@ -75,7 +75,7 @@ export default function HomePage() {
               <div className="mt-12 flex flex-col gap-4 sm:flex-row">
                 <Link href="/contact">
                   <MagneticButton intensity={30}>
-                    <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       Book a Consultation
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -83,7 +83,7 @@ export default function HomePage() {
                 </Link>
                 <Link href="/packages">
                   <MagneticButton intensity={20}>
-                    <Button size="lg" variant="outline" className="border-primary-foreground/70 text-primary-foreground bg-primary-foreground/5 hover:bg-primary-foreground/10 hover:border-primary-foreground font-bold px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground/70 text-primary-foreground bg-primary-foreground/5 hover:bg-primary-foreground/10 hover:border-primary-foreground font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       View Our Packages
                     </Button>
                   </MagneticButton>

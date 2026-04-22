@@ -6,7 +6,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
 import AmbientGlow from "@/components/AmbientGlow";
 import InfiniteMarquee from "@/components/InfiniteMarquee";
-import { Calendar, Megaphone, BarChart3, Zap, ArrowRight } from "lucide-react";
+import { Calendar, Megaphone, BarChart3, Zap, ArrowRight, Star } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Our Services",
@@ -44,6 +44,13 @@ const sections = [
     image: "/assets/gallery/event-50.jpg",
     items: ["Live social coverage", "Influencer integration", "Post-event marketing", "Digital visibility strategy"],
   },
+];
+
+const testimonials = [
+  { name: "Sarah Kimani", company: "TechVentures Kenya", quote: "Their attention to detail and creative vision exceeded every expectation we had." },
+  { name: "James Odhiambo", company: "Capital Finance Group", quote: "Professional, strategic, and incredibly organized. Highly recommended." },
+  { name: "Amina Hassan", company: "Bloom Lifestyle Brand", quote: "The brand activation campaign generated incredible engagement." },
+  { name: "David Mwangi", company: "Savannah Holdings", quote: "Miss Wanjey stands out for their strategic approach and reliable execution." },
 ];
 
 export default function ServicesPage() {
@@ -106,6 +113,40 @@ export default function ServicesPage() {
       </section>
       
       <InfiniteMarquee text="END-TO-END CORPORATE EXCELLENCE • STRATEGIC BRANDING • " />
+
+      {/* Testimonials — Minimal */}
+      <section className="py-20 md:py-28">
+        <div className="container">
+          <AnimatedSection className="text-center">
+            <p className="section-label">Testimonials</p>
+            <h2 className="section-heading">Trusted by Leading Brands</h2>
+          </AnimatedSection>
+
+          <div className="mt-12 flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible md:pb-0">
+            {testimonials.map((t, i) => (
+              <AnimatedSection key={t.name} delay={i * 0.06} className="min-w-[280px] snap-center md:min-w-0">
+                <div className="premium-card flex flex-col p-6 h-full">
+                  <div className="flex gap-0.5 mb-3">
+                    {Array.from({ length: 5 }).map((_, j) => (
+                      <Star key={j} className="h-3.5 w-3.5 fill-accent text-accent" />
+                    ))}
+                  </div>
+                  <p className="flex-1 text-sm leading-[1.7] text-muted-foreground">&ldquo;{t.quote}&rdquo;</p>
+                  <div className="mt-4 flex items-center gap-3 pt-4 border-t border-border/50">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 font-serif text-xs font-bold text-accent">
+                      {t.name[0]}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold">{t.name}</p>
+                      <p className="text-[11px] text-muted-foreground">{t.company}</p>
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
     </PageTransition>
   );
 }

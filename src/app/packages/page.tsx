@@ -53,7 +53,7 @@ export default function PackagesPage() {
             </p>
           </AnimatedSection>
 
-          <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <div className="mt-16 grid gap-4 md:grid-cols-2 xl:grid-cols-4 xl:gap-5">
             {packages.map((pkg, i) => (
               <AnimatedSection key={pkg.name} delay={i * 0.08}>
                 <div className={`relative flex h-full flex-col rounded-2xl border p-8 transition-all duration-500 ${

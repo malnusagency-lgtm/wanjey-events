@@ -20,7 +20,7 @@ const ParallaxImageBreakout = ({ src, alt }: Props) => {
   const y = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
 
   return (
-    <section ref={ref} className="relative h-[60vh] md:h-[80vh] w-full overflow-hidden">
+    <section ref={ref} className="relative h-[40vh] md:h-[60vh] lg:h-[80vh] w-full overflow-hidden">
       <motion.div className="absolute inset-0 z-0 h-[130%] w-full" style={{ y, top: "-15%" }}>
         <Image
           src={src}
