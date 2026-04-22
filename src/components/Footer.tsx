@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -38,13 +39,24 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="border-t border-border bg-primary text-primary-foreground">
-      <div className="container py-20 md:py-24">
+    <footer className="relative border-t border-border bg-primary text-primary-foreground overflow-hidden">
+      {/* Background Image Overlay */}
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src="/assets/gallery/event-63.jpg" 
+          alt="Footer background" 
+          fill 
+          className="object-cover opacity-10 grayscale"
+        />
+        <div className="absolute inset-0 bg-primary/90 mix-blend-multiply" />
+      </div>
+
+      <div className="container relative z-10 py-20 md:py-24">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="font-serif text-xl font-bold">
-              Miss Wanjey<span className="text-accent">.</span>
+              Wanjey Events<span className="text-accent">.</span>
             </h3>
             <p className="mt-5 max-w-xs text-sm leading-[1.7] opacity-50">
               Strategic events management and brand marketing that elevate your business in Kenya and beyond.
@@ -111,7 +123,7 @@ const Footer = () => {
         <div className="mt-16 h-px w-full bg-primary-foreground/10" />
         <div className="pt-8 text-center">
           <p className="text-xs opacity-30">
-            © {new Date().getFullYear()} Miss Wanjey Events & Marketing. All rights reserved.
+            © {new Date().getFullYear()} Wanjey Events & Marketing. All rights reserved.
           </p>
         </div>
       </div>

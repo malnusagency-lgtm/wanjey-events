@@ -8,9 +8,9 @@ import { Check, Star } from "lucide-react";
 export const metadata: Metadata = {
   title: "Packages",
   description:
-    "Choose an event and marketing package from Miss Wanjey — Essential, Professional, Premium Corporate, or a fully custom solution for your brand.",
+    "Choose an event and marketing package from Wanjey Events — Essential, Professional, Premium Corporate, or a fully custom solution for your brand.",
   openGraph: {
-    title: "Packages — Miss Wanjey Events & Marketing",
+    title: "Packages — Wanjey Events & Marketing",
     description: "Event and marketing packages for every scale — from SME launches to large corporate events.",
     url: "https://misswanjey.co.ke/packages",
   },

@@ -15,9 +15,9 @@ import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, S
 export const metadata: Metadata = {
   title: "Strategic Events & Marketing That Elevate Your Brand",
   description:
-    "Miss Wanjey Events & Marketing — corporate events, brand activations, and digital marketing in Nairobi, Kenya. Book a consultation today.",
+    "Wanjey Events & Marketing — corporate events, brand activations, and digital marketing in Nairobi, Kenya. Book a consultation today.",
   openGraph: {
-    title: "Miss Wanjey Events & Marketing",
+    title: "Wanjey Events & Marketing",
     description: "Premium event management and brand marketing in Kenya.",
     url: "https://misswanjey.co.ke",
   },
@@ -55,7 +55,7 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <AnimatedSection delay={0.1}>
               <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent">
-                Miss Wanjey Events & Marketing
+                Wanjey Events & Marketing
               </p>
             </AnimatedSection>
             
@@ -184,9 +184,9 @@ export default function HomePage() {
             src="/assets/gallery/event-69.jpg" 
             alt="Event success" 
             fill 
-            className="object-cover opacity-20 grayscale"
+            className="object-cover opacity-50"
           />
-          <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-primary/60 mix-blend-multiply" />
         </div>
 
         <div className="container relative z-10 text-center">

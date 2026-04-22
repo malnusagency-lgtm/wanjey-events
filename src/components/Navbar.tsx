@@ -38,7 +38,7 @@ const Navbar = () => {
         scrolled ? "h-14" : "h-16 md:h-20"
       }`}>
         <Link href="/" className="font-serif text-xl font-bold tracking-tight md:text-2xl">
-          Miss Wanjey<span className="text-accent">.</span>
+          Wanjey Events<span className="text-accent">.</span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -75,7 +75,7 @@ const Navbar = () => {
           </SheetTrigger>
           <SheetContent side="right" className="w-72 border-l-border/30">
             <SheetTitle className="font-serif text-lg">
-              Miss Wanjey<span className="text-accent">.</span>
+              Wanjey Events<span className="text-accent">.</span>
             </SheetTitle>
             <nav className="mt-10 flex flex-col gap-0.5">
               {navLinks.map((link) => (

@@ -48,8 +48,21 @@ function useCountdown(target: Date) {
 
 const UpcomingEventSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const countdown = useCountdown(EVENT_DATE);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isModalOpen) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch(() => {
+          // Ignore autoplay errors
+        });
+      }
+    }
+  }, [isModalOpen]);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -65,6 +78,7 @@ const UpcomingEventSection = () => {
           style={{ y, top: "-10%" }}
         >
           <video
+            ref={videoRef}
             src="/assets/bigvoices/bv-vid-1.mp4"
             autoPlay
             muted

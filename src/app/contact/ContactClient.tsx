@@ -23,7 +23,7 @@ const WHATSAPP_NUMBER = "254790381039";
 
 function buildWhatsAppUrl(data: FormData): string {
   const lines = [
-    `Hi Miss Wanjey! 👋`,
+    `Hi Wanjey Events! 👋`,
     ``,
     `*Name:* ${data.name}`,
     data.company ? `*Company:* ${data.company}` : null,

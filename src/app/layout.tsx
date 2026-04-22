@@ -28,15 +28,15 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL("https://misswanjey.co.ke"),
   title: {
-    default: "Miss Wanjey Events & Marketing — Nairobi, Kenya",
-    template: "%s | Miss Wanjey Events & Marketing",
+    default: "Wanjey Events & Marketing — Nairobi, Kenya",
+    template: "%s | Wanjey Events & Marketing",
   },
   description:
     "Premium corporate events management and brand marketing agency based in Nairobi, Kenya. We plan, execute, and amplify impactful events that drive visibility and growth.",
-  keywords: ["events management Kenya", "corporate events Nairobi", "brand activations", "digital marketing Kenya", "Miss Wanjey"],
+  keywords: ["events management Kenya", "corporate events Nairobi", "brand activations", "digital marketing Kenya", "Wanjey Events"],
   openGraph: {
     type: "website",
-    siteName: "Miss Wanjey Events & Marketing",
+    siteName: "Wanjey Events & Marketing",
     locale: "en_KE",
   },
   twitter: {

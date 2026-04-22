@@ -11,7 +11,7 @@ export default function HeroBackground() {
     >
       <Image
         src="/assets/hero-bg.jpg"
-        alt="Miss Wanjey Events hero"
+        alt="Wanjey Events hero"
         fill
         className="object-cover object-top"
         priority

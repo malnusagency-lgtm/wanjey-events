@@ -11,9 +11,9 @@ import { Calendar, Megaphone, BarChart3, Zap, ArrowRight, Star } from "lucide-re
 export const metadata: Metadata = {
   title: "Our Services",
   description:
-    "Miss Wanjey Events & Marketing offers corporate events, brand activations, digital marketing, and event amplification in Nairobi, Kenya.",
+    "Wanjey Events & Marketing offers corporate events, brand activations, digital marketing, and event amplification in Nairobi, Kenya.",
   openGraph: {
-    title: "Services — Miss Wanjey Events & Marketing",
+    title: "Services — Wanjey Events & Marketing",
     description: "Corporate events, brand activations, digital marketing, and event amplification in Kenya.",
     url: "https://misswanjey.co.ke/services",
   },
@@ -50,7 +50,7 @@ const testimonials = [
   { name: "Sarah Kimani", company: "TechVentures Kenya", quote: "Their attention to detail and creative vision exceeded every expectation we had." },
   { name: "James Odhiambo", company: "Capital Finance Group", quote: "Professional, strategic, and incredibly organized. Highly recommended." },
   { name: "Amina Hassan", company: "Bloom Lifestyle Brand", quote: "The brand activation campaign generated incredible engagement." },
-  { name: "David Mwangi", company: "Savannah Holdings", quote: "Miss Wanjey stands out for their strategic approach and reliable execution." },
+  { name: "David Mwangi", company: "Savannah Holdings", quote: "Wanjey Events stands out for their strategic approach and reliable execution." },
 ];
 
 export default function ServicesPage() {
