@@ -10,6 +10,7 @@ import AmbientGlow from "@/components/AmbientGlow";
 import MagneticButton from "@/components/MagneticButton";
 import HeroBackground from "@/components/HeroBackground";
 import UpcomingEventSection from "@/components/UpcomingEventSection";
+import ServicesMarquee from "@/components/ServicesMarquee";
 import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -123,19 +124,7 @@ export default function HomePage() {
             </p>
           </AnimatedSection>
 
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {services.map((s, i) => (
-              <AnimatedSection key={s.title} delay={i * 0.08}>
-                <div className="premium-card group bg-accent/5 backdrop-blur-md border border-accent/10 hover:bg-accent/10 hover:border-accent/20 transition-all duration-500 rounded-2xl relative overflow-hidden flex flex-col h-full p-8">
-                  <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/8 border border-accent/20 transition-transform duration-500 group-hover:scale-110">
-                    <s.icon className="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 className="relative z-10 mt-6 font-serif text-xl font-bold tracking-wide transition-colors duration-300">{s.title}</h3>
-                  <p className="relative z-10 mt-3 text-[15px] leading-[1.7] text-muted-foreground font-medium">{s.desc}</p>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
+          <ServicesMarquee />
         </div>
       </section>
 
