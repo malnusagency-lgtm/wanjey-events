@@ -166,17 +166,13 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="relative bg-primary py-24 md:py-32 overflow-hidden">
-        {/* Background Image for CTA */}
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/assets/lets-build.jpg" 
-            alt="Let's build together" 
-            fill 
-            className="object-cover opacity-60"
-          />
-          <div className="absolute inset-0 bg-[#FFF5F0]/80" />
-        </div>
+      <section className="relative py-24 md:py-32 overflow-hidden">
+        {/* Background Image for CTA - Fixed position */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-fixed opacity-100"
+          style={{ backgroundImage: 'url("/assets/lets-build.jpg")' }}
+        />
+        <div className="absolute inset-0 z-[1] bg-white/20" />
 
         <div className="container relative z-10 text-center">
           <AnimatedSection delay={0.1}>
