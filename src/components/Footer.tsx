@@ -43,8 +43,8 @@ const Footer = () => {
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/assets/gallery/event-63.jpg" 
-          alt="Footer background" 
+          src="/assets/gallery/event-12.jpg" 
+          alt="Elegant decor setup" 
           fill 
           className="object-cover opacity-50 grayscale"
         />
