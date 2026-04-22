@@ -26,8 +26,15 @@ export default function HeroBackground() {
           quality={90}
         />
       </motion.div>
-      {/* Cinematic gradient vignette overlay with peach tint */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#FFF5F0]/40 to-background/90" />
+      {/* Cinematic gradient vignette overlay with deep edge containment */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-background/40 to-background" />
+      
+      {/* Top and Bottom shadow protection for header/footer overlap */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
+      
+      {/* Deep inner shadow */}
+      <div className="absolute inset-0 shadow-[inset_0_0_200px_rgba(0,0,0,0.5)] pointer-events-none" />
     </div>
   );
 }

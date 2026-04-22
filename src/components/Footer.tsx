@@ -1,5 +1,7 @@
+'use client';
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -38,15 +40,26 @@ const socialLinks = [
 ];
 
 const Footer = () => {
+  const pathname = usePathname();
+  
+  // Dynamic background mapping
+  const bgImage = pathname === '/about' 
+    ? '/assets/gallery/event-68.jpg' 
+    : pathname === '/services' 
+    ? '/assets/gallery/event-69.jpg' 
+    : pathname === '/contact' 
+    ? '/assets/gallery/event-70.jpg' 
+    : '/assets/gallery/event-29.jpg';
+
   return (
     <footer className="relative border-t border-border bg-white/20 text-foreground overflow-hidden">
-      {/* Background Image Overlay */}
+      {/* Background Image Overlay - Dynamic based on page */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/assets/gallery/event-29.jpg" 
+          src={bgImage} 
           alt="Elegant decor setup" 
           fill 
-          className="object-cover opacity-60"
+          className="object-cover opacity-60 transition-opacity duration-700"
         />
         <div className="absolute inset-0 bg-[#FFF5F0]/90" />
       </div>
