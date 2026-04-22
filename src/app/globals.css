@@ -72,7 +72,7 @@
   }
 
   html, body {
-    background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F0 50%, #FFEFD5 100%) fixed !important;
+    background: linear-gradient(180deg, #FFEFD5 0%, #FFF5F0 40%, #FFFFFF 100%) fixed !important;
   }
 
   body {
