@@ -62,18 +62,18 @@ const Footer = () => {
           fill 
           className="object-cover opacity-100 transition-opacity duration-700"
         />
-        {/* Balanced light overlay to ensure dark text is readable without hiding the image */}
-        <div className="absolute inset-0 bg-[#FFF5F0]/60" />
+        {/* Dark overlay to ensure white text is perfectly readable while maintaining image punchiness */}
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      <div className="container relative z-10 py-20 md:py-24">
+      <div className="container relative z-10 py-20 md:py-24 text-white">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <h3 className="font-serif text-xl font-bold">
+            <h3 className="font-serif text-xl font-bold text-white">
               Wanjey Events<span className="text-accent">.</span>
             </h3>
-            <p className="mt-5 max-w-xs text-sm leading-[1.7] text-foreground/70">
+            <p className="mt-5 max-w-xs text-sm leading-[1.7] text-white/80 font-medium">
               Strategic events management and brand marketing that elevate your business in Kenya and beyond.
             </p>
             <div className="mt-8 flex gap-3">
@@ -84,7 +84,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 transition-all duration-300 hover:bg-accent/20 hover:scale-105"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 text-white transition-all duration-300 hover:bg-accent/40 hover:scale-105"
                 >
                   <Icon className="h-5 w-5" />
                 </a>
@@ -94,13 +94,13 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-[11px] font-medium uppercase tracking-[0.2em] text-accent">Quick Links</h4>
+            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] text-accent">Quick Links</h4>
             <nav className="mt-6 flex flex-col gap-3">
               {["About", "Services", "Packages", "Gallery", "Contact"].map((label) => (
                 <Link
                   key={label}
                   href={`/${label.toLowerCase()}`}
-                  className="text-sm text-foreground/70 transition-colors duration-300 hover:text-accent"
+                  className="text-sm text-white/80 font-medium transition-colors duration-300 hover:text-accent"
                 >
                   {label}
                 </Link>
@@ -110,34 +110,34 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="text-[11px] font-medium uppercase tracking-[0.2em] text-accent">Services</h4>
+            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] text-accent">Services</h4>
             <ul className="mt-6 flex flex-col gap-3">
               {["Corporate Events", "Brand Activations", "Digital Marketing", "Event Amplification"].map((s) => (
-                <li key={s} className="text-sm text-foreground/70">{s}</li>
+                <li key={s} className="text-sm text-white/80 font-medium">{s}</li>
               ))}
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="text-[11px] font-medium uppercase tracking-[0.2em] text-accent">Contact</h4>
+            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] text-accent">Contact</h4>
             <ul className="mt-6 flex flex-col gap-4">
-              <li className="flex items-center gap-3 text-sm text-foreground/70">
+              <li className="flex items-center gap-3 text-sm text-white/80 font-medium">
                 <MapPin className="h-4 w-4 shrink-0 text-accent" /> Nairobi, Kenya
               </li>
-              <li className="flex items-center gap-3 text-sm text-foreground/70">
+              <li className="flex items-center gap-3 text-sm text-white/80 font-medium">
                 <Phone className="h-4 w-4 shrink-0 text-accent" /> +254 790 381039
               </li>
-              <li className="flex items-center gap-3 text-sm text-foreground/70">
+              <li className="flex items-center gap-3 text-sm text-white/80 font-medium">
                 <Mail className="h-4 w-4 shrink-0 text-accent" /> hello@misswanjey.co.ke
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-16 h-px w-full bg-foreground/10" />
+        <div className="mt-16 h-px w-full bg-white/20" />
         <div className="pt-8 text-center">
-          <p className="text-xs text-foreground/40">
+          <p className="text-xs text-white/60 font-medium">
             © {new Date().getFullYear()} Wanjey Events & Marketing. All rights reserved.
           </p>
         </div>
