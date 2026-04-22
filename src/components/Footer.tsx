@@ -62,7 +62,8 @@ const Footer = () => {
           fill 
           className="object-cover opacity-100 transition-opacity duration-700"
         />
-        {/* Removed overlay to maximize image vibrancy as requested */}
+        {/* Balanced light overlay to ensure dark text is readable without hiding the image */}
+        <div className="absolute inset-0 bg-[#FFF5F0]/60" />
       </div>
 
       <div className="container relative z-10 py-20 md:py-24">
