@@ -170,8 +170,8 @@ export default function HomePage() {
         {/* Background Image for CTA */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/assets/gallery/event-70.jpg" 
-            alt="Premium decor setup" 
+            src="/assets/lets-build.jpg" 
+            alt="Let's build together" 
             fill 
             className="object-cover opacity-60"
           />

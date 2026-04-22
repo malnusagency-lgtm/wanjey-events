@@ -42,22 +42,23 @@ const socialLinks = [
 const Footer = () => {
   const pathname = usePathname();
   
-  // Dynamic background mapping
-  const bgImage = pathname === '/about' 
-    ? '/assets/gallery/event-68.jpg' 
-    : pathname === '/services' 
-    ? '/assets/gallery/event-69.jpg' 
-    : pathname === '/contact' 
-    ? '/assets/gallery/event-70.jpg' 
-    : '/assets/gallery/event-29.jpg';
+  // Strict alternation mapping for 6 pages
+  const bgImage = 
+    pathname === '/' || pathname === '/packages'
+      ? '/assets/footer.jpg'
+      : pathname === '/about' || pathname === '/gallery'
+      ? '/assets/footer1.jpg'
+      : pathname === '/services' || pathname === '/contact'
+      ? '/assets/footer2.jpg'
+      : '/assets/footer.jpg'; // Default
 
   return (
     <footer className="relative border-t border-border bg-white/20 text-foreground overflow-hidden">
-      {/* Background Image Overlay - Dynamic based on page */}
+      {/* Background Image Overlay - Strict alternation */}
       <div className="absolute inset-0 z-0">
         <Image 
           src={bgImage} 
-          alt="Elegant decor setup" 
+          alt="Elegant event background" 
           fill 
           className="object-cover opacity-60 transition-opacity duration-700"
         />
