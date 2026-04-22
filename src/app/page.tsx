@@ -181,12 +181,12 @@ export default function HomePage() {
         {/* Background Image for CTA */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/assets/gallery/event-29.jpg" 
+            src="/assets/gallery/event-27.jpg" 
             alt="Premium decor setup" 
             fill 
-            className="object-cover opacity-50"
+            className="object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-primary/60 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
         </div>
 
         <div className="container relative z-10 text-center">

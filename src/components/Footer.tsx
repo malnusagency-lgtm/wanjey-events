@@ -46,9 +46,9 @@ const Footer = () => {
           src="/assets/gallery/event-12.jpg" 
           alt="Elegant decor setup" 
           fill 
-          className="object-cover opacity-50 grayscale"
+          className="object-cover opacity-40"
         />
-        <div className="absolute inset-0 bg-primary/50 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
       </div>
 
       <div className="container relative z-10 py-20 md:py-24">
