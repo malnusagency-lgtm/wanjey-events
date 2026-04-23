@@ -54,11 +54,7 @@ export default function HomePage() {
         <HeroBackground />
         <div className="container relative z-10 py-24 md:py-32">
           <div className="max-w-2xl">
-            <AnimatedSection delay={0.1}>
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent">
-                Wanjey Events & Marketing
-              </p>
-            </AnimatedSection>
+
             
             <AnimatedSection delay={0.25}>
               <h1 className="mt-6 font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]">

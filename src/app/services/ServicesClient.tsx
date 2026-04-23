@@ -1,4 +1,6 @@
 'use client';
+import { useScroll, useTransform, motion } from "framer-motion";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -42,6 +44,54 @@ const testimonials = [
   { name: "David Mwangi", company: "Savannah Holdings", quote: "Wanjey Events stands out for their strategic approach and reliable execution." },
 ];
 
+const ParallaxCard = ({ s, i }: { s: typeof sections[0], i: number }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+
+  return (
+    <AnimatedSection key={s.title} delay={i * 0.08}>
+      <div 
+        ref={containerRef}
+        className="glass-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full min-h-[420px]"
+      >
+        <div className="relative h-72 w-full md:h-auto md:w-1/2 overflow-hidden">
+          <motion.div 
+            style={{ y }}
+            className="absolute inset-[-30%] bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
+          >
+            <div 
+              className="h-full w-full bg-cover bg-center"
+              style={{ backgroundImage: `url("${s.image}")` }}
+            />
+          </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-transparent group-hover:bg-black/20 transition-colors duration-500 z-10" />
+        </div>
+        <div className="p-10 md:w-1/2 flex flex-col justify-center">
+          <div className="flex items-center gap-4">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 border border-accent/20">
+              <s.icon className="h-5 w-5 text-accent" />
+            </div>
+            <h3 className="font-serif text-xl font-bold tracking-wide">{s.title}</h3>
+          </div>
+          <ul className="mt-6 space-y-3">
+            {s.items.map((item) => (
+              <li key={item} className="flex items-center gap-3 text-[15px] text-muted-foreground font-medium">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/60" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+};
+
 export default function ServicesClient() {
   return (
     <PageTransition>
@@ -49,54 +99,24 @@ export default function ServicesClient() {
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center">
-            <p className="section-label font-bold">Our Services</p>
+            <p className="section-label font-bold text-accent">Our Services</p>
             <h1 className="section-heading font-bold">What We Offer</h1>
-            <p className="section-subtext font-medium">
+            <p className="section-subtext font-medium text-muted-foreground/80">
               End-to-end event management and marketing solutions tailored for corporate excellence.
             </p>
           </AnimatedSection>
 
-          <div className="mt-8 md:mt-16 grid gap-6 md:grid-cols-2">
+          <div className="mt-8 md:mt-16 grid gap-8 md:grid-cols-2">
             {sections.map((s, i) => (
-              <AnimatedSection key={s.title} delay={i * 0.08}>
-                <div className="glass-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full min-h-[400px]">
-                  <div className="relative h-64 w-full md:h-auto md:w-1/2 overflow-hidden" style={{ clipPath: 'inset(0)' }}>
-                    <div 
-                      className="fixed inset-0 bg-cover bg-center bg-no-repeat w-full h-full"
-                      style={{ 
-                        backgroundImage: `url("${s.image}")`,
-                        transform: 'translateZ(0)',
-                        willChange: 'transform'
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500 z-10" />
-                  </div>
-                  <div className="p-10 md:w-1/2 flex flex-col justify-center">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 border border-accent/20">
-                        <s.icon className="h-5 w-5 text-accent" />
-                      </div>
-                      <h3 className="font-serif text-xl font-bold tracking-wide">{s.title}</h3>
-                    </div>
-                    <ul className="mt-6 space-y-3">
-                      {s.items.map((item) => (
-                        <li key={item} className="flex items-center gap-3 text-[15px] text-muted-foreground font-medium">
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/60" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </AnimatedSection>
+              <ParallaxCard key={s.title} s={s} i={i} />
             ))}
           </div>
 
-          <AnimatedSection className="mt-12 text-center">
+          <AnimatedSection className="mt-16 text-center">
             <Link href="/contact">
-              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 h-14 text-[15px] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-accent/20">
+              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-12 h-16 text-[16px] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-accent/20 rounded-full">
                 Request a Custom Proposal
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </AnimatedSection>
