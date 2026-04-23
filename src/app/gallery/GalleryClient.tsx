@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, X, LayoutGrid, View as CarouselIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, LayoutGrid, View as CarouselIcon, Columns3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
 
@@ -79,15 +79,17 @@ const images = [
   { src: "/assets/gallery/event-70.jpg", alt: "Party event highlight" },
 ];
 
-const aspectRatios = ["aspect-[4/3]", "aspect-[3/4]", "aspect-[4/3]", "aspect-square", "aspect-[3/4]", "aspect-[4/3]"];
+// Masonry height patterns for visual variety
+const masonryHeights = ["h-48", "h-64", "h-56", "h-72", "h-52", "h-60", "h-80", "h-48", "h-68", "h-56"];
 const ITEMS_PER_PAGE = 12;
 
 export default function GalleryClient() {
-  const [viewMode, setViewMode] = useState<'grid' | 'carousel'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'masonry' | 'carousel'>('masonry');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
   
   // Carousel specific state
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -114,6 +116,20 @@ export default function GalleryClient() {
     setSelectedIndex((prev) => (prev! - 1 + images.length) % images.length);
   }, [selectedIndex]);
 
+  // Touch swipe support for lightbox
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const diff = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goNext();
+      else goPrev();
+    }
+    setTouchStart(null);
+  };
+
   // Keyboard nav + body lock
   useEffect(() => {
     if (selectedIndex === null) return;
@@ -136,87 +152,82 @@ export default function GalleryClient() {
     return () => clearTimeout(t);
   }, [selectedIndex]);
 
-  const slideVariants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 80 : -80, opacity: 0, scale: 0.95 }),
-    center: { x: 0, opacity: 1, scale: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? -80 : 80, opacity: 0, scale: 0.95 }),
-  };
-
   const carouselNext = () => setCarouselIndex((prev) => (prev + 1) % images.length);
   const carouselPrev = () => setCarouselIndex((prev) => (prev - 1 + images.length) % images.length);
 
+  const viewOptions = [
+    { key: 'masonry' as const, icon: Columns3, label: 'Masonry' },
+    { key: 'grid' as const, icon: LayoutGrid, label: 'Grid' },
+    { key: 'carousel' as const, icon: CarouselIcon, label: 'Carousel' },
+  ];
+
   return (
     <>
-      <section className="py-24 md:py-32">
+      <section className="py-12 md:py-16">
         <div className="container">
           <AnimatedSection className="text-center">
             <p className="section-label">Gallery</p>
             <h1 className="section-heading">Event Highlights</h1>
             <p className="section-subtext">
-              Discover different ways to explore our impactful events and stunning setups.
+              Discover our impactful events and stunning setups.
             </p>
           </AnimatedSection>
 
           {/* View Toggle */}
-          <div className="mt-12 flex justify-center gap-4">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-300 ${
-                viewMode === 'grid' 
-                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20" 
-                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              Grid View
-            </button>
-            <button
-              onClick={() => setViewMode('carousel')}
-              className={`flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-300 ${
-                viewMode === 'carousel' 
-                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20" 
-                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-              }`}
-            >
-              <CarouselIcon className="h-4 w-4" />
-              Carousel View
-            </button>
+          <div className="mt-10 flex justify-center gap-3">
+            {viewOptions.map(({ key, icon: Icon, label }) => (
+              <button
+                key={key}
+                onClick={() => setViewMode(key)}
+                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300 ${
+                  viewMode === key 
+                  ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20" 
+                  : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </button>
+            ))}
           </div>
 
-          <div className="mt-16">
+          <div className="mt-10">
             <AnimatePresence mode="wait">
-              {viewMode === 'grid' ? (
+              {/* === MASONRY VIEW === */}
+              {viewMode === 'masonry' && (
                 <motion.div
-                  key="grid"
+                  key="masonry"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="columns-2 gap-2 sm:gap-3 lg:columns-3 xl:columns-4">
+                  <div className="columns-2 gap-3 sm:columns-3 lg:columns-4 xl:columns-5">
                     {visible.map((img, i) => (
                       <motion.div
                         key={img.src}
-                        layout
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.35, delay: i * 0.02 }}
-                        className="mb-2 sm:mb-3 break-inside-avoid"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: i * 0.02 }}
+                        className="mb-3 break-inside-avoid"
                       >
                         <div
-                          className="group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl"
+                          className="group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500"
                           onClick={() => openLightbox(i)}
                         >
-                          <div className={`relative ${aspectRatios[i % aspectRatios.length]}`}>
+                          <div className={`relative ${masonryHeights[i % masonryHeights.length]} sm:${masonryHeights[(i + 3) % masonryHeights.length]}`}>
                             <Image
                               src={img.src}
                               alt={img.alt}
                               fill
-                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                               loading="lazy"
                             />
-                            <div className="absolute inset-0 bg-primary/0 transition-all duration-500 group-hover:bg-primary/20" />
+                            {/* Hover overlay with title */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                              <p className="text-white text-xs font-medium truncate">{img.alt}</p>
+                            </div>
                           </div>
                         </div>
                       </motion.div>
@@ -224,7 +235,7 @@ export default function GalleryClient() {
                   </div>
 
                   {hasMore && (
-                    <AnimatedSection className="mt-12 text-center">
+                    <AnimatedSection className="mt-10 text-center">
                       <Button
                         variant="outline"
                         size="lg"
@@ -236,7 +247,64 @@ export default function GalleryClient() {
                     </AnimatedSection>
                   )}
                 </motion.div>
-              ) : (
+              )}
+
+              {/* === GRID VIEW === */}
+              {viewMode === 'grid' && (
+                <motion.div
+                  key="grid"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    {visible.map((img, i) => (
+                      <motion.div
+                        key={img.src}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.35, delay: i * 0.02 }}
+                      >
+                        <div
+                          className="group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500"
+                          onClick={() => openLightbox(i)}
+                        >
+                          <div className="relative aspect-square">
+                            <Image
+                              src={img.src}
+                              alt={img.alt}
+                              fill
+                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-3">
+                              <p className="text-white text-xs font-medium truncate">{img.alt}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {hasMore && (
+                    <AnimatedSection className="mt-10 text-center">
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                        className="font-sans px-10"
+                      >
+                        View More ({images.length - visibleCount} remaining)
+                      </Button>
+                    </AnimatedSection>
+                  )}
+                </motion.div>
+              )}
+
+              {/* === CAROUSEL VIEW === */}
+              {viewMode === 'carousel' && (
                 <motion.div
                   key="carousel"
                   initial={{ opacity: 0, y: 20 }}
@@ -245,7 +313,7 @@ export default function GalleryClient() {
                   transition={{ duration: 0.5 }}
                   className="relative mx-auto max-w-5xl"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-black/5">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-black/5 shadow-2xl">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={carouselIndex}
@@ -266,32 +334,42 @@ export default function GalleryClient() {
                       </motion.div>
                     </AnimatePresence>
 
+                    {/* Counter badge */}
+                    <div className="absolute top-4 right-4 z-10 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-xs font-bold text-white">
+                      {carouselIndex + 1} / {images.length}
+                    </div>
+
+                    {/* Caption */}
+                    <div className="absolute bottom-4 left-4 z-10">
+                      <p className="text-white text-sm font-medium drop-shadow-lg">{images[carouselIndex].alt}</p>
+                    </div>
+
                     {/* Navigation */}
                     <button
                       onClick={carouselPrev}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/20"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/20 z-10"
                     >
                       <ChevronLeft className="h-6 w-6" />
                     </button>
                     <button
                       onClick={carouselNext}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/20"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/20 z-10"
                     >
                       <ChevronRight className="h-6 w-6" />
                     </button>
                   </div>
                   
                   {/* Thumbnails below carousel */}
-                  <div className="mt-6 flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
+                  <div className="mt-4 flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
                     {images.map((img, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCarouselIndex(idx)}
-                        className={`relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                          carouselIndex === idx ? 'border-accent scale-105' : 'border-transparent opacity-50 hover:opacity-100'
+                        className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                          carouselIndex === idx ? 'border-accent scale-105 shadow-lg' : 'border-transparent opacity-50 hover:opacity-100'
                         }`}
                       >
-                        <Image src={img.src} alt="thumb" fill className="object-cover" />
+                        <Image src={img.src} alt="thumb" fill className="object-cover" loading="lazy" />
                       </button>
                     ))}
                   </div>
@@ -302,22 +380,46 @@ export default function GalleryClient() {
         </div>
       </section>
 
-      {/* Lightbox remains for grid view */}
+      {/* Premium Lightbox */}
       <AnimatePresence>
         {selectedIndex !== null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-primary/90 backdrop-blur-md"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md"
             onClick={closeLightbox}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
-            <button onClick={closeLightbox} className="absolute right-4 top-12 sm:top-4 z-10 p-3 text-white"><X className="h-6 w-6" /></button>
-            
-            <button onClick={(e) => { e.stopPropagation(); goPrev(); }} className="absolute left-6 top-1/2 -translate-y-1/2 p-3 text-white hidden md:block"><ChevronLeft className="h-8 w-8" /></button>
-            <button onClick={(e) => { e.stopPropagation(); goNext(); }} className="absolute right-6 top-1/2 -translate-y-1/2 p-3 text-white hidden md:block"><ChevronRight className="h-8 w-8" /></button>
+            {/* Close button */}
+            <button onClick={closeLightbox} className="absolute right-4 top-12 sm:top-4 z-10 p-3 text-white/80 hover:text-white transition-colors">
+              <X className="h-7 w-7" />
+            </button>
 
-            <motion.div className="relative max-h-[80vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
+            {/* Image counter */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 rounded-full bg-white/10 backdrop-blur-md px-4 py-1.5 text-sm font-bold text-white">
+              {selectedIndex + 1} / {images.length}
+            </div>
+            
+            {/* Navigation buttons */}
+            <button onClick={(e) => { e.stopPropagation(); goPrev(); }} className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/70 hover:text-white transition-colors hidden md:flex h-14 w-14 items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-sm">
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); goNext(); }} className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/70 hover:text-white transition-colors hidden md:flex h-14 w-14 items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-sm">
+              <ChevronRight className="h-8 w-8" />
+            </button>
+
+            {/* Main image */}
+            <motion.div
+              key={selectedIndex}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="relative max-h-[80vh] max-w-[90vw]"
+              onClick={(e) => e.stopPropagation()}
+            >
               <Image
                 src={images[selectedIndex].src}
                 alt={images[selectedIndex].alt}
@@ -326,7 +428,25 @@ export default function GalleryClient() {
                 className="max-h-[80vh] rounded-xl object-contain"
                 priority
               />
+              {/* Caption */}
+              <p className="absolute bottom-4 left-0 right-0 text-center text-sm text-white/80 font-medium drop-shadow-lg">
+                {images[selectedIndex].alt}
+              </p>
             </motion.div>
+
+            {/* Swipe hint on mobile */}
+            <AnimatePresence>
+              {showSwipeHint && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/10 backdrop-blur-md px-4 py-2 text-xs text-white md:hidden"
+                >
+                  ← Swipe to navigate →
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

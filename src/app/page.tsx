@@ -113,7 +113,7 @@ export default function HomePage() {
       </section>
 
       {/* What We Do */}
-      <section className="relative py-24 overflow-hidden md:py-32">
+      <section className="relative py-16 overflow-hidden md:py-20">
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center">
@@ -135,7 +135,7 @@ export default function HomePage() {
       <UpcomingEventSection />
 
       {/* Why Choose Us */}
-      <section className="py-24 md:py-32">
+      <section className="py-16 md:py-20">
         <div className="container">
           <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
             <div>
@@ -166,7 +166,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="relative py-24 md:py-32 overflow-hidden w-full">
+      <section className="relative py-16 md:py-20 overflow-hidden w-full">
         {/* Background Image for CTA - Fixed position stabilized */}
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-100 w-full"

@@ -43,7 +43,7 @@ const packages = [
 export default function PackagesPage() {
   return (
     <PageTransition>
-      <section className="py-24 md:py-32">
+      <section className="py-12 md:py-16">
         <div className="container">
           <AnimatedSection className="text-center">
             <p className="section-label">Packages</p>

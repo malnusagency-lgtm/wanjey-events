@@ -84,32 +84,32 @@ export default function AboutPage() {
           <div className="mt-10 grid gap-6 md:grid-cols-2 max-w-3xl mx-auto">
             {/* Wanjey Events Card */}
             <AnimatedSection delay={0.08}>
-              <div className="premium-card group p-8 h-full flex flex-col bg-accent/[0.03] border-accent/20">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 mb-5">
+              <div className="glass-card group p-8 h-full flex flex-col">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 border border-accent/30 mb-5 shadow-lg shadow-accent/10">
                   <Award className="h-6 w-6 text-accent" />
                 </div>
                 <h3 className="font-serif text-xl font-bold">Miss Wanjey Digital Consultant</h3>
                 <p className="mt-3 flex-1 text-sm leading-[1.7] text-muted-foreground">
                   Premium corporate events management, brand activations, and strategic digital marketing for businesses that want to stand out.
                 </p>
-                <Link href="/services" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline">
-                  Explore Our Services <ArrowRight className="h-4 w-4" />
-                </Link>
+                <a href="https://www.instagram.com/miss_wanjey_digital_consultant?igsh=MTA0Zmp3bmJqOXpkYw==" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline transition-colors">
+                  Follow on Instagram <ExternalLink className="h-4 w-4" />
+                </a>
               </div>
             </AnimatedSection>
 
             {/* Toto Kingdom Card */}
             <AnimatedSection delay={0.16}>
-              <div className="premium-card group p-8 h-full flex flex-col">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 mb-5">
+              <div className="glass-card group p-8 h-full flex flex-col">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 border border-accent/30 mb-5 shadow-lg shadow-accent/10">
                   <Heart className="h-6 w-6 text-accent" />
                 </div>
                 <h3 className="font-serif text-xl font-bold">Toto Kingdom</h3>
                 <p className="mt-3 flex-1 text-sm leading-[1.7] text-muted-foreground">
                   A vibrant children&apos;s entertainment and events brand creating unforgettable experiences for kids — from themed parties to interactive play events.
                 </p>
-                <a href="https://totokingdom.co.ke" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline">
-                  Visit Toto Kingdom <ExternalLink className="h-4 w-4" />
+                <a href="https://www.instagram.com/toto_kingdom_systems_events?igsh=eXB6aTdsM3ZlYXZp" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline transition-colors">
+                  Follow on Instagram <ExternalLink className="h-4 w-4" />
                 </a>
               </div>
             </AnimatedSection>

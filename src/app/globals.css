@@ -134,6 +134,19 @@
   .premium-card {
     @apply rounded-2xl border-2 border-accent/20 bg-white transition-all duration-500 shadow-xl;
     @apply hover:border-accent/50 hover:shadow-[0_20px_50px_-12px_rgba(255,160,122,0.3)];
+    will-change: transform, box-shadow;
+  }
+
+  .glass-card {
+    @apply rounded-2xl border border-white/40 transition-all duration-500 shadow-2xl;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  .glass-card:hover {
+    @apply border-accent/40 shadow-[0_20px_60px_-12px_rgba(255,160,122,0.35)];
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
   }
 
   .gradient-separator {
