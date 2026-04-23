@@ -108,22 +108,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* What We Do - Horizontal Scroll Experience */}
-      <section className="relative pt-16 overflow-hidden md:pt-20">
+      {/* What We Do */}
+      <section className="relative py-16 overflow-hidden md:py-20">
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto mb-8 md:mb-16">
             <div className="glass-card p-6 md:p-16">
-              <p className="section-label font-bold">What We Do</p>
+              <p className="section-label font-bold text-accent">What We Do</p>
               <h2 className="section-heading font-bold">Comprehensive Event & Marketing Solutions</h2>
-              <p className="section-subtext font-medium">
+              <p className="section-subtext font-medium text-muted-foreground/80">
                 Professional event execution and strategic brand marketing solutions for businesses that want to stand out.
               </p>
             </div>
           </AnimatedSection>
-
+ 
+          <ServicesMarquee />
         </div>
-        <ServicesMarquee />
       </section>
 
       <ParallaxImageBreakout src="/assets/gallery/event-30.jpg" alt="Premium Event Setup" />
