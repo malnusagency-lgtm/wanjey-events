@@ -108,8 +108,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* What We Do */}
-      <section className="relative py-16 overflow-hidden md:py-20">
+      {/* What We Do - Horizontal Scroll Experience */}
+      <section className="relative pt-16 overflow-hidden md:pt-20">
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto mb-8 md:mb-16">
@@ -122,8 +122,8 @@ export default function HomePage() {
             </div>
           </AnimatedSection>
 
-          <ServicesMarquee />
         </div>
+        <ServicesMarquee />
       </section>
 
       <ParallaxImageBreakout src="/assets/gallery/event-30.jpg" alt="Premium Event Setup" />

@@ -32,7 +32,8 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [] }:
   const next = useCallback(() => setCurrentIndex((prev) => (prev + 1) % items.length), [items.length]);
   const prev = useCallback(() => setCurrentIndex((prev) => (prev - 1 + items.length) % items.length), [items.length]);
 
-  // Slideshow logic
+  // Slideshow logic removed as requested - users now control navigation manually
+  /* 
   useEffect(() => {
     if (!isOpen || !isPlaying) return;
     
@@ -42,6 +43,7 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [] }:
     
     return () => clearInterval(interval);
   }, [isOpen, isPlaying, next]);
+  */
 
   useEffect(() => {
     if (!isOpen) return;
