@@ -226,10 +226,8 @@ export default function GalleryClient() {
                               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                               loading="lazy"
                             />
-                            {/* Hover overlay with title */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
-                              <p className="text-white text-xs font-medium truncate">{img.alt}</p>
-                            </div>
+                            {/* Hover overlay - simplified for premium look */}
+                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           </div>
                         </div>
                       </motion.div>
@@ -239,10 +237,9 @@ export default function GalleryClient() {
                   {hasMore && (
                     <AnimatedSection className="mt-10 text-center">
                       <Button
-                        variant="outline"
                         size="lg"
                         onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
-                        className="font-sans px-10"
+                        className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 shadow-lg shadow-accent/20"
                       >
                         View More ({images.length - visibleCount} remaining)
                       </Button>
@@ -281,9 +278,7 @@ export default function GalleryClient() {
                               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                               loading="lazy"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-3">
-                              <p className="text-white text-xs font-medium truncate">{img.alt}</p>
-                            </div>
+                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           </div>
                         </div>
                       </motion.div>
@@ -293,10 +288,9 @@ export default function GalleryClient() {
                   {hasMore && (
                     <AnimatedSection className="mt-10 text-center">
                       <Button
-                        variant="outline"
                         size="lg"
                         onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
-                        className="font-sans px-10"
+                        className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 shadow-lg shadow-accent/20"
                       >
                         View More ({images.length - visibleCount} remaining)
                       </Button>
@@ -315,7 +309,7 @@ export default function GalleryClient() {
                   transition={{ duration: 0.5 }}
                   className="relative mx-auto max-w-5xl"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-black/5 shadow-2xl">
+                  <div className="relative aspect-[4/5] sm:aspect-[16/9] overflow-hidden rounded-2xl bg-black/5 shadow-2xl">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={carouselIndex}
@@ -332,18 +326,12 @@ export default function GalleryClient() {
                           className="object-cover"
                           priority
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                       </motion.div>
                     </AnimatePresence>
 
                     {/* Counter badge */}
                     <div className="absolute top-4 right-4 z-10 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-xs font-bold text-white">
                       {carouselIndex + 1} / {images.length}
-                    </div>
-
-                    {/* Caption */}
-                    <div className="absolute bottom-4 left-4 z-10">
-                      <p className="text-white text-sm font-medium drop-shadow-lg">{images[carouselIndex].alt}</p>
                     </div>
 
                     {/* Navigation */}
@@ -430,10 +418,6 @@ export default function GalleryClient() {
                 className="max-h-[80vh] rounded-xl object-contain"
                 priority
               />
-              {/* Caption */}
-              <p className="absolute bottom-4 left-0 right-0 text-center text-sm text-white/80 font-medium drop-shadow-lg">
-                {images[selectedIndex].alt}
-              </p>
             </motion.div>
 
             {/* Swipe hint on mobile */}

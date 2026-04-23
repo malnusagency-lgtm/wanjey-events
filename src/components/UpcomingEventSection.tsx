@@ -67,23 +67,23 @@ const UpcomingEventSection = () => {
         {/* Content Overlay */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
           <AnimatedSection delay={0.2}>
-            <h2 className="font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl">
+            <h2 className="font-serif text-3xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl">
               BIGVOICES <em className="italic font-light text-white">FEST</em>
             </h2>
           </AnimatedSection>
           
           <AnimatedSection delay={0.4}>
-            <p className="mt-4 font-sans text-lg font-black uppercase tracking-[0.2em] text-white sm:text-2xl drop-shadow-md">
+            <p className="mt-4 font-sans text-lg font-black uppercase tracking-[0.2em] text-white sm:text-2xl drop-shadow-md text-balance">
               Season 2: Millennial Edition
             </p>
           </AnimatedSection>
-
+ 
           {/* Bold 6th June Date — Changed to White */}
           <AnimatedSection delay={0.5}>
             <div className="mt-6 md:mt-10 flex flex-col items-center">
               <div className="h-px w-24 bg-white/40 mb-6" />
               <div className="flex flex-col items-center gap-2">
-                <span className="font-serif text-6xl font-black text-white sm:text-8xl md:text-[8.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
+                <span className="font-serif text-4xl font-black text-white sm:text-8xl md:text-[8.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
                   6TH JUNE
                 </span>
                 <span className="text-sm font-bold uppercase tracking-[0.6em] text-white sm:text-xl">SAVE THE DATE</span>

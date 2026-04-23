@@ -84,7 +84,7 @@ export default function HomePage() {
                 </Link>
                 <Link href="/packages">
                   <MagneticButton intensity={20}>
-                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground/70 text-primary-foreground bg-primary-foreground/5 hover:bg-primary-foreground/10 hover:border-primary-foreground font-bold px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" className="w-full sm:w-auto bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-transparent font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       View Our Packages
                     </Button>
                   </MagneticButton>
