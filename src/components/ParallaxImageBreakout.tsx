@@ -14,7 +14,9 @@ const ParallaxImageBreakout = ({ src, alt }: Props) => {
         style={{ 
           backgroundImage: `url("${src}")`,
           height: '100vh',
-          width: '100vw'
+          width: '100vw',
+          transform: 'translateZ(0)',
+          willChange: 'transform'
         }}
       />
       {/* Cinematic blend overlay */}

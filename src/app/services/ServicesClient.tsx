@@ -63,7 +63,11 @@ export default function ServicesClient() {
                   <div className="relative h-48 w-full md:h-auto md:w-2/5 overflow-hidden">
                     <div 
                       className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed w-full h-full"
-                      style={{ backgroundImage: `url("${s.image}")` }}
+                      style={{ 
+                        backgroundImage: `url("${s.image}")`,
+                        transform: 'translateZ(0)',
+                        willChange: 'transform'
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
                   </div>

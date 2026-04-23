@@ -8,7 +8,9 @@ export default function HeroBackground() {
         style={{ 
           backgroundImage: 'url("/assets/hero-bg.jpg")',
           height: '100vh',
-          width: '100vw'
+          width: '100vw',
+          transform: 'translateZ(0)',
+          willChange: 'transform'
         }}
       />
       {/* Balanced dark overlay to ensure light text is readable without hiding the image */}
