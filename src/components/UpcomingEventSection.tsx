@@ -42,7 +42,7 @@ const UpcomingEventSection = () => {
 
   return (
     <>
-      <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-black">
+      <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-black">
         {/* Dynamic Background — Videos only, smooth transitions */}
         <div className="absolute inset-0 z-0 h-full w-full">
           {bgVideos.map((item, idx) => (
@@ -80,7 +80,7 @@ const UpcomingEventSection = () => {
 
           {/* Bold 6th June Date — Changed to White */}
           <AnimatedSection delay={0.5}>
-            <div className="mt-10 flex flex-col items-center">
+            <div className="mt-6 md:mt-10 flex flex-col items-center">
               <div className="h-px w-24 bg-white/40 mb-6" />
               <div className="flex flex-col items-center gap-2">
                 <span className="font-serif text-6xl font-black text-white sm:text-8xl md:text-[8.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
@@ -93,7 +93,7 @@ const UpcomingEventSection = () => {
           </AnimatedSection>
 
           <AnimatedSection delay={0.6}>
-            <div className="mt-12 sm:mt-16">
+            <div className="mt-8 sm:mt-16">
               <MagneticButton intensity={40}>
                 <Button 
                   onClick={() => setIsModalOpen(true)}

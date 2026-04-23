@@ -61,14 +61,14 @@ export default function ContactClient() {
   ) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   return (
-    <section className="py-12 md:py-16">
+    <section className="py-8 md:py-16">
       <div className="container">
         <AnimatedSection className="text-center">
           <p className="section-label">Contact</p>
           <h1 className="section-heading">Let&apos;s Plan Your Next Event</h1>
         </AnimatedSection>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-3 lg:gap-16">
+        <div className="mt-8 md:mt-10 grid gap-12 lg:grid-cols-3 lg:gap-16">
           <AnimatedSection className="lg:col-span-2">
             {submitted ? (
               <div className="glass-card flex flex-col items-center p-16 text-center">

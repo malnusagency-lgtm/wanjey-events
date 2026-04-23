@@ -163,10 +163,10 @@ export default function GalleryClient() {
 
   return (
     <>
-      <section className="py-12 md:py-16">
+      <section className="py-8 md:py-16">
         <div className="container">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <div className="glass-card p-10 md:p-12">
+            <div className="glass-card p-6 md:p-12">
               <p className="section-label">Gallery</p>
               <h1 className="section-heading">Event Highlights</h1>
               <p className="section-subtext">
@@ -176,7 +176,7 @@ export default function GalleryClient() {
           </AnimatedSection>
 
           {/* View Toggle */}
-          <div className="mt-10 flex justify-center gap-3">
+          <div className="mt-6 md:mt-10 flex justify-center gap-3">
             {viewOptions.map(({ key, icon: Icon, label }) => (
               <button
                 key={key}
@@ -193,7 +193,7 @@ export default function GalleryClient() {
             ))}
           </div>
 
-          <div className="mt-10">
+          <div className="mt-6 md:mt-10">
             <AnimatePresence mode="wait">
               {/* === MASONRY VIEW === */}
               {viewMode === 'masonry' && (

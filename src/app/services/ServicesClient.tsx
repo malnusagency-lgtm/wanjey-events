@@ -56,7 +56,7 @@ export default function ServicesClient() {
             </p>
           </AnimatedSection>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-2">
+          <div className="mt-8 md:mt-16 grid gap-6 md:grid-cols-2">
             {sections.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 0.08}>
                 <div className="glass-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full">
@@ -102,9 +102,9 @@ export default function ServicesClient() {
       <InfiniteMarquee text="END-TO-END CORPORATE EXCELLENCE • STRATEGIC BRANDING • " />
 
       {/* Testimonials — Auto-scrolling Marquee */}
-      <section className="py-12 md:py-16 overflow-hidden">
+      <section className="py-8 md:py-16 overflow-hidden">
         <div className="container">
-          <AnimatedSection className="text-center mb-16">
+          <AnimatedSection className="text-center mb-8 md:mb-16">
             <p className="section-label">Testimonials</p>
             <h2 className="section-heading">Trusted by Leading Brands</h2>
           </AnimatedSection>

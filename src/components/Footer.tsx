@@ -66,7 +66,7 @@ const Footer = () => {
         <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      <div className="container relative z-10 py-20 md:py-24 text-white">
+      <div className="container relative z-10 py-12 md:py-24 text-white">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -135,7 +135,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-16 h-px w-full bg-white/20" />
+        <div className="mt-10 md:mt-16 h-px w-full bg-white/20" />
         <div className="pt-8 text-center">
           <p className="text-xs text-white/60 font-medium">
             © {new Date().getFullYear()} Wanjey Events & Marketing. All rights reserved.

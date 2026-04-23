@@ -116,8 +116,8 @@ export default function HomePage() {
       <section className="relative py-16 overflow-hidden md:py-20">
         <AmbientGlow />
         <div className="container relative z-10">
-          <AnimatedSection className="text-center max-w-4xl mx-auto mb-16">
-            <div className="glass-card p-10 md:p-16">
+          <AnimatedSection className="text-center max-w-4xl mx-auto mb-8 md:mb-16">
+            <div className="glass-card p-6 md:p-16">
               <p className="section-label font-bold">What We Do</p>
               <h2 className="section-heading font-bold">Comprehensive Event & Marketing Solutions</h2>
               <p className="section-subtext font-medium">
@@ -140,7 +140,7 @@ export default function HomePage() {
       <section className="py-16 md:py-20">
         <div className="container">
           <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
-              <div className="glass-card p-10 md:p-12 mb-8 lg:mb-0">
+              <div className="glass-card p-6 md:p-12 mb-8 lg:mb-0">
                 <AnimatedSection delay={0.1}>
                   <p className="section-label font-bold">Why Choose Us</p>
                 </AnimatedSection>
