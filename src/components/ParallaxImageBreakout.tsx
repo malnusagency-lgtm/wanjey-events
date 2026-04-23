@@ -12,8 +12,8 @@ const ParallaxImageBreakout = ({ src, alt }: Props) => {
   return (
     <section className="relative h-[40vh] md:h-[60vh] lg:h-[80vh] w-full overflow-hidden">
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed w-full h-full"
-        style={{ backgroundImage: `url("${src}")` }}
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed w-full h-full transform translate-z-0"
+        style={{ backgroundImage: `url("${src}")`, transform: 'translateZ(0)' }}
       />
       {/* Cinematic blend overlay to maintain transition smoothness */}
       <div className="absolute inset-0 z-1 bg-gradient-to-t from-background/90 via-background/40 to-background/90 mix-blend-multiply pointer-events-none" />

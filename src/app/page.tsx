@@ -172,7 +172,7 @@ export default function HomePage() {
         {/* Background Image for CTA - Fixed position stabilized */}
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-100 w-full"
-          style={{ backgroundImage: 'url("/assets/lets-build.jpg")' }}
+          style={{ backgroundImage: 'url("/assets/lets-build.jpg")', transform: 'translateZ(0)' }}
         />
         <div className="absolute inset-0 z-[1] bg-white/20" />
 

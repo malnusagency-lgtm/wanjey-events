@@ -51,18 +51,9 @@ export default function AboutPage() {
                 Founded to bridge the gap between exceptional event execution and strategic brand visibility, <strong className="text-foreground">Wanjey Events &amp; Marketing</strong> combines creativity, structure, and marketing expertise to deliver experiences that leave lasting impressions.
               </p>
               <p className="mt-4 text-[15px] leading-[1.7] text-muted-foreground md:text-base">
-                We are a proud brand under the <strong className="text-foreground">Miss Wanjey</strong> umbrella — a dynamic personal brand built on passion, excellence, and entrepreneurship. Miss Wanjey is more than a name — it&apos;s a movement that powers multiple ventures dedicated to elevating communities and experiences across Kenya.
+                We are a proud brand under the <strong className="text-foreground">Miss Wanjey</strong> umbrella — a dynamic brand ecosystem led by our <strong className="text-foreground">CEO, Miss Wanjey</strong>. Under her strategic leadership, <strong className="text-foreground">Wanjey Event &amp; Marketing</strong> and <strong className="text-foreground">Toto Kingdom</strong> operate as specialized ventures dedicated to elevating corporate experiences and event systems across Kenya.
               </p>
-              <div className="mt-8 space-y-3">
-                <div className="glass-card p-6">
-                  <h3 className="font-serif text-lg font-bold">Innovation</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Pushing boundaries in event technology and digital engagement.</p>
-                </div>
-                <div className="glass-card p-6">
-                  <h3 className="font-serif text-lg font-bold">Excellence</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Obsessive attention to detail from the first concept to final execution.</p>
-                </div>
-              </div>
+
             </AnimatedSection>
           </div>
         </div>
