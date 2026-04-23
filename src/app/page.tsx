@@ -176,7 +176,7 @@ export default function HomePage() {
             backgroundImage: 'url("/assets/lets-build.jpg")', 
             height: '100vh', 
             width: '100vw',
-            backgroundPosition: 'right 5%' 
+            backgroundPosition: 'center 0%' 
           }}
         />
         <div className="absolute inset-0 z-[1] bg-white/20" />
