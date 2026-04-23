@@ -101,11 +101,11 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {stats.map((stat, i) => (
               <AnimatedSection key={stat.label} delay={i * 0.08} className="text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 mb-4">
-                  <stat.icon className="h-6 w-6 text-accent" />
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-accent-foreground mb-6 shadow-[0_10px_30px_-10px_rgba(202,163,101,0.6)]">
+                  <stat.icon className="h-8 w-8" />
                 </div>
                 <p className="font-serif text-3xl font-bold text-foreground md:text-4xl">{stat.value}</p>
-                <p className="mt-1 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
+                <p className="mt-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -137,10 +137,10 @@ export default function HomePage() {
       <UpcomingEventSection />
 
       {/* Why Choose Us */}
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-16">
         <div className="container">
-          <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
-              <div className="glass-card p-6 md:p-12 mb-8 lg:mb-0">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+              <div className="glass-card p-6 md:p-10 mb-6 lg:mb-0">
                 <AnimatedSection delay={0.1}>
                   <p className="section-label font-bold">Why Choose Us</p>
                 </AnimatedSection>
