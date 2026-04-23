@@ -61,7 +61,7 @@ const UpcomingEventSection = () => {
               />
             </div>
           ))}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black via-black/20 to-black/60" />
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/40 via-transparent to-black/30" />
         </div>
 
         {/* Content Overlay */}

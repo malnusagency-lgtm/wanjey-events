@@ -176,7 +176,7 @@ export default function HomePage() {
             backgroundImage: 'url("/assets/lets-build.jpg")', 
             height: '100vh', 
             width: '100vw',
-            backgroundPosition: '50% 0%',
+            backgroundPosition: '45% 0%',
             transform: 'translateZ(0)',
             willChange: 'transform'
           }}
