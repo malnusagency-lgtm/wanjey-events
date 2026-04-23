@@ -59,19 +59,19 @@ export default function ServicesClient() {
           <div className="mt-8 md:mt-16 grid gap-6 md:grid-cols-2">
             {sections.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 0.08}>
-                <div className="glass-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full">
-                  <div className="relative h-48 w-full md:h-auto md:w-2/5 overflow-hidden">
+                <div className="glass-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full min-h-[400px]">
+                  <div className="relative h-64 w-full md:h-auto md:w-1/2 overflow-hidden" style={{ clipPath: 'inset(0)' }}>
                     <div 
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed w-full h-full"
+                      className="fixed inset-0 bg-cover bg-center bg-no-repeat w-full h-full"
                       style={{ 
                         backgroundImage: `url("${s.image}")`,
                         transform: 'translateZ(0)',
                         willChange: 'transform'
                       }}
                     />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500 z-10" />
                   </div>
-                  <div className="p-8 md:w-3/5">
+                  <div className="p-10 md:w-1/2 flex flex-col justify-center">
                     <div className="flex items-center gap-4">
                       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 border border-accent/20">
                         <s.icon className="h-5 w-5 text-accent" />

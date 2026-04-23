@@ -61,8 +61,8 @@ export default function HomePage() {
             </AnimatedSection>
             
             <AnimatedSection delay={0.25}>
-              <h1 className="mt-6 font-serif text-5xl font-bold leading-[1.05] text-primary-foreground md:text-6xl lg:text-[4.5rem] tracking-tight text-balance">
-                Strategic Events & Marketing That Elevate Your Brand
+              <h1 className="mt-6 font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+                Wanjey <span className="text-accent italic font-light">Events</span> & Marketing
               </h1>
             </AnimatedSection>
 
@@ -176,7 +176,7 @@ export default function HomePage() {
             backgroundImage: 'url("/assets/lets-build.jpg")', 
             height: '100vh', 
             width: '100vw',
-            backgroundPosition: '45% 0%',
+            backgroundPosition: '80% 0%',
             transform: 'translateZ(0)',
             willChange: 'transform'
           }}
