@@ -1,11 +1,10 @@
 'use client';
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import MagneticButton from "./MagneticButton";
 import { ArrowRight } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import MediaModal from "./MediaModal";
-import Image from "next/image";
 
 const mediaItems = [
   { type: 'video', src: '/assets/bigvoices/bv-vid-1.mp4' },
@@ -28,48 +27,41 @@ const mediaItems = [
   { type: 'video', src: '/assets/bigvoices/bv-vid-12.mp4' },
 ] as const;
 
+const bgVideos = mediaItems.filter(item => item.type === 'video');
+
 const UpcomingEventSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   
   useEffect(() => {
     const timer = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % mediaItems.length);
-    }, 4000);
+      setBgIndex((prev) => (prev + 1) % bgVideos.length);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
   return (
     <>
       <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-black">
-        {/* Dynamic Background Slideshow - Double Buffered to prevent gray flicker */}
+        {/* Dynamic Background — Videos only, smooth transitions */}
         <div className="absolute inset-0 z-0 h-full w-full">
-          {mediaItems.map((item, idx) => (
+          {bgVideos.map((item, idx) => (
             <div 
               key={item.src} 
-              className={`absolute inset-0 h-full w-full transition-opacity duration-[100ms] ${idx === bgIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+              className={`absolute inset-0 h-full w-full transition-opacity duration-1000 ease-in-out ${idx === bgIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             >
-              {item.type === 'video' ? (
-                <video
-                  src={item.src}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="h-full w-full object-cover" 
-                />
-              ) : (
-                <Image
-                  src={item.src}
-                  alt="Background"
-                  fill
-                  className="object-cover"
-                  priority={idx === 0}
-                />
-              )}
+              <video
+                src={item.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={idx <= 1 ? "auto" : "none"}
+                className="h-full w-full object-cover grayscale-[0.2] contrast-[1.1]" 
+              />
             </div>
           ))}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/60 via-transparent to-background/60 mix-blend-multiply" />
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black via-black/20 to-black/60" />
         </div>
 
         {/* Content Overlay */}
@@ -81,35 +73,35 @@ const UpcomingEventSection = () => {
           </AnimatedSection>
           
           <AnimatedSection delay={0.4}>
-            <p className="mt-4 font-sans text-lg font-black uppercase tracking-[0.2em] text-white/80 sm:text-2xl drop-shadow-md">
+            <p className="mt-4 font-sans text-lg font-black uppercase tracking-[0.2em] text-white sm:text-2xl drop-shadow-md">
               Season 2: Millennial Edition
             </p>
           </AnimatedSection>
 
-          {/* Bold 6th June Date */}
+          {/* Bold 6th June Date — Changed to White */}
           <AnimatedSection delay={0.5}>
             <div className="mt-10 flex flex-col items-center">
-              <div className="h-px w-24 bg-accent mb-6" />
+              <div className="h-px w-24 bg-white/40 mb-6" />
               <div className="flex flex-col items-center gap-2">
-                <span className="font-serif text-6xl font-black text-accent sm:text-8xl md:text-[8rem] tracking-tighter drop-shadow-2xl uppercase">
+                <span className="font-serif text-6xl font-black text-white sm:text-8xl md:text-[8.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
                   6TH JUNE
                 </span>
-                <span className="text-sm font-bold uppercase tracking-[0.5em] text-accent sm:text-lg">SAVE THE DATE</span>
+                <span className="text-sm font-bold uppercase tracking-[0.6em] text-white sm:text-xl">SAVE THE DATE</span>
               </div>
-              <div className="h-px w-24 bg-accent mt-6" />
+              <div className="h-px w-24 bg-white/40 mt-6" />
             </div>
           </AnimatedSection>
 
           <AnimatedSection delay={0.6}>
             <div className="mt-12 sm:mt-16">
-              <MagneticButton intensity={30}>
+              <MagneticButton intensity={40}>
                 <Button 
                   onClick={() => setIsModalOpen(true)}
                   size="lg" 
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 px-10 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 px-10 h-16 text-base sm:px-20 sm:h-24 sm:text-2xl font-black uppercase tracking-[0.3em] shadow-[0_0_70px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border-2 border-white/10"
                 >
                   Join the Movement
-                  <ArrowRight className="ml-3 h-5 w-5 sm:ml-4 sm:h-7 sm:w-7 group-hover:translate-x-1 transition-transform duration-300" />
+                  <ArrowRight className="ml-3 h-6 w-6 sm:ml-5 sm:h-8 sm:w-8 group-hover:translate-x-2 transition-transform duration-300" />
                 </Button>
               </MagneticButton>
             </div>
@@ -121,6 +113,7 @@ const UpcomingEventSection = () => {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         items={[...mediaItems]} 
+        bgVideos={bgVideos}
       />
     </>
   );

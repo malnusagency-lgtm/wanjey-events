@@ -45,44 +45,46 @@ export default function PackagesPage() {
     <PageTransition>
       <section className="py-12 md:py-16">
         <div className="container">
-          <AnimatedSection className="text-center">
-            <p className="section-label">Packages</p>
-            <h1 className="section-heading">Our Event &amp; Marketing Packages</h1>
-            <p className="section-subtext">
-              Choose a package that fits your needs, or let us create something custom.
-            </p>
+          <AnimatedSection className="text-center max-w-4xl mx-auto mb-16">
+            <div className="glass-card p-10 md:p-12">
+              <p className="section-label">Packages</p>
+              <h1 className="section-heading">Our Event &amp; Marketing Packages</h1>
+              <p className="section-subtext">
+                Choose a package that fits your needs, or let us create something custom.
+              </p>
+            </div>
           </AnimatedSection>
 
           <div className="mt-16 grid gap-4 md:grid-cols-2 xl:grid-cols-4 xl:gap-5">
             {packages.map((pkg, i) => (
               <AnimatedSection key={pkg.name} delay={i * 0.08}>
-                <div className={`relative flex h-full flex-col rounded-2xl border p-8 transition-all duration-500 ${
-                  pkg.featured
-                    ? "border-accent/30 bg-accent/[0.03]"
-                    : "border-border/80 bg-card hover:border-accent/20"
+                <div className={`glass-card relative flex h-full flex-col p-8 transition-all duration-500 ${
+                  pkg.featured ? "border-accent/40 bg-accent/10 scale-105 shadow-accent/20 z-10" : ""
                 }`}>
                   {pkg.featured && (
-                    <span className="absolute -top-3 left-8 inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1 text-xs font-medium text-accent-foreground">
-                      <Star className="h-3 w-3" />
+                    <span className="absolute -top-3 left-8 inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-foreground shadow-lg">
+                      <Star className="h-3 w-3 fill-current" />
                       Most Popular
                     </span>
                   )}
                   <h3 className="font-serif text-2xl font-bold">{pkg.name}</h3>
                   <p className="mt-3 text-sm text-muted-foreground">{pkg.tagline}</p>
-                  <div className="gradient-separator my-6" />
-                  <ul className="flex-1 space-y-3">
+                  <div className="gradient-separator my-6 opacity-40" />
+                  <ul className="flex-1 space-y-4">
                     {pkg.features.map((f) => (
-                      <li key={f} className="flex items-start gap-3 text-sm">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                      <li key={f} className="flex items-start gap-3 text-[13px] font-medium leading-relaxed">
+                        <div className="mt-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent/10">
+                          <Check className="h-3 w-3 text-accent stroke-[3]" />
+                        </div>
                         <span>{f}</span>
                       </li>
                     ))}
                   </ul>
                   <Link href="/contact" className="mt-8">
-                    <Button className={`w-full font-sans transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] ${
+                    <Button className={`w-full font-sans font-bold uppercase tracking-widest text-xs h-12 transition-all duration-300 hover:scale-[1.05] active:scale-[0.95] ${
                       pkg.featured
-                        ? "bg-accent text-accent-foreground hover:bg-accent/90"
-                        : "bg-primary text-primary-foreground hover:bg-primary/90"
+                        ? "bg-accent text-accent-foreground hover:bg-accent/90 shadow-xl shadow-accent/20"
+                        : "bg-white/10 text-foreground hover:bg-white/20 border border-white/10"
                     }`}>
                       Request Pricing
                     </Button>

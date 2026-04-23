@@ -16,7 +16,7 @@ export default function ServicesMarquee() {
         {/* Double items for seamless loop */}
         {[...services, ...services].map((s, i) => (
           <div key={i} className="min-w-[300px] md:min-w-[350px]">
-            <div className="premium-card group bg-accent/5 backdrop-blur-md border border-accent/10 hover:bg-accent/10 hover:border-accent/20 transition-all duration-500 rounded-2xl relative overflow-hidden flex flex-col h-full p-8 whitespace-normal">
+            <div className="glass-card group bg-accent/5 backdrop-blur-md border border-accent/10 hover:bg-accent/10 hover:border-accent/20 transition-all duration-500 rounded-2xl relative overflow-hidden flex flex-col h-full p-8 whitespace-normal">
               <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/8 border border-accent/20 transition-transform duration-500 group-hover:scale-110">
                 <s.icon className="h-6 w-6 text-accent" />
               </div>

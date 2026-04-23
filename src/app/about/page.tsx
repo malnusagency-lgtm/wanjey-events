@@ -54,13 +54,13 @@ export default function AboutPage() {
                 We are a proud brand under the <strong className="text-foreground">Miss Wanjey</strong> umbrella — a dynamic personal brand built on passion, excellence, and entrepreneurship. Miss Wanjey is more than a name — it&apos;s a movement that powers multiple ventures dedicated to elevating communities and experiences across Kenya.
               </p>
               <div className="mt-8 space-y-3">
-                <div className="premium-card p-6">
-                  <h3 className="font-serif text-lg font-semibold">Our Mission</h3>
-                  <p className="mt-2 text-sm leading-[1.7] text-muted-foreground">To create impactful events and marketing campaigns that elevate brands and connect audiences.</p>
+                <div className="glass-card p-6">
+                  <h3 className="font-serif text-lg font-bold">Innovation</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">Pushing boundaries in event technology and digital engagement.</p>
                 </div>
-                <div className="premium-card p-6">
-                  <h3 className="font-serif text-lg font-semibold">Our Vision</h3>
-                  <p className="mt-2 text-sm leading-[1.7] text-muted-foreground">To become a leading corporate events and marketing agency in Kenya and East Africa.</p>
+                <div className="glass-card p-6">
+                  <h3 className="font-serif text-lg font-bold">Excellence</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">Obsessive attention to detail from the first concept to final execution.</p>
                 </div>
               </div>
             </AnimatedSection>
@@ -129,7 +129,7 @@ export default function AboutPage() {
           <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {values.map((v, i) => (
               <AnimatedSection key={v.label} delay={i * 0.06}>
-                <div className="premium-card flex flex-col items-center gap-3 p-6">
+                <div className="glass-card flex flex-col items-center gap-3 p-6">
                   <v.icon className="h-6 w-6 text-accent" />
                   <span className="text-sm font-medium">{v.label}</span>
                 </div>

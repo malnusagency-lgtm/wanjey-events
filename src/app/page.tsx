@@ -116,12 +116,14 @@ export default function HomePage() {
       <section className="relative py-16 overflow-hidden md:py-20">
         <AmbientGlow />
         <div className="container relative z-10">
-          <AnimatedSection className="text-center">
-            <p className="section-label font-bold">What We Do</p>
-            <h2 className="section-heading font-bold">Comprehensive Event & Marketing Solutions</h2>
-            <p className="section-subtext font-medium">
-              Professional event execution and strategic brand marketing solutions for businesses that want to stand out.
-            </p>
+          <AnimatedSection className="text-center max-w-4xl mx-auto mb-16">
+            <div className="glass-card p-10 md:p-16">
+              <p className="section-label font-bold">What We Do</p>
+              <h2 className="section-heading font-bold">Comprehensive Event & Marketing Solutions</h2>
+              <p className="section-subtext font-medium">
+                Professional event execution and strategic brand marketing solutions for businesses that want to stand out.
+              </p>
+            </div>
           </AnimatedSection>
 
           <ServicesMarquee />
@@ -138,23 +140,23 @@ export default function HomePage() {
       <section className="py-16 md:py-20">
         <div className="container">
           <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
-            <div>
-              <AnimatedSection delay={0.1}>
-                <p className="section-label font-bold">Why Choose Us</p>
-              </AnimatedSection>
-              <AnimatedSection delay={0.2}>
-                <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
-              </AnimatedSection>
-              <AnimatedSection delay={0.3}>
-                <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
-                  With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
-                </p>
-              </AnimatedSection>
-            </div>
+              <div className="glass-card p-10 md:p-12 mb-8 lg:mb-0">
+                <AnimatedSection delay={0.1}>
+                  <p className="section-label font-bold">Why Choose Us</p>
+                </AnimatedSection>
+                <AnimatedSection delay={0.2}>
+                  <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
+                </AnimatedSection>
+                <AnimatedSection delay={0.3}>
+                  <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
+                    With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
+                  </p>
+                </AnimatedSection>
+              </div>
             <div className="grid gap-3">
               {differentiators.map((d, i) => (
                 <AnimatedSection key={d} delay={i * 0.06}>
-                  <div className="premium-card flex items-center gap-4 p-5 bg-accent/5">
+                  <div className="glass-card flex items-center gap-4 p-5 bg-accent/5">
                     <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
                     <span className="text-[15px] font-bold">{d}</span>
                   </div>

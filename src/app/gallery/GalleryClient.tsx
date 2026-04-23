@@ -165,12 +165,14 @@ export default function GalleryClient() {
     <>
       <section className="py-12 md:py-16">
         <div className="container">
-          <AnimatedSection className="text-center">
-            <p className="section-label">Gallery</p>
-            <h1 className="section-heading">Event Highlights</h1>
-            <p className="section-subtext">
-              Discover our impactful events and stunning setups.
-            </p>
+          <AnimatedSection className="text-center max-w-4xl mx-auto">
+            <div className="glass-card p-10 md:p-12">
+              <p className="section-label">Gallery</p>
+              <h1 className="section-heading">Event Highlights</h1>
+              <p className="section-subtext">
+                Discover our impactful events and stunning setups.
+              </p>
+            </div>
           </AnimatedSection>
 
           {/* View Toggle */}

@@ -71,7 +71,7 @@ export default function ContactClient() {
         <div className="mt-10 grid gap-12 lg:grid-cols-3 lg:gap-16">
           <AnimatedSection className="lg:col-span-2">
             {submitted ? (
-              <div className="premium-card flex flex-col items-center p-16 text-center">
+              <div className="glass-card flex flex-col items-center p-16 text-center">
                 <CheckCircle2 className="h-10 w-10 text-accent" />
                 <h3 className="mt-5 font-serif text-2xl font-bold">Opening WhatsApp…</h3>
                 <p className="mt-3 text-sm text-muted-foreground">
@@ -143,7 +143,7 @@ export default function ContactClient() {
 
           <AnimatedSection delay={0.1}>
             <div className="space-y-3">
-              <div className="premium-card p-6">
+              <div className="glass-card p-6">
                 <h3 className="font-serif text-lg font-semibold">Contact Details</h3>
                 <ul className="mt-4 space-y-3">
                   <li className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -162,7 +162,7 @@ export default function ContactClient() {
                 href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi%20Miss%20Wanjey%2C%20I'd%20like%20to%20inquire%20about%20your%20event%20services.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="premium-card flex items-center gap-4 p-6 block"
+                className="glass-card flex items-center gap-4 p-6 block"
               >
                 <MessageCircle className="h-5 w-5 text-accent shrink-0" />
                 <div>
