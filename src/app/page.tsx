@@ -171,8 +171,13 @@ export default function HomePage() {
       <section className="relative py-16 md:py-20 overflow-hidden w-full" style={{ clipPath: 'inset(0)' }}>
         {/* Truly Fixed Background - Position fixed within clipped section */}
         <div 
-          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full pointer-events-none"
-          style={{ backgroundImage: 'url("/assets/lets-build.jpg")', height: '100vh', width: '100vw' }}
+          className="fixed inset-0 z-0 bg-cover bg-no-repeat w-full pointer-events-none"
+          style={{ 
+            backgroundImage: 'url("/assets/lets-build.jpg")', 
+            height: '100vh', 
+            width: '100vw',
+            backgroundPosition: 'center 15%' 
+          }}
         />
         <div className="absolute inset-0 z-[1] bg-white/20" />
 
