@@ -108,7 +108,7 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [] }:
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 z-[110] flex items-center justify-between p-4 sm:p-8 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
             <div className="flex flex-col">
-              <h3 className="font-serif text-xl sm:text-2xl font-black text-white tracking-tighter uppercase drop-shadow-lg">BIGVOICES <span className="text-accent italic font-light ml-2">Experience</span></h3>
+              <h3 className="font-serif text-xl sm:text-2xl font-black text-white tracking-tighter uppercase drop-shadow-lg">BIGVOICES <span className="text-accent italic font-light ml-2">FEST</span></h3>
               <p className="text-[10px] sm:text-xs text-white/60 font-bold uppercase tracking-[0.3em] mt-1">Join The Movement</p>
             </div>
             <div className="flex items-center gap-4">
