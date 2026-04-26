@@ -77,9 +77,9 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-fraunces), system-ui, serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: clamp(1rem, 0.4vw + 0.9rem, 1.1rem);
     line-height: 1.7;
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
@@ -87,13 +87,13 @@
   }
 
   p, li, span, a, label, td, th, dd, dt, blockquote {
-    font-family: var(--font-inter), system-ui, sans-serif;
-    font-weight: 450;
+    font-family: var(--font-fraunces), system-ui, serif;
+    font-weight: 400;
     line-height: 1.7;
   }
 
   .text-muted-foreground {
-    font-weight: 450;
+    font-weight: 400;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -123,13 +123,15 @@
   }
 
   .section-heading {
-    @apply mt-3 font-serif text-3xl font-bold md:text-4xl lg:text-[2.5rem] text-balance;
+    @apply mt-3 font-serif font-bold text-balance;
+    font-size: clamp(2rem, 5vw + 1rem, 4.5rem);
     letter-spacing: -0.03em;
-    line-height: 1.12;
+    line-height: 1.1;
   }
 
   .section-subtext {
-    @apply mx-auto mt-4 max-w-xl text-muted-foreground leading-[1.7] text-[15px] md:text-base;
+    @apply mx-auto mt-4 max-w-xl text-muted-foreground leading-[1.7];
+    font-size: clamp(0.95rem, 0.2vw + 0.9rem, 1.1rem);
   }
 
   .premium-card {

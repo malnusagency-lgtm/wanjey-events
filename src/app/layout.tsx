@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Inter } from "next/font/google";
+import { Outfit, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -18,11 +18,11 @@ const outfit = Outfit({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const inter = Inter({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-fraunces",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${fraunces.variable}`}>
       <body>
         <FilmGrain />
         <SmoothScroll />
