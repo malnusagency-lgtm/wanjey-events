@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["var(--font-poppins)", "system-ui", "sans-serif"],
-        sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        serif: ["var(--font-outfit)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
