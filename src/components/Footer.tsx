@@ -129,7 +129,7 @@ const Footer = () => {
                 <Phone className="h-4 w-4 shrink-0 text-accent" /> +254 790 381039
               </li>
               <li className="flex items-center gap-3 text-sm text-white/80 font-medium">
-                <Mail className="h-4 w-4 shrink-0 text-accent" /> hello@misswanjey.co.ke
+                <Mail className="h-4 w-4 shrink-0 text-accent" /> theweventsmarketing@gmail.com
               </li>
             </ul>
           </div>

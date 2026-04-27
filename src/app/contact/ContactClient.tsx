@@ -153,7 +153,7 @@ export default function ContactClient() {
                     <Phone className="h-4 w-4 text-accent" /> +254 790 381039
                   </li>
                   <li className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <Mail className="h-4 w-4 text-accent" /> hello@misswanjey.co.ke
+                    <Mail className="h-4 w-4 text-accent" /> theweventsmarketing@gmail.com
                   </li>
                 </ul>
               </div>
