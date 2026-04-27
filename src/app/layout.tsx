@@ -8,6 +8,7 @@ import BackToTop from "@/components/BackToTop";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
 import SmoothScroll from "@/components/SmoothScroll";
 import FilmGrain from "@/components/FilmGrain";
+import PremiumCursor from "@/components/PremiumCursor";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
     <html lang="en" className={`${outfit.variable} ${fraunces.variable}`}>
       <body>
         <FilmGrain />
+        <PremiumCursor />
         <SmoothScroll />
         <ScrollProgress />
         <Navbar />

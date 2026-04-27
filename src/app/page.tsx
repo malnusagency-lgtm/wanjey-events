@@ -8,6 +8,7 @@ import ParallaxImageBreakout from "@/components/ParallaxImageBreakout";
 import InfiniteMarquee from "@/components/InfiniteMarquee";
 import AmbientGlow from "@/components/AmbientGlow";
 import MagneticButton from "@/components/MagneticButton";
+import TextReveal from "@/components/TextReveal";
 import HeroBackground from "@/components/HeroBackground";
 import UpcomingEventSection from "@/components/UpcomingEventSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
@@ -56,11 +57,11 @@ export default function HomePage() {
           <div className="max-w-2xl">
 
             
-            <AnimatedSection delay={0.25}>
-              <h1 className="mt-6 font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-                Wanjey <span className="text-accent italic font-light">Events</span> & Marketing
-              </h1>
-            </AnimatedSection>
+            <TextReveal 
+              text="Wanjey Events & Marketing"
+              delay={0.25}
+              className="mt-6 font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+            />
 
             <AnimatedSection delay={0.4}>
               <p className="mt-8 max-w-lg text-[16px] leading-[1.7] text-primary-foreground/80 md:text-lg opacity-90 font-medium">
