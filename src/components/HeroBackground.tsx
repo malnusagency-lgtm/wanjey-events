@@ -6,7 +6,7 @@ export default function HeroBackground() {
       <div 
         className="fixed inset-0 z-[-1] bg-cover bg-center bg-no-repeat w-full h-full pointer-events-none"
         style={{ 
-          backgroundImage: 'url("/assets/hero-bg.jpg")',
+          backgroundImage: 'url("/assets/p2.jpeg")',
           height: '100vh',
           width: '100vw',
           transform: 'translateZ(0)',
