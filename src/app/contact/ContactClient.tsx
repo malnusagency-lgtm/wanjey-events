@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AnimatedSection from "@/components/AnimatedSection";
-import { MapPin, Phone, Mail, MessageCircle, CheckCircle2, ArrowRight } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, CheckCircle2, ArrowRight, Upload } from "lucide-react";
 
 type FormData = {
   name: string;
@@ -127,6 +127,31 @@ export default function ContactClient() {
                 <div className="space-y-2 sm:col-span-2">
                   <Label className="text-sm font-medium">Message</Label>
                   <Textarea rows={4} value={form.message} onChange={update("message")} placeholder="Tell us about your event vision…" className="rounded-lg" />
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label className="text-sm font-medium">Upload Event Brief (Optional)</Label>
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      id="brief-upload"
+                      className="hidden" 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setForm(prev => ({ ...prev, message: prev.message + `\n\n[Note: User has an event brief ready: ${file.name}]` }));
+                        }
+                      }}
+                      accept=".pdf,.doc,.docx,.jpg,.png"
+                    />
+                    <label 
+                      htmlFor="brief-upload"
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-accent/40 bg-accent/5 cursor-pointer hover:bg-accent/10 transition-colors"
+                    >
+                      <Upload className="h-4 w-4 text-accent" />
+                      <span className="text-sm text-muted-foreground font-medium">Click to upload PDF, Word, or Image brief</span>
+                    </label>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground italic">Note: Files will be mentioned in the WhatsApp message; please send them manually in the chat.</p>
                 </div>
                 <div className="sm:col-span-2">
                   <Button type="submit" size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-sans transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] px-10">

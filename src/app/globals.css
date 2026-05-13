@@ -205,3 +205,36 @@ html {
   animation: rotate-slow 10s linear infinite;
 }
 
+@keyframes glimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  25%, 100% { transform: translateX(200%) rotate(45deg); }
+}
+
+.glass-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-card:hover::before {
+  animation: glimmer 1.5s infinite;
+}
+
