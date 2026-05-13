@@ -13,6 +13,7 @@ import HeroBackground from "@/components/HeroBackground";
 import UpcomingEventSection from "@/components/UpcomingEventSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
 import FAQ from "@/components/FAQ";
+import OurProcess from "@/components/OurProcess";
 import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -127,6 +128,8 @@ export default function HomePage() {
           <ServicesMarquee />
         </div>
       </section>
+
+      <OurProcess />
 
       <ParallaxImageBreakout src="/assets/gallery/event-30.jpg" alt="Premium Event Setup" />
 
