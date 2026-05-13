@@ -12,6 +12,7 @@ import TextReveal from "@/components/TextReveal";
 import HeroBackground from "@/components/HeroBackground";
 import UpcomingEventSection from "@/components/UpcomingEventSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
+import FAQ from "@/components/FAQ";
 import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -132,6 +133,9 @@ export default function HomePage() {
       <InfiniteMarquee text="PREMIUM EVENTS • STRATEGIC MARKETING • BRAND ACTIVATIONS • " />
 
       <UpcomingEventSection />
+      
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* Why Choose Us */}
       <section className="py-12 md:py-16">

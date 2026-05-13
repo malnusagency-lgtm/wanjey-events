@@ -51,7 +51,7 @@ export default function AboutPage() {
                 Founded to bridge the gap between exceptional event execution and strategic brand visibility, <strong className="text-foreground">Wanjey Events &amp; Marketing</strong> combines creativity, structure, and marketing expertise to deliver experiences that leave lasting impressions.
               </p>
               <p className="mt-4 text-[15px] leading-[1.7] text-muted-foreground md:text-base">
-                We are a proud brand under the <strong className="text-foreground">Miss Wanjey</strong> umbrella — a dynamic brand ecosystem led by our <strong className="text-foreground">CEO, Miss Wanjey</strong>. Under her strategic leadership, <strong className="text-foreground">Wanjey Event &amp; Marketing</strong> and <strong className="text-foreground">Toto Kingdom</strong> operate as specialized ventures dedicated to elevating corporate experiences and event systems across Kenya.
+                We are a proud brand under the <strong className="text-foreground">Miss Wanjey</strong> umbrella — a dynamic brand ecosystem led by our <strong className="text-foreground">CEO, Miss Wanjey</strong>. Under her strategic leadership, <strong className="text-foreground">Wanjey Events &amp; Marketing</strong> and <strong className="text-foreground">Toto Kingdom</strong> operate as specialized ventures dedicated to elevating corporate experiences and event systems across Kenya.
               </p>
 
             </AnimatedSection>

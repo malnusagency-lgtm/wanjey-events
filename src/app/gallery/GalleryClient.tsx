@@ -7,76 +7,76 @@ import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
 
 const images = [
-  { src: "/assets/gallery/event-1.jpg", alt: "Birthday party balloon setup" },
-  { src: "/assets/gallery/event-2.jpg", alt: "Event balloon decor" },
-  { src: "/assets/gallery/event-3.jpg", alt: "Themed birthday backdrop" },
-  { src: "/assets/gallery/event-4.jpg", alt: "Party decorations" },
-  { src: "/assets/gallery/event-5.jpg", alt: "Birthday celebration setup" },
-  { src: "/assets/gallery/event-6.jpg", alt: "Balloon arch arrangement" },
-  { src: "/assets/gallery/event-7.jpg", alt: "Kids party decoration" },
-  { src: "/assets/gallery/event-8.jpg", alt: "Birthday event styling" },
-  { src: "/assets/gallery/event-9.jpg", alt: "Celebration event decor" },
-  { src: "/assets/gallery/event-10.jpg", alt: "Birthday balloon backdrop" },
-  { src: "/assets/gallery/event-11.jpg", alt: "Corporate event setup" },
-  { src: "/assets/gallery/event-12.jpg", alt: "Elegant dinner table setting" },
-  { src: "/assets/gallery/event-13.jpg", alt: "Gold charger plate detail" },
-  { src: "/assets/gallery/event-14.jpg", alt: "Formal dining arrangement" },
-  { src: "/assets/gallery/event-15.jpg", alt: "Birthday party theme" },
-  { src: "/assets/gallery/event-16.jpg", alt: "Table centrepiece floral" },
-  { src: "/assets/gallery/event-17.jpg", alt: "Party balloon arrangement" },
-  { src: "/assets/gallery/event-18.jpg", alt: "Celebration backdrop setup" },
-  { src: "/assets/gallery/event-19.jpg", alt: "Garden party table layout" },
-  { src: "/assets/gallery/event-20.jpg", alt: "Outdoor event dining setup" },
-  { src: "/assets/gallery/event-21.jpg", alt: "Themed celebration decor" },
-  { src: "/assets/gallery/event-22.jpg", alt: "Event venue preparation" },
-  { src: "/assets/gallery/event-23.jpg", alt: "Formal event table design" },
-  { src: "/assets/gallery/event-24.jpg", alt: "Birthday party styling" },
-  { src: "/assets/gallery/event-25.jpg", alt: "Corporate dinner setting" },
-  { src: "/assets/gallery/event-26.jpg", alt: "Balloon decoration arch" },
-  { src: "/assets/gallery/event-27.jpg", alt: "Elegant table arrangement" },
-  { src: "/assets/gallery/event-28.jpg", alt: "Party decor details" },
-  { src: "/assets/gallery/event-29.jpg", alt: "Premium dining setup" },
-  { src: "/assets/gallery/event-30.jpg", alt: "Table napkin fold detail" },
-  { src: "/assets/gallery/event-31.jpg", alt: "Festival brand activation" },
-  { src: "/assets/gallery/event-32.jpg", alt: "Event activation booth" },
-  { src: "/assets/gallery/event-33.jpg", alt: "Brand activation setup" },
-  { src: "/assets/gallery/event-34.jpg", alt: "Festival event branding" },
-  { src: "/assets/gallery/event-35.jpg", alt: "Outdoor brand activation" },
-  { src: "/assets/gallery/event-36.jpg", alt: "Activation decor styling" },
-  { src: "/assets/gallery/event-37.jpg", alt: "Event brand experience" },
-  { src: "/assets/gallery/event-38.jpg", alt: "Festival activation stage" },
-  { src: "/assets/gallery/event-39.jpg", alt: "Corporate event styling" },
-  { src: "/assets/gallery/event-40.jpg", alt: "Dinner event centrepiece" },
-  { src: "/assets/gallery/event-41.jpg", alt: "Themed party backdrop" },
-  { src: "/assets/gallery/event-42.jpg", alt: "Table decor arrangement" },
-  { src: "/assets/gallery/event-43.jpg", alt: "Balloon arch celebration" },
-  { src: "/assets/gallery/event-44.jpg", alt: "Elegant venue setup" },
-  { src: "/assets/gallery/event-45.jpg", alt: "Birthday event backdrop" },
-  { src: "/assets/gallery/event-46.jpg", alt: "Event table styling" },
-  { src: "/assets/gallery/event-47.jpg", alt: "Celebration decor detail" },
-  { src: "/assets/gallery/event-48.jpg", alt: "Premium table arrangement" },
-  { src: "/assets/gallery/event-49.jpg", alt: "Festival photo moment" },
-  { src: "/assets/gallery/event-50.jpg", alt: "Festival activation moment" },
-  { src: "/assets/gallery/event-51.jpg", alt: "Party decor styling" },
-  { src: "/assets/gallery/event-52.jpg", alt: "Dining event detail" },
-  { src: "/assets/gallery/event-53.jpg", alt: "Birthday styling detail" },
-  { src: "/assets/gallery/event-54.jpg", alt: "Event table presentation" },
-  { src: "/assets/gallery/event-55.jpg", alt: "Party balloon styling" },
-  { src: "/assets/gallery/event-56.jpg", alt: "Event decor highlight" },
-  { src: "/assets/gallery/event-57.jpg", alt: "Brand activation event" },
-  { src: "/assets/gallery/event-58.jpg", alt: "Event experience setup" },
-  { src: "/assets/gallery/event-59.jpg", alt: "Formal event arrangement" },
-  { src: "/assets/gallery/event-60.jpg", alt: "Corporate decor detail" },
-  { src: "/assets/gallery/event-61.jpg", alt: "Birthday celebration theme" },
-  { src: "/assets/gallery/event-62.jpg", alt: "Table setting highlight" },
-  { src: "/assets/gallery/event-63.jpg", alt: "Event celebration decor" },
-  { src: "/assets/gallery/event-64.jpg", alt: "Activation branding detail" },
-  { src: "/assets/gallery/event-65.jpg", alt: "Event venue detail" },
-  { src: "/assets/gallery/event-66.jpg", alt: "Birthday decor theme" },
-  { src: "/assets/gallery/event-67.jpg", alt: "Dinner event styling" },
-  { src: "/assets/gallery/event-68.jpg", alt: "Celebration detail shot" },
-  { src: "/assets/gallery/event-69.jpg", alt: "Premium event arrangement" },
-  { src: "/assets/gallery/event-70.jpg", alt: "Party event highlight" },
+  { src: "/assets/gallery/event-1.jpg", alt: "Birthday party balloon setup", category: "lifestyle" },
+  { src: "/assets/gallery/event-2.jpg", alt: "Event balloon decor", category: "lifestyle" },
+  { src: "/assets/gallery/event-3.jpg", alt: "Themed birthday backdrop", category: "lifestyle" },
+  { src: "/assets/gallery/event-4.jpg", alt: "Party decorations", category: "lifestyle" },
+  { src: "/assets/gallery/event-5.jpg", alt: "Birthday celebration setup", category: "lifestyle" },
+  { src: "/assets/gallery/event-6.jpg", alt: "Balloon arch arrangement", category: "lifestyle" },
+  { src: "/assets/gallery/event-7.jpg", alt: "Kids party decoration", category: "lifestyle" },
+  { src: "/assets/gallery/event-8.jpg", alt: "Birthday event styling", category: "lifestyle" },
+  { src: "/assets/gallery/event-9.jpg", alt: "Celebration event decor", category: "lifestyle" },
+  { src: "/assets/gallery/event-10.jpg", alt: "Birthday balloon backdrop", category: "lifestyle" },
+  { src: "/assets/gallery/event-11.jpg", alt: "Corporate event setup", category: "corporate" },
+  { src: "/assets/gallery/event-12.jpg", alt: "Elegant dinner table setting", category: "corporate" },
+  { src: "/assets/gallery/event-13.jpg", alt: "Gold charger plate detail", category: "corporate" },
+  { src: "/assets/gallery/event-14.jpg", alt: "Formal dining arrangement", category: "corporate" },
+  { src: "/assets/gallery/event-15.jpg", alt: "Birthday party theme", category: "lifestyle" },
+  { src: "/assets/gallery/event-16.jpg", alt: "Table centrepiece floral", category: "corporate" },
+  { src: "/assets/gallery/event-17.jpg", alt: "Party balloon arrangement", category: "lifestyle" },
+  { src: "/assets/gallery/event-18.jpg", alt: "Celebration backdrop setup", category: "lifestyle" },
+  { src: "/assets/gallery/event-19.jpg", alt: "Garden party table layout", category: "corporate" },
+  { src: "/assets/gallery/event-20.jpg", alt: "Outdoor event dining setup", category: "corporate" },
+  { src: "/assets/gallery/event-21.jpg", alt: "Themed celebration decor", category: "lifestyle" },
+  { src: "/assets/gallery/event-22.jpg", alt: "Event venue preparation", category: "corporate" },
+  { src: "/assets/gallery/event-23.jpg", alt: "Formal event table design", category: "corporate" },
+  { src: "/assets/gallery/event-24.jpg", alt: "Birthday party styling", category: "lifestyle" },
+  { src: "/assets/gallery/event-25.jpg", alt: "Corporate dinner setting", category: "corporate" },
+  { src: "/assets/gallery/event-26.jpg", alt: "Balloon decoration arch", category: "lifestyle" },
+  { src: "/assets/gallery/event-27.jpg", alt: "Elegant table arrangement", category: "corporate" },
+  { src: "/assets/gallery/event-28.jpg", alt: "Party decor details", category: "lifestyle" },
+  { src: "/assets/gallery/event-29.jpg", alt: "Premium dining setup", category: "corporate" },
+  { src: "/assets/gallery/event-30.jpg", alt: "Table napkin fold detail", category: "corporate" },
+  { src: "/assets/gallery/event-31.jpg", alt: "Festival brand activation", category: "activations" },
+  { src: "/assets/gallery/event-32.jpg", alt: "Event activation booth", category: "activations" },
+  { src: "/assets/gallery/event-33.jpg", alt: "Brand activation setup", category: "activations" },
+  { src: "/assets/gallery/event-34.jpg", alt: "Festival event branding", category: "activations" },
+  { src: "/assets/gallery/event-35.jpg", alt: "Outdoor brand activation", category: "activations" },
+  { src: "/assets/gallery/event-36.jpg", alt: "Activation decor styling", category: "activations" },
+  { src: "/assets/gallery/event-37.jpg", alt: "Event brand experience", category: "activations" },
+  { src: "/assets/gallery/event-38.jpg", alt: "Festival activation stage", category: "activations" },
+  { src: "/assets/gallery/event-39.jpg", alt: "Corporate event styling", category: "corporate" },
+  { src: "/assets/gallery/event-40.jpg", alt: "Dinner event centrepiece", category: "corporate" },
+  { src: "/assets/gallery/event-41.jpg", alt: "Themed party backdrop", category: "lifestyle" },
+  { src: "/assets/gallery/event-42.jpg", alt: "Table decor arrangement", category: "corporate" },
+  { src: "/assets/gallery/event-43.jpg", alt: "Balloon arch celebration", category: "lifestyle" },
+  { src: "/assets/gallery/event-44.jpg", alt: "Elegant venue setup", category: "corporate" },
+  { src: "/assets/gallery/event-45.jpg", alt: "Birthday event backdrop", category: "lifestyle" },
+  { src: "/assets/gallery/event-46.jpg", alt: "Event table styling", category: "corporate" },
+  { src: "/assets/gallery/event-47.jpg", alt: "Celebration decor detail", category: "lifestyle" },
+  { src: "/assets/gallery/event-48.jpg", alt: "Premium table arrangement", category: "corporate" },
+  { src: "/assets/gallery/event-49.jpg", alt: "Festival photo moment", category: "activations" },
+  { src: "/assets/gallery/event-50.jpg", alt: "Festival activation moment", category: "activations" },
+  { src: "/assets/gallery/event-51.jpg", alt: "Party decor styling", category: "lifestyle" },
+  { src: "/assets/gallery/event-52.jpg", alt: "Dining event detail", category: "corporate" },
+  { src: "/assets/gallery/event-53.jpg", alt: "Birthday styling detail", category: "lifestyle" },
+  { src: "/assets/gallery/event-54.jpg", alt: "Event table presentation", category: "corporate" },
+  { src: "/assets/gallery/event-55.jpg", alt: "Party balloon styling", category: "lifestyle" },
+  { src: "/assets/gallery/event-56.jpg", alt: "Event decor highlight", category: "corporate" },
+  { src: "/assets/gallery/event-57.jpg", alt: "Brand activation event", category: "activations" },
+  { src: "/assets/gallery/event-58.jpg", alt: "Event experience setup", category: "corporate" },
+  { src: "/assets/gallery/event-59.jpg", alt: "Formal event arrangement", category: "corporate" },
+  { src: "/assets/gallery/event-60.jpg", alt: "Corporate decor detail", category: "corporate" },
+  { src: "/assets/gallery/event-61.jpg", alt: "Birthday celebration theme", category: "lifestyle" },
+  { src: "/assets/gallery/event-62.jpg", alt: "Table setting highlight", category: "corporate" },
+  { src: "/assets/gallery/event-63.jpg", alt: "Event celebration decor", category: "lifestyle" },
+  { src: "/assets/gallery/event-64.jpg", alt: "Activation branding detail", category: "activations" },
+  { src: "/assets/gallery/event-65.jpg", alt: "Event venue detail", category: "corporate" },
+  { src: "/assets/gallery/event-66.jpg", alt: "Birthday decor theme", category: "lifestyle" },
+  { src: "/assets/gallery/event-67.jpg", alt: "Dinner event styling", category: "corporate" },
+  { src: "/assets/gallery/event-68.jpg", alt: "Celebration detail shot", category: "lifestyle" },
+  { src: "/assets/gallery/event-69.jpg", alt: "Premium event arrangement", category: "corporate" },
+  { src: "/assets/gallery/event-70.jpg", alt: "Party event highlight", category: "lifestyle" },
 ];
 
 // Masonry height patterns for visual variety
@@ -90,12 +90,15 @@ export default function GalleryClient() {
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [touchStart, setTouchStart] = useState<number | null>(null);
-  
-  // Carousel specific state
+  const [filter, setFilter] = useState<'all' | 'corporate' | 'activations' | 'lifestyle'>('all');
   const [carouselIndex, setCarouselIndex] = useState(0);
 
-  const visible = images.slice(0, visibleCount);
-  const hasMore = visibleCount < images.length;
+  const filteredImages = filter === 'all' 
+    ? images 
+    : images.filter(img => (img as any).category === filter);
+
+  const visible = filteredImages.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredImages.length;
 
   const openLightbox = (index: number) => {
     setDirection(0);
@@ -107,14 +110,14 @@ export default function GalleryClient() {
   const goNext = useCallback(() => {
     if (selectedIndex === null) return;
     setDirection(1);
-    setSelectedIndex((prev) => (prev! + 1) % images.length);
-  }, [selectedIndex]);
+    setSelectedIndex((prev) => (prev! + 1) % filteredImages.length);
+  }, [selectedIndex, filteredImages.length]);
 
   const goPrev = useCallback(() => {
     if (selectedIndex === null) return;
     setDirection(-1);
-    setSelectedIndex((prev) => (prev! - 1 + images.length) % images.length);
-  }, [selectedIndex]);
+    setSelectedIndex((prev) => (prev! - 1 + filteredImages.length) % filteredImages.length);
+  }, [selectedIndex, filteredImages.length]);
 
   // Touch swipe support for lightbox
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -152,13 +155,20 @@ export default function GalleryClient() {
     return () => clearTimeout(t);
   }, [selectedIndex]);
 
-  const carouselNext = () => setCarouselIndex((prev) => (prev + 1) % images.length);
-  const carouselPrev = () => setCarouselIndex((prev) => (prev - 1 + images.length) % images.length);
+  const carouselNext = () => setCarouselIndex((prev) => (prev + 1) % filteredImages.length);
+  const carouselPrev = () => setCarouselIndex((prev) => (prev - 1 + filteredImages.length) % filteredImages.length);
 
   const viewOptions = [
     { key: 'masonry' as const, icon: Columns3, label: 'Masonry' },
     { key: 'grid' as const, icon: LayoutGrid, label: 'Grid' },
     { key: 'carousel' as const, icon: CarouselIcon, label: 'Carousel' },
+  ];
+
+  const categories = [
+    { key: 'all' as const, label: 'All Projects' },
+    { key: 'corporate' as const, label: 'Corporate' },
+    { key: 'activations' as const, label: 'Activations' },
+    { key: 'lifestyle' as const, label: 'Lifestyle' },
   ];
 
   return (
@@ -175,19 +185,40 @@ export default function GalleryClient() {
             </div>
           </AnimatedSection>
 
-          {/* View Toggle */}
-          <div className="mt-6 md:mt-10 flex justify-center gap-3">
-            {viewOptions.map(({ key, icon: Icon, label }) => (
+          {/* Category Filter */}
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
+            {categories.map((cat) => (
               <button
-                key={key}
-                onClick={() => setViewMode(key)}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300 ${
-                  viewMode === key 
+                key={cat.key}
+                onClick={() => {
+                  setFilter(cat.key);
+                  setVisibleCount(ITEMS_PER_PAGE);
+                  setCarouselIndex(0);
+                }}
+                className={`rounded-full px-6 py-2 text-sm font-bold transition-all duration-300 ${
+                  filter === cat.key 
                   ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20" 
                   : "bg-secondary text-muted-foreground hover:bg-secondary/80"
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* View Toggle */}
+          <div className="mt-4 flex justify-center gap-2">
+            {viewOptions.map(({ key, icon: Icon, label }) => (
+              <button
+                key={key}
+                onClick={() => setViewMode(key)}
+                className={`flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-bold transition-all duration-300 ${
+                  viewMode === key 
+                  ? "bg-foreground text-background" 
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                <Icon className="h-3 w-3" />
                 {label}
               </button>
             ))}
