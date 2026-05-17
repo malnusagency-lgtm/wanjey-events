@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,8 +38,19 @@ const Navbar = () => {
       <div className={`container flex items-center justify-between transition-all duration-700 ${
         scrolled ? "h-14" : "h-16 md:h-20"
       }`}>
-        <Link href="/" className="font-serif text-xl font-bold tracking-tight md:text-2xl">
-          Wanjey Events<span className="text-accent">.</span>
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="relative h-10 w-10 md:h-12 md:w-12 overflow-hidden rounded-full border border-accent/20 transition-transform duration-500 group-hover:scale-105">
+            <Image 
+              src="/assets/logo.jpeg" 
+              alt="Wanjey Events Logo" 
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <span className="font-serif text-lg font-bold tracking-tight md:text-xl hidden sm:block">
+            Wanjey Events<span className="text-accent">.</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -74,7 +86,15 @@ const Navbar = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-72 border-l-border/30">
-            <SheetTitle className="font-serif text-lg">
+            <SheetTitle className="flex items-center gap-3 font-serif text-lg">
+              <div className="relative h-8 w-8 overflow-hidden rounded-full border border-accent/20">
+                <Image 
+                  src="/assets/logo.jpeg" 
+                  alt="Wanjey Events Logo" 
+                  fill
+                  className="object-cover"
+                />
+              </div>
               Wanjey Events<span className="text-accent">.</span>
             </SheetTitle>
             <nav className="mt-10 flex flex-col gap-0.5">
