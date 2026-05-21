@@ -311,13 +311,15 @@ export default function GalleryClient() {
                         transition={{ duration: 0.6 }}
                         className="absolute inset-0"
                       >
-                        <Image
-                          src={images[carouselIndex].src}
-                          alt={images[carouselIndex].alt}
-                          fill
-                          className="object-cover"
-                          priority
-                        />
+                        {images[carouselIndex] && (
+                          <Image
+                            src={images[carouselIndex].src}
+                            alt={images[carouselIndex].alt}
+                            fill
+                            className="object-cover"
+                            priority
+                          />
+                        )}
                       </motion.div>
                     </AnimatePresence>
 
@@ -402,14 +404,16 @@ export default function GalleryClient() {
               className="relative max-h-[80vh] max-w-[90vw]"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
-                src={images[selectedIndex].src}
-                alt={images[selectedIndex].alt}
-                width={1200}
-                height={900}
-                className="max-h-[80vh] rounded-xl object-contain"
-                priority
-              />
+              {images[selectedIndex as number] && (
+                <Image
+                  src={images[selectedIndex as number].src}
+                  alt={images[selectedIndex as number].alt}
+                  width={1200}
+                  height={900}
+                  className="max-h-[80vh] rounded-xl object-contain"
+                  priority
+                />
+              )}
             </motion.div>
 
             {/* Swipe hint on mobile */}
