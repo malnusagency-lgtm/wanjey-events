@@ -18,13 +18,12 @@ const ITEMS_PER_PAGE = 12;
 
 export default function GalleryClient() {
   const [images, setImages] = useState<GalleryImage[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'masonry' | 'carousel'>('masonry');
+  const [viewMode, setViewMode] = useState<'grid' | 'masonry' | 'carousel'>('grid');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [filter, setFilter] = useState<'all' | 'corporate' | 'activations' | 'lifestyle'>('all');
   const [carouselIndex, setCarouselIndex] = useState(0);
 
   useEffect(() => {
@@ -54,12 +53,8 @@ export default function GalleryClient() {
     fetchImages();
   }, []);
 
-  const filteredImages = filter === 'all' 
-    ? images 
-    : images.filter(img => (img as any).category === filter);
-
-  const visible = filteredImages.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredImages.length;
+  const visible = images.slice(0, visibleCount);
+  const hasMore = visibleCount < images.length;
 
   const openLightbox = (index: number) => {
     setDirection(0);
@@ -71,14 +66,14 @@ export default function GalleryClient() {
   const goNext = useCallback(() => {
     if (selectedIndex === null) return;
     setDirection(1);
-    setSelectedIndex((prev) => (prev! + 1) % filteredImages.length);
-  }, [selectedIndex, filteredImages.length]);
+    setSelectedIndex((prev) => (prev! + 1) % images.length);
+  }, [selectedIndex, images.length]);
 
   const goPrev = useCallback(() => {
     if (selectedIndex === null) return;
     setDirection(-1);
-    setSelectedIndex((prev) => (prev! - 1 + filteredImages.length) % filteredImages.length);
-  }, [selectedIndex, filteredImages.length]);
+    setSelectedIndex((prev) => (prev! - 1 + images.length) % images.length);
+  }, [selectedIndex, images.length]);
 
   // Touch swipe support for lightbox
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -116,20 +111,13 @@ export default function GalleryClient() {
     return () => clearTimeout(t);
   }, [selectedIndex]);
 
-  const carouselNext = () => setCarouselIndex((prev) => (prev + 1) % filteredImages.length);
-  const carouselPrev = () => setCarouselIndex((prev) => (prev - 1 + filteredImages.length) % filteredImages.length);
+  const carouselNext = () => setCarouselIndex((prev) => (prev + 1) % images.length);
+  const carouselPrev = () => setCarouselIndex((prev) => (prev - 1 + images.length) % images.length);
 
   const viewOptions = [
-    { key: 'masonry' as const, icon: Columns3, label: 'Masonry' },
     { key: 'grid' as const, icon: LayoutGrid, label: 'Grid' },
+    { key: 'masonry' as const, icon: Columns3, label: 'Masonry' },
     { key: 'carousel' as const, icon: CarouselIcon, label: 'Carousel' },
-  ];
-
-  const categories = [
-    { key: 'all' as const, label: 'All Projects' },
-    { key: 'corporate' as const, label: 'Corporate' },
-    { key: 'activations' as const, label: 'Activations' },
-    { key: 'lifestyle' as const, label: 'Lifestyle' },
   ];
 
   return (
@@ -145,27 +133,6 @@ export default function GalleryClient() {
               </p>
             </div>
           </AnimatedSection>
-
-          {/* Category Filter */}
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.key}
-                onClick={() => {
-                  setFilter(cat.key);
-                  setVisibleCount(ITEMS_PER_PAGE);
-                  setCarouselIndex(0);
-                }}
-                className={`rounded-full px-6 py-2 text-sm font-bold transition-all duration-300 ${
-                  filter === cat.key 
-                  ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20" 
-                  : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
 
           {/* View Toggle */}
           <div className="mt-4 flex justify-center gap-2">
