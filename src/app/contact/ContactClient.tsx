@@ -48,9 +48,25 @@ export default function ContactClient() {
     service: "", date: "", budget: "", message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email) return;
+    setIsSubmitting(true);
+    
+    try {
+      // Save to Supabase Leads table
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+    } catch (err) {
+      console.error('Failed to save lead', err);
+    }
+    
+    setIsSubmitting(false);
     setSubmitted(true);
     const url = buildWhatsAppUrl(form);
     window.open(url, "_blank", "noopener,noreferrer");

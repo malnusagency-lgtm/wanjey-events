@@ -82,6 +82,10 @@ export default function MediaManagerPage() {
             console.log('Upload success:', result)
             fetchMedia(activeFolder)
           }}
+          onError={(error) => {
+            console.error('Upload Error:', error)
+            alert('Upload failed: ' + (typeof error === 'string' ? error : JSON.stringify(error)))
+          }}
         >
           {({ open }) => {
             return (
