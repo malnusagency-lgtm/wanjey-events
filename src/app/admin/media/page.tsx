@@ -23,7 +23,7 @@ export default function MediaManagerPage() {
   const fetchMedia = async (folder: string) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/media?folder=${folder}`)
+      const response = await fetch(`/api/media?folder=${folder}&t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
         setMedia(data.media || [])
@@ -143,7 +143,7 @@ export default function MediaManagerPage() {
               {item.type === 'video' ? (
                 <video src={item.url} className="w-full h-full object-cover" muted playsInline />
               ) : (
-                <Image src={item.url} alt={item.id} fill className="object-cover" />
+                <Image src={item.url} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
               )}
               
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
