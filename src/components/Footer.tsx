@@ -42,6 +42,10 @@ const socialLinks = [
 const Footer = () => {
   const pathname = usePathname();
   
+  if (pathname.startsWith('/admin') || pathname.startsWith('/login')) {
+    return null;
+  }
+  
   // Strict alternation mapping for 6 pages
   const bgImage = 
     pathname === '/' || pathname === '/packages'

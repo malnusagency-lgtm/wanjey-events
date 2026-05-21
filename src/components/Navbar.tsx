@@ -27,6 +27,10 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  if (pathname.startsWith('/admin') || pathname.startsWith('/login')) {
+    return null;
+  }
+
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-700 ease-out ${
