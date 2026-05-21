@@ -1,10 +1,9 @@
 import { login } from './actions'
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string }
+export default async function LoginPage(props: {
+  searchParams: Promise<{ error?: string }>
 }) {
+  const searchParams = await props.searchParams;
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-zinc-950 px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md space-y-8 rounded-2xl bg-zinc-900 p-8 shadow-2xl border border-zinc-800">
