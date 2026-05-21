@@ -127,6 +127,8 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
+            maxFileSize: 104857600, // 100 MB in bytes (Cloudinary free tier limit for videos)
+            clientAllowedFormats: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'avi', 'webm', 'mkv'],
           }}
           onSuccess={(result: any) => {
             console.log('Upload success:', result)
