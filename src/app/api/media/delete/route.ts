@@ -33,10 +33,22 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { public_id, resource_type } = await request.json();
+    const body = await request.json();
+    const { public_id, resource_type, items } = body;
+
+    if (items && Array.isArray(items)) {
+      const results = await Promise.all(
+        items.map(async (item: { public_id: string; resource_type: string }) => {
+          return cloudinary.uploader.destroy(item.public_id, {
+            resource_type: item.resource_type || 'image',
+          });
+        })
+      );
+      return NextResponse.json({ success: true, results });
+    }
 
     if (!public_id) {
-      return NextResponse.json({ error: 'public_id is required' }, { status: 400 });
+      return NextResponse.json({ error: 'public_id or items is required' }, { status: 400 });
     }
 
     // Cloudinary destroy method requires resource_type for videos

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { CldUploadWidget } from 'next-cloudinary'
-import { UploadCloud, Folder, Image as ImageIcon, Video, Trash2, Loader2 } from 'lucide-react'
+import { UploadCloud, Folder, Image as ImageIcon, Video, Trash2, Loader2, CheckSquare, Square } from 'lucide-react'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 type MediaItem = {
   id: string;
@@ -19,6 +20,8 @@ export default function MediaManagerPage() {
   const [media, setMedia] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [bulkDeleting, setBulkDeleting] = useState(false)
 
   const fetchMedia = async (folder: string) => {
     setLoading(true)
@@ -30,19 +33,22 @@ export default function MediaManagerPage() {
       }
     } catch (error) {
       console.error('Failed to fetch media:', error)
+      toast.error('Failed to load media assets')
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
+    setSelectedIds([])
     fetchMedia(activeFolder)
   }, [activeFolder])
 
-  const handleDelete = async (publicId: string, resourceType: string) => {
-    if (!confirm('Are you sure you want to delete this file? It will be removed from your website immediately.')) return;
-    
+  const handleDeleteSingle = async (publicId: string, resourceType: string) => {
     setDeletingId(publicId)
+    // Remove from selection if it was selected
+    setSelectedIds(prev => prev.filter(item => item !== publicId))
+    
     try {
       const response = await fetch('/api/media/delete', {
         method: 'POST',
@@ -51,14 +57,59 @@ export default function MediaManagerPage() {
       })
       if (response.ok) {
         setMedia(prev => prev.filter(item => item.id !== publicId))
+        toast.success('Asset deleted successfully')
       } else {
-        alert('Failed to delete media')
+        toast.error('Failed to delete asset')
       }
     } catch (error) {
       console.error('Failed to delete:', error)
-      alert('An error occurred while deleting')
+      toast.error('An error occurred while deleting')
     } finally {
       setDeletingId(null)
+    }
+  }
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    )
+  }
+
+  const handleSelectAll = () => {
+    if (selectedIds.length === media.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(media.map(item => item.id))
+    }
+  }
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length === 0) return
+
+    setBulkDeleting(true)
+    const itemsToDelete = media
+      .filter(item => selectedIds.includes(item.id))
+      .map(item => ({ public_id: item.id, resource_type: item.type }))
+
+    try {
+      const response = await fetch('/api/media/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: itemsToDelete }),
+      })
+
+      if (response.ok) {
+        setMedia(prev => prev.filter(item => !selectedIds.includes(item.id)))
+        toast.success(`Successfully deleted ${selectedIds.length} asset(s)`)
+        setSelectedIds([])
+      } else {
+        toast.error('Failed to delete selected assets')
+      }
+    } catch (error) {
+      console.error('Failed to delete selected:', error)
+      toast.error('An error occurred during bulk deletion')
+    } finally {
+      setBulkDeleting(false)
     }
   }
 
@@ -88,16 +139,15 @@ export default function MediaManagerPage() {
                 height: result.info.height,
                 created_at: result.info.created_at,
               }
-              // Add new item to the top of the grid without making an API request
               setMedia(prev => [newItem, ...prev.filter(item => item.id !== newItem.id)])
+              toast.success('Asset uploaded successfully')
             } else {
-              // Fallback to fetch if result format is unexpected
               fetchMedia(activeFolder)
             }
           }}
           onError={(error) => {
             console.error('Upload Error:', error)
-            alert('Upload failed: ' + (typeof error === 'string' ? error : JSON.stringify(error)))
+            toast.error('Upload failed: ' + (typeof error === 'string' ? error : 'Check file type/size'))
           }}
         >
           {({ open }) => {
@@ -139,12 +189,45 @@ export default function MediaManagerPage() {
         </button>
       </div>
 
+      {/* Bulk actions bar */}
+      {!loading && media.length > 0 && (
+        <div className="flex items-center justify-between bg-zinc-900/40 border border-zinc-800/80 rounded-xl p-4 flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleSelectAll}
+              className="flex items-center gap-2 text-sm text-zinc-300 hover:text-white transition-colors bg-zinc-800 hover:bg-zinc-700 px-3.5 py-2 rounded-lg font-medium"
+            >
+              {selectedIds.length === media.length ? <CheckSquare size={18} className="text-[#8C1B11]" /> : <Square size={18} />}
+              {selectedIds.length === media.length ? 'Deselect All' : 'Select All'}
+            </button>
+            <span className="text-sm text-zinc-400">
+              {selectedIds.length} of {media.length} selected
+            </span>
+          </div>
+
+          {selectedIds.length > 0 && (
+            <button
+              onClick={handleDeleteSelected}
+              disabled={bulkDeleting}
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-5 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg"
+            >
+              {bulkDeleting ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Trash2 size={16} />
+              )}
+              Delete Selected ({selectedIds.length})
+            </button>
+          )}
+        </div>
+      )}
+
       {loading ? (
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-[300px]">
           <Loader2 className="w-8 h-8 animate-spin text-[#8C1B11]" />
         </div>
       ) : media.length === 0 ? (
-        <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[400px]">
+        <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[300px]">
           <div className="bg-zinc-900 p-4 rounded-full mb-4">
             <ImageIcon size={32} className="text-zinc-500" />
           </div>
@@ -155,31 +238,55 @@ export default function MediaManagerPage() {
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {media.map((item) => (
-            <div key={item.id} className="group relative aspect-square rounded-xl border border-zinc-800 bg-zinc-900 overflow-hidden">
-              {item.type === 'video' ? (
-                <video src={item.url} className="w-full h-full object-cover" muted playsInline />
-              ) : (
-                <Image src={item.url} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
-              )}
-              
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
-                <div className="flex justify-end">
-                  <button 
-                    onClick={() => handleDelete(item.id, item.type)}
-                    disabled={deletingId === item.id}
-                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors disabled:opacity-50"
-                    title="Delete permanently"
-                  >
-                    {deletingId === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                  </button>
+          {media.map((item) => {
+            const isSelected = selectedIds.includes(item.id);
+            return (
+              <div 
+                key={item.id} 
+                onClick={() => handleToggleSelect(item.id)}
+                className={`group relative aspect-square rounded-xl border transition-all duration-300 bg-zinc-900 overflow-hidden cursor-pointer ${
+                  isSelected ? 'border-[#8C1B11] ring-2 ring-[#8C1B11]/30' : 'border-zinc-800 hover:border-zinc-700'
+                }`}
+              >
+                {/* Checkbox badge */}
+                <div className={`absolute top-3 left-3 z-20 transition-all duration-200 ${
+                  isSelected ? 'opacity-100 scale-100' : 'opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100'
+                }`}>
+                  <div className={`p-1 rounded-md border backdrop-blur-md transition-colors ${
+                    isSelected ? 'bg-[#8C1B11] border-[#8C1B11] text-white' : 'bg-black/60 border-zinc-700 text-zinc-400'
+                  }`}>
+                    <CheckSquare size={16} className={isSelected ? 'block' : 'hidden'} />
+                    <Square size={16} className={isSelected ? 'hidden' : 'block'} />
+                  </div>
                 </div>
-                <div className="text-xs text-white truncate px-1 bg-black/50 rounded p-1">
-                  {item.id.split('/').pop()}
+
+                {item.type === 'video' ? (
+                  <video src={item.url} className="w-full h-full object-cover" muted playsInline />
+                ) : (
+                  <Image src={item.url} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
+                )}
+                
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteSingle(item.id, item.type);
+                      }}
+                      disabled={deletingId === item.id}
+                      className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors disabled:opacity-50 z-20 shadow-md"
+                      title="Delete permanently"
+                    >
+                      {deletingId === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <div className="text-xs text-white truncate px-1 bg-black/50 rounded p-1">
+                    {item.id.split('/').pop()}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

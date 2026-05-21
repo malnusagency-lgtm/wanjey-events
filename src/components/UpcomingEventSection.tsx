@@ -12,11 +12,26 @@ type MediaItem = {
   type: 'video' | 'image';
 };
 
+type EventData = {
+  title: string;
+  subtitle: string;
+  event_date: string;
+  save_the_date_text: string;
+  cta_text: string;
+};
+
 const UpcomingEventSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [bgVideos, setBgVideos] = useState<MediaItem[]>([]);
+  const [eventData, setEventData] = useState<EventData>({
+    title: 'BIGVOICES FEST',
+    subtitle: 'Season 2: Millennial Edition',
+    event_date: '6TH JUNE',
+    save_the_date_text: 'SAVE THE DATE',
+    cta_text: 'Join the Movement',
+  });
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -37,7 +52,29 @@ const UpcomingEventSection = () => {
         console.error('Failed to fetch bigvoices media:', error);
       }
     };
+
+    const fetchEvent = async () => {
+      try {
+        const response = await fetch('/api/events');
+        if (response.ok) {
+          const data = await response.json();
+          if (data && !data.error) {
+            setEventData({
+              title: data.title || 'BIGVOICES FEST',
+              subtitle: data.subtitle || 'Season 2: Millennial Edition',
+              event_date: data.event_date || '6TH JUNE',
+              save_the_date_text: data.save_the_date_text || 'SAVE THE DATE',
+              cta_text: data.cta_text || 'Join the Movement',
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch event data:', error);
+      }
+    };
+
     fetchMedia();
+    fetchEvent();
   }, []);
 
   useEffect(() => {
@@ -47,6 +84,17 @@ const UpcomingEventSection = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, [bgVideos.length]);
+
+  const renderTitle = (title: string) => {
+    const words = title.trim().split(/\s+/);
+    if (words.length <= 1) return title;
+    const lastWord = words.pop();
+    return (
+      <>
+        {words.join(' ')} <em className="italic font-light text-white">{lastWord}</em>
+      </>
+    );
+  };
 
   return (
     <>
@@ -75,26 +123,28 @@ const UpcomingEventSection = () => {
         {/* Content Overlay */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
           <AnimatedSection delay={0.2}>
-            <h2 className="font-serif text-3xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl">
-              BIGVOICES <em className="italic font-light text-white">FEST</em>
+            <h2 className="font-serif text-3xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl uppercase">
+              {renderTitle(eventData.title)}
             </h2>
           </AnimatedSection>
           
           <AnimatedSection delay={0.4}>
             <p className="mt-4 font-sans text-lg font-black uppercase tracking-[0.2em] text-white sm:text-2xl drop-shadow-md text-balance">
-              Season 2: Millennial Edition
+              {eventData.subtitle}
             </p>
           </AnimatedSection>
  
-          {/* Bold 6th June Date — Changed to White */}
+          {/* Bold Event Date — Changed to White */}
           <AnimatedSection delay={0.5}>
             <div className="mt-6 md:mt-10 flex flex-col items-center">
               <div className="h-px w-24 bg-white/40 mb-6" />
               <div className="flex flex-col items-center gap-2">
                 <span className="font-serif text-4xl font-black text-white sm:text-8xl md:text-[8.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
-                  6TH JUNE
+                  {eventData.event_date}
                 </span>
-                <span className="text-sm font-bold uppercase tracking-[0.6em] text-white sm:text-xl">SAVE THE DATE</span>
+                <span className="text-sm font-bold uppercase tracking-[0.6em] text-white sm:text-xl">
+                  {eventData.save_the_date_text}
+                </span>
               </div>
               <div className="h-px w-24 bg-white/40 mt-6" />
             </div>
@@ -108,7 +158,7 @@ const UpcomingEventSection = () => {
                   size="lg" 
                   className="bg-accent text-accent-foreground hover:bg-accent/90 px-10 h-16 text-base sm:px-20 sm:h-24 sm:text-2xl font-black uppercase tracking-[0.3em] shadow-[0_0_70px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border-2 border-white/10"
                 >
-                  Join the Movement
+                  {eventData.cta_text}
                   <ArrowRight className="ml-3 h-6 w-6 sm:ml-5 sm:h-8 sm:w-8 group-hover:translate-x-2 transition-transform duration-300" />
                 </Button>
               </MagneticButton>

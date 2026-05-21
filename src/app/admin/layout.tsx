@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { logout } from '@/app/login/actions'
-import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, Mail } from 'lucide-react'
+import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, Mail, CalendarDays } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,6 +33,13 @@ export default function AdminLayout({
           >
             <Mail size={20} />
             Leads Inbox
+          </Link>
+          <Link 
+            href="/admin/events" 
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          >
+            <CalendarDays size={20} />
+            Event Editor
           </Link>
           <Link 
             href="/admin/media" 
