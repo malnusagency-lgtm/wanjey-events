@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { logout } from '@/app/login/actions'
 import { LayoutDashboard, Image as ImageIcon, Settings, LogOut } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminLayout({
   children,
 }: {
