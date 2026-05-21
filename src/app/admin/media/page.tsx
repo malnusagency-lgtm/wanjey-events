@@ -77,10 +77,23 @@ export default function MediaManagerPage() {
             multiple: true,
             maxFiles: 50,
           }}
-          onSuccess={(result, { widget }) => {
-            // Refresh logic
+          onSuccess={(result: any) => {
             console.log('Upload success:', result)
-            fetchMedia(activeFolder)
+            if (result?.info && typeof result.info === 'object') {
+              const newItem: MediaItem = {
+                id: result.info.public_id,
+                url: result.info.secure_url,
+                type: result.info.resource_type,
+                width: result.info.width,
+                height: result.info.height,
+                created_at: result.info.created_at,
+              }
+              // Add new item to the top of the grid without making an API request
+              setMedia(prev => [newItem, ...prev.filter(item => item.id !== newItem.id)])
+            } else {
+              // Fallback to fetch if result format is unexpected
+              fetchMedia(activeFolder)
+            }
           }}
           onError={(error) => {
             console.error('Upload Error:', error)
