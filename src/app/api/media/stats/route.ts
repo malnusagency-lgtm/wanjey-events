@@ -35,21 +35,21 @@ export async function GET() {
   }
 
   try {
-    // Get total counts across our specific folders
+    // Use api.resources which works on all Cloudinary plans (including free)
     const [imagesResult, videosResult] = await Promise.all([
-      cloudinary.search
-        .expression('folder:wanjey/* AND resource_type:image')
-        .max_results(1)
-        .execute(),
-      cloudinary.search
-        .expression('folder:wanjey/* AND resource_type:video')
-        .max_results(1)
-        .execute()
+      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'image', max_results: 1 }),
+      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'video', max_results: 1 }),
+    ]);
+
+    // api.resources doesn't give a total count directly, so we fetch all and count
+    const [allImages, allVideos] = await Promise.all([
+      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'image', max_results: 500 }),
+      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'video', max_results: 500 }),
     ]);
 
     return NextResponse.json({
-      totalImages: imagesResult.total_count,
-      totalVideos: videosResult.total_count,
+      totalImages: allImages.resources.length,
+      totalVideos: allVideos.resources.length,
     });
   } catch (error) {
     console.error('Cloudinary Stats Error:', error);

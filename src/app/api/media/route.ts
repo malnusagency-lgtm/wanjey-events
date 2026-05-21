@@ -18,21 +18,35 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Fetch both images and videos from the specified folder
-    const result = await cloudinary.search
-      .expression(`folder:wanjey/${folder}`)
-      .sort_by('created_at', 'desc')
-      .max_results(100)
-      .execute();
+    // Fetch images and videos separately using api.resources (works on all Cloudinary plans)
+    const [imageResult, videoResult] = await Promise.all([
+      cloudinary.api.resources({
+        type: 'upload',
+        prefix: `wanjey/${folder}/`,
+        resource_type: 'image',
+        max_results: 100,
+      }),
+      cloudinary.api.resources({
+        type: 'upload',
+        prefix: `wanjey/${folder}/`,
+        resource_type: 'video',
+        max_results: 100,
+      }),
+    ]);
 
-    const media = result.resources.map((resource: any) => ({
+    const mapResource = (resource: any, type: string) => ({
       id: resource.public_id,
       url: resource.secure_url,
-      type: resource.resource_type, // 'image' or 'video'
+      type,
       width: resource.width,
       height: resource.height,
-      created_at: resource.created_at
-    }));
+      created_at: resource.created_at,
+    });
+
+    const media = [
+      ...imageResult.resources.map((r: any) => mapResource(r, 'image')),
+      ...videoResult.resources.map((r: any) => mapResource(r, 'video')),
+    ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     return NextResponse.json({ media });
   } catch (error) {
@@ -40,3 +54,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Failed to fetch media' }, { status: 500 });
   }
 }
+
