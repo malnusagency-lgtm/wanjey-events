@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Fraunces } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
-import BackToTop from "@/components/BackToTop";
-import WhatsAppWidget from "@/components/WhatsAppWidget";
-import SmoothScroll from "@/components/SmoothScroll";
-import FilmGrain from "@/components/FilmGrain";
-import PremiumCursor from "@/components/PremiumCursor";
+import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
@@ -53,15 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} ${fraunces.variable}`}>
       <body>
-        <FilmGrain />
-        <PremiumCursor />
-        <SmoothScroll />
-        <ScrollProgress />
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <WhatsAppWidget />
-        <BackToTop />
+        <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
         <Toaster />
         <Sonner />
       </body>
