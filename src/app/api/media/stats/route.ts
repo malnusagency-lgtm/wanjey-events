@@ -47,9 +47,12 @@ export async function GET() {
       cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'video', max_results: 500 }),
     ]);
 
+    const totalBytes = [...allImages.resources, ...allVideos.resources].reduce((acc, curr) => acc + curr.bytes, 0);
+
     return NextResponse.json({
       totalImages: allImages.resources.length,
       totalVideos: allVideos.resources.length,
+      totalBytes: totalBytes,
     });
   } catch (error) {
     console.error('Cloudinary Stats Error:', error);
