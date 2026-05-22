@@ -185,16 +185,6 @@ export default function EventsPage() {
             {saving ? 'Saving...' : 'Save & Publish Changes'}
           </button>
         </div>
-      </div>
-
-      <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-5 text-sm text-blue-200">
-        <strong className="block mb-1">📹 Background Media</strong>
-        The video/image background of the event section is managed from the{' '}
-        <Link href="/admin/media" className="underline hover:text-white">
-          Media Manager → BigVoices folder
-        </Link>
-        . Upload videos there to have them rotate automatically as the background.
-      </div>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import { Settings as SettingsIcon, User, Shield, Key } from 'lucide-react';
+import { Settings as SettingsIcon, User } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,49 +47,6 @@ export default async function SettingsPage() {
           </div>
         </div>
 
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-          <div className="flex items-center gap-4 mb-6 pb-6 border-b border-zinc-800">
-            <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-500">
-              <Shield size={24} />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-white">Security & API</h2>
-              <p className="text-sm text-zinc-400">Connection statuses for external services.</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
-              <div className="flex items-center gap-3">
-                <Key size={18} className="text-zinc-400" />
-                <div>
-                  <div className="text-sm font-medium text-white">Supabase Connection</div>
-                  <div className="text-xs text-zinc-500">Database and Authentication</div>
-                </div>
-              </div>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-xs font-medium border border-emerald-500/20">
-                Active
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between p-4 bg-zinc-950/50 rounded-lg border border-zinc-800/50">
-              <div className="flex items-center gap-3">
-                <Key size={18} className="text-zinc-400" />
-                <div>
-                  <div className="text-sm font-medium text-white">Cloudinary Connection</div>
-                  <div className="text-xs text-zinc-500">Media Storage API</div>
-                </div>
-              </div>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-xs font-medium border border-emerald-500/20">
-                Active
-              </span>
-            </div>
-          </div>
-          
-          <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg text-sm text-blue-200">
-            <strong>Note:</strong> To change passwords or manage API keys, please use your Supabase or Cloudinary dashboard directly.
-          </div>
-        </div>
       </div>
     </div>
   );
