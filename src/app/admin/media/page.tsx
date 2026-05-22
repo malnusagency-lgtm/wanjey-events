@@ -121,6 +121,8 @@ export default function MediaManagerPage() {
           <p className="text-zinc-400 mt-1">Upload and manage assets for your website sections.</p>
         </div>
         
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+          <span className="text-xs text-zinc-500 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">Max 100 MB per file</span>
         <CldUploadWidget 
           key={activeFolder}
           signatureEndpoint="/api/cloudinary/sign"
@@ -128,7 +130,7 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
-            maxFileSize: 2147483648, // 2 GB in bytes (Cloudinary's premium tier limit for videos)
+            maxFileSize: 104857600, // 100 MB — Cloudinary free-tier server hard limit
             clientAllowedFormats: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'avi', 'webm', 'mkv'],
           }}
           onSuccess={(result: any) => {
@@ -165,6 +167,7 @@ export default function MediaManagerPage() {
             )
           }}
         </CldUploadWidget>
+        </div>
       </div>
 
       <div className="flex gap-4 border-b border-zinc-800 pb-4">
