@@ -134,6 +134,8 @@ export default function MediaManagerPage() {
             maxFiles: 50,
             // 500MB for bigvoices (videos), 100MB for gallery (images)
             maxFileSize: activeFolder === 'bigvoices' ? 524288000 : 104857600,
+            maxVideoFileSize: 524288000, // 500MB explicitly for videos
+            maxImageFileSize: 104857600, // 100MB explicitly for images
             // Chunked uploads: splits large files into 6MB chunks to bypass single-request limits
             maxChunkSize: 6000000,
             clientAllowedFormats: activeFolder === 'bigvoices'
