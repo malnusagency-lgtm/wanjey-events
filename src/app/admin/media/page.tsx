@@ -123,7 +123,7 @@ export default function MediaManagerPage() {
         
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
           <span className="text-xs text-zinc-500 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">
-            Max {activeFolder === 'bigvoices' ? '500 MB' : '100 MB'} per file
+            Max {activeFolder === 'bigvoices' ? '2 GB' : '100 MB'} per file
           </span>
         <CldUploadWidget 
           key={activeFolder}
@@ -132,9 +132,9 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
-            // 500MB for bigvoices (videos), 100MB for gallery (images)
-            maxFileSize: activeFolder === 'bigvoices' ? 524288000 : 104857600,
-            maxVideoFileSize: 524288000, // 500MB explicitly for videos
+            // 2GB for bigvoices (videos), 100MB for gallery (images)
+            maxFileSize: activeFolder === 'bigvoices' ? 2147483648 : 104857600,
+            maxVideoFileSize: activeFolder === 'bigvoices' ? 2147483648 : 524288000, // 2GB for BigVoices videos
             maxImageFileSize: 104857600, // 100MB explicitly for images
             // Chunked uploads: splits large files into 6MB chunks to bypass single-request limits
             maxChunkSize: 6000000,
