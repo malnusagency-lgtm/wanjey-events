@@ -185,6 +185,7 @@ export default function EventsPage() {
             {saving ? 'Saving...' : 'Save & Publish Changes'}
           </button>
         </div>
+      </div>
     </div>
   )
 }
