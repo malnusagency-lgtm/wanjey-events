@@ -122,6 +122,7 @@ export default function MediaManagerPage() {
         </div>
         
         <CldUploadWidget 
+          key={activeFolder}
           signatureEndpoint="/api/cloudinary/sign"
           options={{
             folder: `wanjey/${activeFolder}`,
