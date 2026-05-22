@@ -132,16 +132,13 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
-            // 2GB for bigvoices (videos), 100MB for gallery (images)
-            maxFileSize: activeFolder === 'bigvoices' ? 2147483648 : 104857600,
-            maxVideoFileSize: activeFolder === 'bigvoices' ? 2147483648 : 524288000, // 2GB for BigVoices videos
-            maxImageFileSize: 104857600, // 100MB explicitly for images
-            // Chunked uploads: splits large files into 6MB chunks to bypass single-request limits
+            // Set global max file size to 2GB
+            maxFileSize: 2147483648,
+            // Auto-compress large images client-side to bypass the 10MB free tier image limit
+            maxImageWidth: 2500,
+            // Chunked uploads: splits large videos into chunks
             maxChunkSize: 6000000,
-            resourceType: 'auto', // Fixes the 10MB bug: forces Cloudinary to recognize videos as videos, not images
-            clientAllowedFormats: activeFolder === 'bigvoices'
-              ? ['mp4', 'mov', 'avi', 'webm', 'mkv', 'png', 'jpg', 'jpeg', 'webp']
-              : ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'webm'],
+            resourceType: 'auto',
           }}
           onSuccess={(result: any) => {
             console.log('Upload success:', result)
