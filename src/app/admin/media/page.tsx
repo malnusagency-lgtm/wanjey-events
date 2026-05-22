@@ -138,6 +138,7 @@ export default function MediaManagerPage() {
             maxImageFileSize: 104857600, // 100MB explicitly for images
             // Chunked uploads: splits large files into 6MB chunks to bypass single-request limits
             maxChunkSize: 6000000,
+            resourceType: 'auto', // Fixes the 10MB bug: forces Cloudinary to recognize videos as videos, not images
             clientAllowedFormats: activeFolder === 'bigvoices'
               ? ['mp4', 'mov', 'avi', 'webm', 'mkv', 'png', 'jpg', 'jpeg', 'webp']
               : ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'webm'],
