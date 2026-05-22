@@ -122,7 +122,9 @@ export default function MediaManagerPage() {
         </div>
         
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-          <span className="text-xs text-zinc-500 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">Max 100 MB per file</span>
+          <span className="text-xs text-zinc-500 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">
+            Max {activeFolder === 'bigvoices' ? '500 MB' : '100 MB'} per file
+          </span>
         <CldUploadWidget 
           key={activeFolder}
           signatureEndpoint="/api/cloudinary/sign"
@@ -130,8 +132,13 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
-            maxFileSize: 104857600, // 100 MB — Cloudinary free-tier server hard limit
-            clientAllowedFormats: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'avi', 'webm', 'mkv'],
+            // 500MB for bigvoices (videos), 100MB for gallery (images)
+            maxFileSize: activeFolder === 'bigvoices' ? 524288000 : 104857600,
+            // Chunked uploads: splits large files into 6MB chunks to bypass single-request limits
+            maxChunkSize: 6000000,
+            clientAllowedFormats: activeFolder === 'bigvoices'
+              ? ['mp4', 'mov', 'avi', 'webm', 'mkv', 'png', 'jpg', 'jpeg', 'webp']
+              : ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'webm'],
           }}
           onSuccess={(result: any) => {
             console.log('Upload success:', result)
