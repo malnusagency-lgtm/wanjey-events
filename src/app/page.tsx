@@ -57,20 +57,16 @@ export default function HomePage() {
         <HeroBackground />
         <div className="container relative z-10 py-24 md:py-32">
           <div className="max-w-2xl">
-
-            
-            <TextReveal 
+            <TextReveal
               text="Wanjey Events & Marketing"
               delay={0.25}
               className="mt-6 font-serif text-5xl font-black leading-tight text-white sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter uppercase drop-shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
             />
-
             <AnimatedSection delay={0.4}>
               <p className="mt-8 max-w-lg text-[16px] leading-[1.7] text-primary-foreground/80 md:text-lg opacity-90 font-medium">
                 We plan, execute, and amplify impactful corporate and lifestyle events that drive visibility, engagement, and measurable growth.
               </p>
             </AnimatedSection>
-
             <AnimatedSection delay={0.6}>
               <div className="mt-12 flex flex-col gap-4 sm:flex-row">
                 <Link href="/contact">
@@ -95,12 +91,12 @@ export default function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="bg-accent/5 border-y border-accent/10 py-12 md:py-16">
+      <section className="bg-accent/5 border-y border-accent/10 py-10 md:py-12">
         <div className="container">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {stats.map((stat, i) => (
               <AnimatedSection key={stat.label} delay={i * 0.08} className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-accent-foreground mb-6 shadow-[0_10px_30px_-10px_rgba(202,163,101,0.6)]">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-accent-foreground mb-4 shadow-[0_10px_30px_-10px_rgba(202,163,101,0.6)]">
                   <stat.icon className="h-8 w-8" />
                 </div>
                 <p className="font-serif text-3xl font-bold text-foreground md:text-4xl">{stat.value}</p>
@@ -112,11 +108,11 @@ export default function HomePage() {
       </section>
 
       {/* What We Do */}
-      <section className="relative py-16 overflow-hidden md:py-20">
+      <section className="relative py-12 overflow-hidden md:py-16">
         <AmbientGlow />
         <div className="container relative z-10">
-          <AnimatedSection className="text-center max-w-4xl mx-auto mb-8 md:mb-16">
-            <div className="glass-card p-6 md:p-16">
+          <AnimatedSection className="text-center max-w-4xl mx-auto mb-8 md:mb-12">
+            <div className="glass-card p-6 md:p-12">
               <p className="section-label font-bold text-accent">What We Do</p>
               <h2 className="section-heading font-bold">Comprehensive Event & Marketing Solutions</h2>
               <p className="section-subtext font-medium text-muted-foreground/80">
@@ -124,39 +120,36 @@ export default function HomePage() {
               </p>
             </div>
           </AnimatedSection>
- 
           <ServicesMarquee />
         </div>
       </section>
-
-      <OurProcess />
 
       <ParallaxImageBreakout src="/assets/gallery/event-30.jpg" alt="Premium Event Setup" />
 
       <InfiniteMarquee text="PREMIUM EVENTS • STRATEGIC MARKETING • BRAND ACTIVATIONS • " />
 
       <UpcomingEventSection />
-      
+
       {/* FAQ Section */}
       <FAQ />
 
       {/* Why Choose Us */}
-      <section className="py-12 md:py-16">
+      <section className="py-10 md:py-14">
         <div className="container">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-              <div className="glass-card p-6 md:p-10 mb-6 lg:mb-0">
-                <AnimatedSection delay={0.1}>
-                  <p className="section-label font-bold">Why Choose Us</p>
-                </AnimatedSection>
-                <AnimatedSection delay={0.2}>
-                  <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
-                </AnimatedSection>
-                <AnimatedSection delay={0.3}>
-                  <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
-                    With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
-                  </p>
-                </AnimatedSection>
-              </div>
+            <div className="glass-card p-6 md:p-10">
+              <AnimatedSection delay={0.1}>
+                <p className="section-label font-bold">Why Choose Us</p>
+              </AnimatedSection>
+              <AnimatedSection delay={0.2}>
+                <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
+              </AnimatedSection>
+              <AnimatedSection delay={0.3}>
+                <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
+                  With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
+                </p>
+              </AnimatedSection>
+            </div>
             <div className="grid gap-3">
               {differentiators.map((d, i) => (
                 <AnimatedSection key={d} delay={i * 0.06}>
@@ -171,14 +164,16 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Strategic Approach — last section before footer */}
+      <OurProcess />
+
       {/* CTA */}
-      <section className="relative py-16 md:py-20 overflow-hidden w-full" style={{ clipPath: 'inset(0)' }}>
-        {/* Truly Fixed Background - Position fixed within clipped section */}
-        <div 
+      <section className="relative py-14 md:py-20 overflow-hidden w-full" style={{ clipPath: 'inset(0)' }}>
+        <div
           className="fixed inset-0 z-[-1] bg-cover bg-no-repeat w-full pointer-events-none"
-          style={{ 
-            backgroundImage: 'url("/assets/lets-build.jpg")', 
-            height: '100vh', 
+          style={{
+            backgroundImage: 'url("/assets/lets-build.jpg")',
+            height: '100vh',
             width: '100vw',
             backgroundPosition: '80% 0%',
             transform: 'translateZ(0)',
@@ -186,7 +181,6 @@ export default function HomePage() {
           }}
         />
         <div className="absolute inset-0 z-[1] bg-white/20" />
-
         <div className="container relative z-10 text-center">
           <AnimatedSection delay={0.1}>
             <h2 className="font-serif text-4xl font-bold text-foreground md:text-5xl lg:text-[4rem] text-balance tracking-tight leading-[1.1]">

@@ -6,9 +6,9 @@ import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
 import AmbientGlow from "@/components/AmbientGlow";
 import {
-  Heart, Shield, Lightbulb, Award, Users,
+  Heart, Users,
   ArrowRight, ExternalLink, Quote, Star,
-  Sparkles, Target, Repeat2,
+  Target, Repeat2, Award,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -37,13 +37,7 @@ const philosophy = [
   { icon: Target, label: "Consistency compounds.", sub: "Long-term results are born from disciplined, daily execution — not one-off moments." },
 ];
 
-const values = [
-  { icon: Shield, label: "Professionalism" },
-  { icon: Heart, label: "Integrity" },
-  { icon: Lightbulb, label: "Creativity" },
-  { icon: Award, label: "Excellence" },
-  { icon: Users, label: "Client-Centered" },
-];
+
 
 const projects = [
   "Big Voices Festival",
@@ -60,7 +54,7 @@ export default function AboutPage() {
     <PageTransition>
 
       {/* ── CINEMATIC HERO ── */}
-      <section className="relative min-h-[70vh] flex items-end overflow-hidden">
+      <section className="relative min-h-[60vh] flex items-end overflow-hidden">
         {/* Background image with dark overlay */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -90,7 +84,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── FOUNDER INTRO ── */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
+      <section className="relative py-14 md:py-20 overflow-hidden">
         <AmbientGlow />
         <div className="container relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -157,7 +151,7 @@ export default function AboutPage() {
       <div className="gradient-separator" />
 
       {/* ── ORIGIN STORY ── */}
-      <section className="py-20 md:py-28">
+      <section className="py-12 md:py-16">
         <div className="container">
           <AnimatedSection className="max-w-3xl mx-auto text-center mb-16">
             <p className="section-label mb-3">The Journey</p>
@@ -197,7 +191,7 @@ export default function AboutPage() {
       <div className="gradient-separator" />
 
       {/* ── CAREER TIMELINE ── */}
-      <section className="py-20 md:py-28 bg-accent/3">
+      <section className="py-12 md:py-20">
         <div className="container">
           <AnimatedSection className="text-center mb-16">
             <p className="section-label mb-3">Career Timeline</p>
@@ -249,7 +243,6 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="container relative z-10 text-center">
           <AnimatedSection>
-            <Sparkles className="h-8 w-8 text-accent mx-auto mb-6" />
             <p className="section-label text-accent mb-4">The Beginning</p>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-tight max-w-3xl mx-auto">
               Founding Wanjey Events &amp; Marketing
@@ -303,7 +296,7 @@ export default function AboutPage() {
       <div className="gradient-separator" />
 
       {/* ── PHILOSOPHY ── */}
-      <section className="py-20 md:py-28 relative overflow-hidden">
+      <section className="py-12 md:py-20 relative overflow-hidden">
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center mb-14">
@@ -340,32 +333,8 @@ export default function AboutPage() {
 
       <div className="gradient-separator" />
 
-      {/* ── VALUES ── */}
-      <section className="py-20 md:py-24">
-        <div className="container text-center">
-          <AnimatedSection>
-            <p className="section-label mb-3">Our Values</p>
-            <h2 className="section-heading">What Guides Us</h2>
-          </AnimatedSection>
-          <div className="mx-auto mt-10 grid max-w-3xl gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
-            {values.map((v, i) => (
-              <AnimatedSection key={v.label} delay={i * 0.06}>
-                <div className="glass-card flex flex-col items-center gap-3 p-6 hover:border-accent/40">
-                  <div className="h-10 w-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center">
-                    <v.icon className="h-5 w-5 text-accent" />
-                  </div>
-                  <span className="text-sm font-bold text-foreground">{v.label}</span>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="gradient-separator" />
-
       {/* ── BRAND FAMILY ── */}
-      <section className="py-20 md:py-28">
+      <section className="py-12 md:py-16">
         <div className="container">
           <AnimatedSection className="text-center mb-14">
             <p className="section-label mb-3">The Brand Family</p>
@@ -422,7 +391,7 @@ export default function AboutPage() {
       <div className="gradient-separator" />
 
       {/* ── CTA ── */}
-      <section className="py-20 md:py-28 text-center">
+      <section className="py-12 md:py-20 text-center">
         <div className="container">
           <AnimatedSection>
             <p className="section-label mb-4">Looking Ahead</p>

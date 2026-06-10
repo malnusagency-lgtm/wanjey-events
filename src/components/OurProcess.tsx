@@ -32,7 +32,7 @@ const steps = [
 
 export default function OurProcess() {
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden">
+    <section className="py-14 md:py-20 relative overflow-hidden">
       <div className="container relative z-10">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
           <p className="section-label">Strategic Approach</p>
