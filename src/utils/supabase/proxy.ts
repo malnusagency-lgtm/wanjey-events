@@ -6,16 +6,27 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
+  // Guard: if Supabase env vars are not configured (e.g. missing in Vercel
+  // environment settings), skip the auth check entirely rather than hanging
+  // on a network request to an undefined host and triggering a timeout.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('[proxy] Supabase env vars are not set – skipping auth check.')
+    return supabaseResponse
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
           })
@@ -31,9 +42,16 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch (err) {
+    // If the Supabase API is unreachable or times out, log the error and
+    // continue without authentication context rather than crashing the request.
+    console.error('[proxy] supabase.auth.getUser() failed:', err)
+    return supabaseResponse
+  }
 
   if (
     !user &&
