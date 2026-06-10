@@ -53,21 +53,34 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse
   }
 
-  if (
-    !user &&
-    request.nextUrl.pathname.startsWith('/admin')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
+  // Helper: copy any refreshed session cookies onto a redirect response so
+  // they are not lost (Supabase may refresh the token on every request).
+  function redirectWithCookies(url: URL) {
+    const redirectResponse = NextResponse.redirect(url)
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie)
+    })
+    return redirectResponse
   }
 
-  // If user is logged in and trying to access login page, redirect to admin
-  if (user && request.nextUrl.pathname === '/login') {
+  if (!user && request.nextUrl.pathname.startsWith('/admin')) {
+    // No authenticated user — send to login page.
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.search = ''
+    return redirectWithCookies(url)
+  }
+
+  // If user is logged in and on /login with no error param, redirect to admin.
+  // We check for no ?error= to avoid a redirect loop after a failed login attempt
+  // where the server action redirects back to /login?error=... and the proxy
+  // would immediately bounce them to /admin if a stale cookie is present.
+  const hasError = request.nextUrl.searchParams.has('error')
+  if (user && request.nextUrl.pathname === '/login' && !hasError) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin'
-    return NextResponse.redirect(url)
+    url.search = ''
+    return redirectWithCookies(url)
   }
 
   return supabaseResponse

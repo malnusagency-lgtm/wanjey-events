@@ -7,8 +7,6 @@ import { createClient } from '@/utils/supabase/server'
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -17,15 +15,18 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect('/login?error=Could not authenticate user')
+    // NOTE: redirect() throws internally in Next.js — never call it inside
+    // a try/catch block or the thrown redirect will be caught as an error.
+    redirect(`/login?error=${encodeURIComponent('Invalid email or password. Please try again.')}`)
   }
 
-  revalidatePath('/', 'layout')
+  revalidatePath('/admin', 'layout')
   redirect('/admin')
 }
 
 export async function logout() {
   const supabase = await createClient()
   await supabase.auth.signOut()
+  revalidatePath('/', 'layout')
   redirect('/login')
 }
