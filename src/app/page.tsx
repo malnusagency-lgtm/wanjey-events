@@ -73,7 +73,7 @@ export default function HomePage() {
               <div className="mt-12 flex flex-col gap-4 sm:flex-row">
                 <Link href="/contact">
                   <MagneticButton intensity={30}>
-                    <Button size="lg" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       Book a Consultation
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -81,7 +81,7 @@ export default function HomePage() {
                 </Link>
                 <Link href="/packages">
                   <MagneticButton intensity={20}>
-                    <Button size="lg" className="w-full sm:w-auto bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-transparent font-bold px-8 h-14 text-[15px] transition-all duration-300">
+                    <Button size="lg" className="w-full sm:w-auto bg-primary-foreground/10 text-primary-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] border-transparent font-bold px-8 h-14 text-[15px] transition-all duration-300">
                       View Our Packages
                     </Button>
                   </MagneticButton>
@@ -201,7 +201,7 @@ export default function HomePage() {
           <AnimatedSection delay={0.3}>
             <Link href="/contact">
               <MagneticButton intensity={25} className="mt-10">
-                <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 h-14 text-[15px] transition-all duration-300">
+                <Button size="lg" className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] font-bold px-10 h-14 text-[15px] transition-all duration-300">
                   Schedule Your Strategy Call
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

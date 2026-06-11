@@ -63,12 +63,12 @@ const Navbar = () => {
               key={link.path}
               href={link.path}
               className={`relative px-3 py-2 text-[13px] font-medium transition-colors duration-300 ${
-                pathname === link.path ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                pathname === link.path ? "text-[#E07A5F]" : "text-muted-foreground hover:text-[#E07A5F]"
               }`}
             >
               {link.label}
               {pathname === link.path && (
-                <span className="absolute bottom-0 left-1/2 h-px w-4 -translate-x-1/2 bg-accent" />
+                <span className="absolute bottom-0 left-1/2 h-px w-4 -translate-x-1/2 bg-[#E07A5F]" />
               )}
             </Link>
           ))}
@@ -77,7 +77,7 @@ const Navbar = () => {
         <Link href="/contact" className="hidden lg:block">
           <Button
             size="sm"
-            className="bg-accent text-accent-foreground hover:bg-accent/90 font-sans text-xs shadow-none transition-all duration-300 hover:shadow-sm hover:shadow-accent/10"
+            className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] font-sans text-xs shadow-none transition-all duration-300 hover:shadow-sm hover:shadow-accent/10"
           >
             Book a Consultation
           </Button>
@@ -109,15 +109,15 @@ const Navbar = () => {
                   onClick={() => setOpen(false)}
                   className={`rounded-lg px-4 py-3 text-[15px] font-medium transition-colors duration-300 ${
                     pathname === link.path
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "text-[#E07A5F]"
+                      : "text-muted-foreground hover:text-[#E07A5F]"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
               <Link href="/contact" onClick={() => setOpen(false)} className="mt-8">
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-sans">
+                <Button className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] font-sans">
                   Book a Consultation
                 </Button>
               </Link>
