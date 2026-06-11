@@ -365,33 +365,7 @@ export default function EventsPage() {
       {/* ── PAST EVENTS TAB ── */}
       {activeTab === 'past' && (
         <div className="space-y-4">
-          {/* DB notice if table is missing */}
-          {isTableMissing && (
-            <div className="flex items-start gap-3 rounded-xl border border-amber-500/35 bg-amber-500/5 p-4 text-sm text-amber-900 shadow-sm">
-              <AlertCircle size={18} className="text-amber-600 mt-0.5 shrink-0" />
-              <div>
-                <p className="font-bold text-amber-800">Database Table Missing</p>
-                <p className="text-amber-700/80 mt-1 text-xs leading-relaxed font-semibold">
-                  The `past_events` table does not exist in your database. Run this query in your{' '}
-                  <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline text-amber-900 hover:text-amber-950 font-bold">Supabase SQL Editor</a> to create it:
-                </p>
-                <code className="mt-2 block rounded-lg bg-amber-950/5 border border-amber-500/20 px-3 py-2 text-[10px] text-amber-900 leading-relaxed font-mono whitespace-pre overflow-x-auto">{`CREATE TABLE past_events (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  title text NOT NULL,
-  category text DEFAULT 'Event',
-  description text,
-  image_url text,
-  highlight_stat text,
-  event_month_year text,
-  display_order integer DEFAULT 0,
-  created_at timestamptz DEFAULT now()
-);
-ALTER TABLE past_events ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Public read" ON past_events FOR SELECT USING (true);
-CREATE POLICY "Auth write" ON past_events FOR ALL USING (auth.role() = 'authenticated');`}</code>
-              </div>
-            </div>
-          )}
+
 
           {/* Add button */}
           {!showAddForm && (

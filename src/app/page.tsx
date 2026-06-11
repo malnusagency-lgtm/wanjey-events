@@ -13,6 +13,7 @@ import HeroBackground from "@/components/HeroBackground";
 import UpcomingEventSection from "@/components/UpcomingEventSection";
 import PastEventsSection from "@/components/PastEventsSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
+import BrandsMarquee from "@/components/BrandsMarquee";
 import FAQ from "@/components/FAQ";
 import OurProcess from "@/components/OurProcess";
 import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
@@ -130,6 +131,8 @@ export default function HomePage() {
       <InfiniteMarquee text="PREMIUM EVENTS • STRATEGIC MARKETING • BRAND ACTIVATIONS • " />
 
       <UpcomingEventSection />
+
+      <BrandsMarquee />
 
       <PastEventsSection />
 
