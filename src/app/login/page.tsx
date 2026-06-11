@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { login } from './actions'
 import { LoginForm } from './LoginForm'
 
 export const metadata: Metadata = {
@@ -8,18 +7,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-/**
- * This page is a Server Component.
- * - searchParams are read server-side (no useSearchParams / Suspense needed)
- * - The server action `login` is bound to the form action server-side
- * - LoginForm is a client component only for the loading/pending UI
- */
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>
 }) {
   const params = await searchParams
+  // Decode the error param server-side so LoginForm receives plain text
+  const error = params.error ? decodeURIComponent(params.error) : undefined
 
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-zinc-950 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -50,12 +45,8 @@ export default async function LoginPage({
           </div>
         </div>
 
-        {/*
-          LoginForm is a client component for pending UI.
-          The actual form action (login server action) is bound here
-          server-side via the `action` prop so redirect() works correctly.
-        */}
-        <LoginForm error={params.error} serverAction={login} />
+        {/* LoginForm imports the server action directly — no prop passing */}
+        <LoginForm error={error} />
 
         <p className="mt-6 text-center text-xs text-zinc-600">
           © {new Date().getFullYear()} Wanjey Events &amp; Marketing

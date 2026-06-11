@@ -1,8 +1,10 @@
 'use client'
 
+import { login } from './actions'
 import { useFormStatus } from 'react-dom'
 import { Loader2 } from 'lucide-react'
 
+// useFormStatus must live in a child of the <form> that uses the action
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
@@ -23,29 +25,22 @@ function SubmitButton() {
   )
 }
 
-interface LoginFormProps {
-  error?: string
-  // Server action passed from the Server Component parent
-  serverAction: (formData: FormData) => Promise<never>
-}
-
-export function LoginForm({ error, serverAction }: LoginFormProps) {
+export function LoginForm({ error }: { error?: string }) {
   return (
     <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-8 shadow-2xl">
       {error && (
         <div className="mb-6 rounded-lg bg-red-950/50 border border-red-500/40 px-4 py-3 text-sm text-red-300 text-center">
-          {decodeURIComponent(error)}
+          {error}
         </div>
       )}
 
       {/*
-        The server action is bound to the native form action prop.
-        This is the ONLY reliable way to:
-        1. Get pending state via useFormStatus()
-        2. Have redirect() from the server action fire correctly in the browser
-        Do NOT use startTransition / event.preventDefault() with server actions that redirect.
+        Import the server action directly — do NOT pass it as a prop.
+        Next.js automatically creates a serialisable reference when a
+        server action is imported into a client component, which avoids
+        the hydration mismatch that occurs when passing actions as props.
       */}
-      <form action={serverAction} className="space-y-5">
+      <form action={login} className="space-y-5">
         <div>
           <label
             htmlFor="email"
