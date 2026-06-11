@@ -73,7 +73,7 @@ export default function PastEventsSection() {
 
   if (loading) {
     return (
-      <section className="relative h-[75vh] md:h-[95vh] w-full bg-black flex items-center justify-center">
+      <section className="relative h-[75vh] md:h-[95vh] w-full bg-[#130B07] flex items-center justify-center">
         <div className="h-12 w-12 rounded-full border-2 border-accent border-t-transparent animate-spin" />
       </section>
     )
@@ -85,7 +85,7 @@ export default function PastEventsSection() {
 
   return (
     <section
-      className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-black"
+      className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -105,11 +105,11 @@ export default function PastEventsSection() {
             />
           </div>
         ))}
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/85 via-black/35 to-black/60" />
-        {/* Side vignettes */}
+        {/* Gold & Chocolate Gradient Overlay */}
+        <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/90 via-[#CAA365]/35 to-[#130B07]/60" />
+        {/* Gold Radial Vignette */}
         <div className="absolute inset-0 z-20"
-          style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 45%, rgba(0,0,0,0.6) 100%)' }} />
+          style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 40%, rgba(202, 163, 101, 0.35) 100%)' }} />
       </div>
 
       {/* ── Content Overlay ── */}

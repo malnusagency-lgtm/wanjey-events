@@ -114,7 +114,7 @@ const UpcomingEventSection = () => {
   // Show nothing while loading to avoid flash
   if (loading) {
     return (
-      <section className="relative h-[75vh] md:h-[95vh] w-full bg-black flex items-center justify-center">
+      <section className="relative h-[75vh] md:h-[95vh] w-full bg-[#130B07] flex items-center justify-center">
         <div className="h-12 w-12 rounded-full border-2 border-accent border-t-transparent animate-spin" />
       </section>
     )
@@ -127,7 +127,7 @@ const UpcomingEventSection = () => {
 
   return (
     <>
-      <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-black">
+      <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
 
         {/* ── Dynamic Background Videos ── */}
         <div className="absolute inset-0 z-0">
@@ -144,11 +144,11 @@ const UpcomingEventSection = () => {
               />
             </div>
           ))}
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/60 via-black/10 to-black/40" />
-          {/* Side vignettes */}
+          {/* Gold & Chocolate Gradient Overlay */}
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/85 via-[#CAA365]/35 to-[#130B07]/55" />
+          {/* Gold Radial Vignette */}
           <div className="absolute inset-0 z-20"
-            style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 50%, rgba(0,0,0,0.5) 100%)' }} />
+            style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 45%, rgba(202, 163, 101, 0.3) 100%)' }} />
         </div>
 
         {/* ── Content Overlay ── */}
