@@ -11,6 +11,7 @@ import MagneticButton from "@/components/MagneticButton";
 import TextReveal from "@/components/TextReveal";
 import HeroBackground from "@/components/HeroBackground";
 import UpcomingEventSection from "@/components/UpcomingEventSection";
+import PastEventsSection from "@/components/PastEventsSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
 import FAQ from "@/components/FAQ";
 import OurProcess from "@/components/OurProcess";
@@ -129,6 +130,8 @@ export default function HomePage() {
       <InfiniteMarquee text="PREMIUM EVENTS • STRATEGIC MARKETING • BRAND ACTIVATIONS • " />
 
       <UpcomingEventSection />
+
+      <PastEventsSection />
 
       {/* FAQ Section */}
       <FAQ />

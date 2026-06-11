@@ -1,180 +1,252 @@
-'use client';
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import MagneticButton from "./MagneticButton";
-import { ArrowRight } from "lucide-react";
-import AnimatedSection from "./AnimatedSection";
-import MediaModal from "./MediaModal";
+'use client'
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import MagneticButton from './MagneticButton'
+import { ArrowRight, MapPin, Clock } from 'lucide-react'
+import AnimatedSection from './AnimatedSection'
+import MediaModal from './MediaModal'
+import BookingCTA3D from './BookingCTA3D'
 
-type MediaItem = {
-  id?: string;
-  src: string;
-  type: 'video' | 'image';
-};
+type MediaItem = { id?: string; src: string; type: 'video' | 'image' }
 
 type EventData = {
-  title: string;
-  subtitle: string;
-  event_date: string;
-  save_the_date_text: string;
-  cta_text: string;
-};
+  title: string
+  subtitle: string
+  event_date: string
+  save_the_date_text: string
+  cta_text: string
+  date_iso?: string
+  location?: string
+  no_event?: boolean
+}
+
+function useCountdown(dateIso?: string) {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0, expired: false })
+
+  useEffect(() => {
+    if (!dateIso) return
+    const target = new Date(dateIso).getTime()
+    const tick = () => {
+      const diff = target - Date.now()
+      if (diff <= 0) { setTimeLeft(t => ({ ...t, expired: true })); return }
+      setTimeLeft({
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        mins: Math.floor((diff % 3600000) / 60000),
+        secs: Math.floor((diff % 60000) / 1000),
+        expired: false,
+      })
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [dateIso])
+
+  return timeLeft
+}
 
 const UpcomingEventSection = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [bgIndex, setBgIndex] = useState(0);
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
-  const [bgVideos, setBgVideos] = useState<MediaItem[]>([]);
-  const [eventData, setEventData] = useState<EventData>({
-    title: 'BIGVOICES FEST',
-    subtitle: 'Season 2: Millennial Edition',
-    event_date: '6TH JUNE',
-    save_the_date_text: 'SAVE THE DATE',
-    cta_text: 'Join the Movement',
-  });
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [bgIndex, setBgIndex] = useState(0)
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([])
+  const [bgVideos, setBgVideos] = useState<MediaItem[]>([])
+  const [eventData, setEventData] = useState<EventData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  const countdown = useCountdown(eventData?.date_iso)
 
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const response = await fetch('/api/media?folder=bigvoices');
-        if (response.ok) {
-          const data = await response.json();
-          // Transform to match existing structure 
-          // Cloudinary type might be 'image' or 'video'
-          const items = data.media.map((item: any) => ({
-            type: item.type,
-            src: item.url,
-          }));
-          setMediaItems(items);
-          setBgVideos(items.filter((item: any) => item.type === 'video'));
+        const r = await fetch('/api/media?folder=bigvoices')
+        if (r.ok) {
+          const data = await r.json()
+          const items = data.media?.map((item: any) => ({ type: item.type, src: item.url })) ?? []
+          setMediaItems(items)
+          setBgVideos(items.filter((i: any) => i.type === 'video'))
         }
-      } catch (error) {
-        console.error('Failed to fetch bigvoices media:', error);
-      }
-    };
+      } catch {}
+    }
 
     const fetchEvent = async () => {
       try {
-        const response = await fetch('/api/events');
-        if (response.ok) {
-          const data = await response.json();
-          if (data && !data.error) {
-            setEventData({
-              title: data.title || 'BIGVOICES FEST',
-              subtitle: data.subtitle || 'Season 2: Millennial Edition',
-              event_date: data.event_date || '6TH JUNE',
-              save_the_date_text: data.save_the_date_text || 'SAVE THE DATE',
-              cta_text: data.cta_text || 'Join the Movement',
-            });
+        const r = await fetch('/api/events')
+        if (r.ok) {
+          const data = await r.json()
+          if (data?.no_event) {
+            setEventData(null)
+          } else {
+            setEventData(data)
           }
         }
-      } catch (error) {
-        console.error('Failed to fetch event data:', error);
-      }
-    };
+      } catch {}
+      setLoading(false)
+    }
 
-    fetchMedia();
-    fetchEvent();
-  }, []);
+    fetchMedia()
+    fetchEvent()
+  }, [])
 
   useEffect(() => {
-    if (bgVideos.length === 0) return;
-    const timer = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % bgVideos.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [bgVideos.length]);
+    if (bgVideos.length === 0) return
+    const t = setInterval(() => setBgIndex(p => (p + 1) % bgVideos.length), 5000)
+    return () => clearInterval(t)
+  }, [bgVideos.length])
 
   const renderTitle = (title: string) => {
-    const words = title.trim().split(/\s+/);
-    if (words.length <= 1) return title;
-    const lastWord = words.pop();
+    const words = title.trim().split(/\s+/)
+    if (words.length <= 1) return title
+    const last = words.pop()
+    return <>{words.join(' ')} <em className="italic font-light text-white">{last}</em></>
+  }
+
+  // Show nothing while loading to avoid flash
+  if (loading) {
     return (
-      <>
-        {words.join(' ')} <em className="italic font-light text-white">{lastWord}</em>
-      </>
-    );
-  };
+      <section className="relative h-[75vh] md:h-[95vh] w-full bg-black flex items-center justify-center">
+        <div className="h-12 w-12 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+      </section>
+    )
+  }
+
+  // No event → show 3D booking CTA
+  if (!eventData) return <BookingCTA3D />
+
+  const showCountdown = !!eventData.date_iso && !countdown.expired
 
   return (
     <>
       <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-black">
-        {/* Dynamic Background — Videos only, smooth transitions */}
-        <div className="absolute inset-0 z-0 h-full w-full">
+
+        {/* ── Dynamic Background Videos ── */}
+        <div className="absolute inset-0 z-0">
           {bgVideos.map((item, idx) => (
-            <div 
-              key={item.src} 
-              className={`absolute inset-0 h-full w-full transition-opacity duration-1000 ease-in-out ${idx === bgIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            <div
+              key={item.src}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === bgIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             >
               <video
                 src={item.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload={idx <= 1 ? "auto" : "none"}
-                className="h-full w-full object-cover grayscale-[0.2] contrast-[1.1]" 
+                autoPlay muted loop playsInline
+                preload={idx <= 1 ? 'auto' : 'none'}
+                className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
               />
             </div>
           ))}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/40 via-transparent to-black/30" />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/60 via-black/10 to-black/40" />
+          {/* Side vignettes */}
+          <div className="absolute inset-0 z-20"
+            style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 50%, rgba(0,0,0,0.5) 100%)' }} />
         </div>
 
-        {/* Content Overlay */}
+        {/* ── Content Overlay ── */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
-          <AnimatedSection delay={0.2}>
-            <h2 className="font-serif text-3xl font-black leading-tight text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl uppercase">
+
+          {/* UPCOMING label */}
+          <AnimatedSection delay={0.1}>
+            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4 md:mb-6">
+              ✦ Upcoming Event ✦
+            </p>
+          </AnimatedSection>
+
+          {/* Event title */}
+          <AnimatedSection delay={0.25}>
+            <h2 className="font-serif text-4xl font-black leading-none text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl uppercase">
               {renderTitle(eventData.title)}
             </h2>
           </AnimatedSection>
-          
+
           <AnimatedSection delay={0.4}>
-            <p className="mt-4 font-sans text-lg font-black uppercase tracking-[0.2em] text-white sm:text-2xl drop-shadow-md text-balance">
+            <p className="mt-3 font-sans text-base font-black uppercase tracking-[0.2em] text-white/70 sm:text-xl drop-shadow-md text-balance">
               {eventData.subtitle}
             </p>
           </AnimatedSection>
- 
-          {/* Bold Event Date — Changed to White */}
+
+          {/* Date block */}
           <AnimatedSection delay={0.5}>
-            <div className="mt-6 md:mt-10 flex flex-col items-center">
-              <div className="h-px w-24 bg-white/40 mb-6" />
-              <div className="flex flex-col items-center gap-2">
-                <span className="font-serif text-4xl font-black text-white sm:text-8xl md:text-[8.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
-                  {eventData.event_date}
-                </span>
-                <span className="text-sm font-bold uppercase tracking-[0.6em] text-white sm:text-xl">
-                  {eventData.save_the_date_text}
-                </span>
-              </div>
-              <div className="h-px w-24 bg-white/40 mt-6" />
+            <div className="mt-6 md:mt-8 flex flex-col items-center">
+              <div className="h-px w-20 mb-4"
+                style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
+              <span className="font-serif text-5xl font-black text-white sm:text-8xl md:text-[7rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
+                {eventData.event_date}
+              </span>
+              <span className="mt-2 text-xs font-bold uppercase tracking-[0.6em] text-white/60 sm:text-sm">
+                {eventData.save_the_date_text}
+              </span>
+              <div className="h-px w-20 mt-4"
+                style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
             </div>
           </AnimatedSection>
 
-          <AnimatedSection delay={0.6}>
-            <div className="mt-8 sm:mt-16">
+          {/* Location badge */}
+          {eventData.location && (
+            <AnimatedSection delay={0.55}>
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
+                <MapPin className="h-3 w-3 text-accent" />
+                <span className="text-xs font-bold uppercase tracking-[0.15em] text-white/70">{eventData.location}</span>
+              </div>
+            </AnimatedSection>
+          )}
+
+          {/* ── Countdown Timer ── */}
+          {showCountdown && (
+            <AnimatedSection delay={0.6}>
+              <div className="mt-6 md:mt-8 flex items-center gap-3 md:gap-5">
+                {[
+                  { val: countdown.days, label: 'Days' },
+                  { val: countdown.hours, label: 'Hrs' },
+                  { val: countdown.mins, label: 'Min' },
+                  { val: countdown.secs, label: 'Sec' },
+                ].map(({ val, label }, i) => (
+                  <div key={label} className="flex items-center gap-3 md:gap-5">
+                    <div className="flex flex-col items-center">
+                      <div
+                        className="flex h-14 w-14 md:h-20 md:w-20 items-center justify-center rounded-xl font-serif font-black text-2xl md:text-4xl text-white"
+                        style={{
+                          background: 'linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02))',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          backdropFilter: 'blur(20px)',
+                        }}
+                      >
+                        {String(val).padStart(2, '0')}
+                      </div>
+                      <span className="mt-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">{label}</span>
+                    </div>
+                    {i < 3 && <span className="font-serif text-2xl font-black text-accent/60 -mt-5">:</span>}
+                  </div>
+                ))}
+              </div>
+            </AnimatedSection>
+          )}
+
+          {/* CTA Button */}
+          <AnimatedSection delay={0.7}>
+            <div className="mt-8 sm:mt-10">
               <MagneticButton intensity={40}>
-                <Button 
+                <Button
                   onClick={() => setIsModalOpen(true)}
-                  size="lg" 
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 px-10 h-16 text-base sm:px-20 sm:h-24 sm:text-2xl font-black uppercase tracking-[0.3em] shadow-[0_0_70px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border-2 border-white/10"
+                  size="lg"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
                 >
                   {eventData.cta_text}
-                  <ArrowRight className="ml-3 h-6 w-6 sm:ml-5 sm:h-8 sm:w-8 group-hover:translate-x-2 transition-transform duration-300" />
+                  <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
                 </Button>
               </MagneticButton>
             </div>
           </AnimatedSection>
+
         </div>
       </section>
 
-      <MediaModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        items={[...mediaItems]} 
+      <MediaModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        items={[...mediaItems]}
         bgVideos={bgVideos}
       />
     </>
-  );
-};
+  )
+}
 
-export default UpcomingEventSection;
+export default UpcomingEventSection

@@ -1,191 +1,478 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CalendarDays, Save, Eye, Loader2, CheckCircle2 } from 'lucide-react'
+import {
+  CalendarDays, Save, Eye, Loader2, Plus, Trash2,
+  Edit3, X, ChevronUp, ChevronDown, ImageIcon, AlertCircle,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
-type EventData = {
+type PastEvent = {
+  id: string
+  title: string
+  category: string
+  description: string
+  image_url: string
+  highlight_stat: string
+  event_month_year: string
+  display_order: number
+}
+
+type UpcomingEventForm = {
   id?: string
   title: string
   subtitle: string
   event_date: string
+  date_iso: string
+  location: string
   save_the_date_text: string
   cta_text: string
 }
 
-const defaultEvent: EventData = {
+const defaultUpcoming: UpcomingEventForm = {
   title: 'BIG VOICES FEST',
   subtitle: 'Season 2: Millennial Edition',
   event_date: '6TH JUNE',
+  date_iso: '',
+  location: '',
   save_the_date_text: 'SAVE THE DATE',
   cta_text: 'Join the Movement',
 }
 
-export default function EventsPage() {
-  const [form, setForm] = useState<EventData>(defaultEvent)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+const CATEGORIES = ['Festival', 'Brand Activation', 'Corporate Dinner', 'Lifestyle Event', 'Concert', 'Product Launch', 'Other']
 
+function PastEventForm({
+  initial,
+  onSave,
+  onCancel,
+  saving,
+}: {
+  initial?: Partial<PastEvent>
+  onSave: (data: Omit<PastEvent, 'id' | 'display_order'>) => void
+  onCancel: () => void
+  saving: boolean
+}) {
+  const [form, setForm] = useState({
+    title: initial?.title ?? '',
+    category: initial?.category ?? 'Festival',
+    description: initial?.description ?? '',
+    image_url: initial?.image_url ?? '',
+    highlight_stat: initial?.highlight_stat ?? '',
+    event_month_year: initial?.event_month_year ?? '',
+  })
+
+  const field = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm(p => ({ ...p, [k]: e.target.value }))
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Event Title *</label>
+          <input value={form.title} onChange={field('title')} placeholder="e.g. Big Voices Festival"
+            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm font-bold" />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Category</label>
+          <select value={form.category} onChange={field('category')}
+            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-[#8C1B11] transition-colors text-sm">
+            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Month & Year</label>
+          <input value={form.event_month_year} onChange={field('event_month_year')} placeholder="e.g. June 2023"
+            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm" />
+        </div>
+
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Highlight Stat</label>
+          <input value={form.highlight_stat} onChange={field('highlight_stat')} placeholder="e.g. 500+ Attendees, Sold Out, Viral Moment"
+            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm" />
+        </div>
+
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2">
+            <ImageIcon size={12} /> Event Photo URL
+          </label>
+          <input value={form.image_url} onChange={field('image_url')} placeholder="https://... or /assets/gallery/event-30.jpg"
+            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm font-mono" />
+          {form.image_url && (
+            <div className="relative h-28 rounded-lg overflow-hidden border border-zinc-800">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.image_url} alt="preview" className="w-full h-full object-cover" />
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Short Description</label>
+          <textarea value={form.description} onChange={field('description')} rows={3}
+            placeholder="A brief description of the event and what made it special..."
+            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm resize-none" />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 pt-2">
+        <button onClick={() => onSave(form)} disabled={saving || !form.title}
+          className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-6 py-2.5 rounded-lg font-bold transition-colors text-sm">
+          {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
+          {saving ? 'Saving…' : 'Save Event'}
+        </button>
+        <button onClick={onCancel}
+          className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-6 py-2.5 rounded-lg font-bold transition-colors text-sm">
+          <X size={15} /> Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function EventsPage() {
+  // Upcoming event state
+  const [upcomingForm, setUpcomingForm] = useState<UpcomingEventForm>(defaultUpcoming)
+  const [loadingUpcoming, setLoadingUpcoming] = useState(true)
+  const [savingUpcoming, setSavingUpcoming] = useState(false)
+
+  // Past events state
+  const [pastEvents, setPastEvents] = useState<PastEvent[]>([])
+  const [loadingPast, setLoadingPast] = useState(true)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [savingPast, setSavingPast] = useState(false)
+  const [isSeeded, setIsSeeded] = useState(false)
+
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming')
+
+  // Load upcoming event
   useEffect(() => {
     fetch('/api/events')
       .then(r => r.json())
-      .then(data => {
-        if (data && !data.error) setForm(data)
-      })
+      .then(data => { if (data && !data.no_event && !data.error) setUpcomingForm(data) })
       .catch(console.error)
-      .finally(() => setLoading(false))
+      .finally(() => setLoadingUpcoming(false))
   }, [])
 
-  const handleSave = async () => {
-    setSaving(true)
+  // Load past events
+  useEffect(() => {
+    fetch('/api/past-events')
+      .then(r => r.json())
+      .then(data => {
+        if (data?.events) setPastEvents(data.events)
+        if (data?.seeded) setIsSeeded(true)
+      })
+      .catch(console.error)
+      .finally(() => setLoadingPast(false))
+  }, [])
+
+  const updateUpcoming = (field: keyof UpcomingEventForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setUpcomingForm(p => ({ ...p, [field]: e.target.value }))
+
+  const saveUpcoming = async () => {
+    setSavingUpcoming(true)
     try {
       const res = await fetch('/api/events', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(upcomingForm),
       })
       if (res.ok) {
         const data = await res.json()
-        setForm(data)
-        toast.success('Event updated! Changes are live on your website.')
-      } else {
-        toast.error('Failed to save. Please try again.')
-      }
-    } catch {
-      toast.error('Network error. Check your connection.')
-    } finally {
-      setSaving(false)
-    }
+        setUpcomingForm(data)
+        toast.success('Upcoming event updated! Live on your site.')
+      } else { toast.error('Failed to save. Please try again.') }
+    } catch { toast.error('Network error.') }
+    finally { setSavingUpcoming(false) }
   }
 
-  const update = (field: keyof EventData) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm(prev => ({ ...prev, [field]: e.target.value }))
-
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#8C1B11]" />
-      </div>
-    )
+  const addPastEvent = async (data: Omit<PastEvent, 'id' | 'display_order'>) => {
+    setSavingPast(true)
+    try {
+      const res = await fetch('/api/past-events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, display_order: pastEvents.length }),
+      })
+      if (res.ok) {
+        const newEvent = await res.json()
+        setPastEvents(p => [...p, newEvent])
+        setShowAddForm(false)
+        setIsSeeded(false)
+        toast.success('Past event added!')
+      } else { toast.error('Failed to add event.') }
+    } catch { toast.error('Network error.') }
+    finally { setSavingPast(false) }
   }
+
+  const updatePastEvent = async (id: string, data: Omit<PastEvent, 'id' | 'display_order'>) => {
+    setSavingPast(true)
+    const ev = pastEvents.find(e => e.id === id)
+    try {
+      const res = await fetch('/api/past-events', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...data, display_order: ev?.display_order ?? 0 }),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        setPastEvents(p => p.map(e => e.id === id ? updated : e))
+        setEditingId(null)
+        toast.success('Event updated!')
+      } else { toast.error('Failed to update.') }
+    } catch { toast.error('Network error.') }
+    finally { setSavingPast(false) }
+  }
+
+  const deletePastEvent = async (id: string) => {
+    if (!confirm('Delete this past event?')) return
+    try {
+      const res = await fetch(`/api/past-events?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setPastEvents(p => p.filter(e => e.id !== id))
+        toast.success('Event deleted.')
+      } else { toast.error('Failed to delete.') }
+    } catch { toast.error('Network error.') }
+  }
+
+  const moveEvent = (id: string, dir: 'up' | 'down') => {
+    const idx = pastEvents.findIndex(e => e.id === id)
+    if (dir === 'up' && idx === 0) return
+    if (dir === 'down' && idx === pastEvents.length - 1) return
+    const newList = [...pastEvents]
+    const swap = dir === 'up' ? idx - 1 : idx + 1
+    ;[newList[idx], newList[swap]] = [newList[swap], newList[idx]]
+    setPastEvents(newList)
+  }
+
+  const inputCls = "w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors"
 
   return (
-    <div className="space-y-8 max-w-4xl">
+    <div className="space-y-6 max-w-4xl">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Event Editor</h1>
-          <p className="text-zinc-400 mt-1">Live-edit the upcoming event section on your homepage.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Event Editor</h1>
+          <p className="text-zinc-400 mt-1 text-sm">Manage upcoming and past events shown on your homepage.</p>
         </div>
-        <Link
-          href="/"
-          target="_blank"
-          className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors border border-zinc-700 px-4 py-2 rounded-lg"
-        >
-          <Eye size={16} /> Preview Site
+        <Link href="/" target="_blank"
+          className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors border border-zinc-700 px-4 py-2 rounded-lg">
+          <Eye size={16} /> Preview
         </Link>
       </div>
 
-      {/* Live Preview Card */}
-      <div className="bg-zinc-950 rounded-xl border border-zinc-800 overflow-hidden">
-        <div className="p-4 border-b border-zinc-800 text-xs font-medium text-zinc-500 uppercase tracking-wider">
-          Live Preview
-        </div>
-        <div className="relative h-48 bg-black flex flex-col items-center justify-center text-center p-6 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-          <div className="relative z-10">
-            <p className="text-white/40 text-xs uppercase tracking-widest mb-1">Upcoming Event</p>
-            <h2 className="font-serif text-3xl font-black text-white tracking-tighter">{form.title}</h2>
-            <p className="text-white/70 text-sm font-bold uppercase tracking-widest mt-1">{form.subtitle}</p>
-            <div className="mt-3 flex items-center gap-3 justify-center">
-              <div className="h-px w-8 bg-white/30" />
-              <span className="text-white font-serif text-2xl font-black">{form.event_date}</span>
-              <div className="h-px w-8 bg-white/30" />
-            </div>
-            <p className="text-white/50 text-xs tracking-[0.3em] mt-1">{form.save_the_date_text}</p>
-            <div className="mt-3 px-4 py-1.5 bg-[#8C1B11]/80 rounded-full text-white text-xs font-bold tracking-widest">
-              {form.cta_text}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Edit Form */}
-      <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
-        <div className="p-6 border-b border-zinc-800 flex items-center gap-3">
-          <div className="p-2 bg-[#8C1B11]/10 rounded-lg">
-            <CalendarDays size={20} className="text-[#8C1B11]" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-white">Event Details</h2>
-            <p className="text-sm text-zinc-400">Changes go live instantly when you save.</p>
-          </div>
-        </div>
-
-        <div className="p-6 grid gap-5 sm:grid-cols-2">
-          <div className="space-y-2 sm:col-span-2">
-            <label className="text-sm font-medium text-zinc-300">Event Title</label>
-            <input
-              value={form.title}
-              onChange={update('title')}
-              placeholder="e.g. BIG VOICES FEST"
-              className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-lg font-bold"
-            />
-            <p className="text-xs text-zinc-500">This is the large headline on your homepage.</p>
-          </div>
-
-          <div className="space-y-2 sm:col-span-2">
-            <label className="text-sm font-medium text-zinc-300">Subtitle / Edition</label>
-            <input
-              value={form.subtitle}
-              onChange={update('subtitle')}
-              placeholder="e.g. Season 2: Millennial Edition"
-              className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-300">Event Date</label>
-            <input
-              value={form.event_date}
-              onChange={update('event_date')}
-              placeholder="e.g. 6TH JUNE"
-              className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-300">Date Label</label>
-            <input
-              value={form.save_the_date_text}
-              onChange={update('save_the_date_text')}
-              placeholder="e.g. SAVE THE DATE"
-              className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors"
-            />
-          </div>
-
-          <div className="space-y-2 sm:col-span-2">
-            <label className="text-sm font-medium text-zinc-300">Button Text</label>
-            <input
-              value={form.cta_text}
-              onChange={update('cta_text')}
-              placeholder="e.g. Join the Movement"
-              className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors"
-            />
-          </div>
-        </div>
-
-        <div className="px-6 pb-6">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-lg"
-          >
-            {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-            {saving ? 'Saving...' : 'Save & Publish Changes'}
+      {/* Tabs */}
+      <div className="flex gap-1 p-1 bg-zinc-900 rounded-xl border border-zinc-800 w-fit">
+        {(['upcoming', 'past'] as const).map(tab => (
+          <button key={tab} onClick={() => setActiveTab(tab)}
+            className={`px-5 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === tab ? 'bg-[#8C1B11] text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}>
+            {tab === 'upcoming' ? '📅 Upcoming Event' : '🏆 Past Events'}
           </button>
-        </div>
+        ))}
       </div>
+
+      {/* ── UPCOMING EVENT TAB ── */}
+      {activeTab === 'upcoming' && (
+        <div className="space-y-6">
+          {loadingUpcoming ? (
+            <div className="flex h-40 items-center justify-center">
+              <Loader2 className="animate-spin text-[#8C1B11]" />
+            </div>
+          ) : (
+            <>
+              {/* Live Preview */}
+              <div className="bg-zinc-950 rounded-xl border border-zinc-800 overflow-hidden">
+                <div className="px-4 py-3 border-b border-zinc-800 text-xs font-bold text-zinc-500 uppercase tracking-wider">Live Preview</div>
+                <div className="relative h-44 bg-black flex flex-col items-center justify-center text-center p-6">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+                  <div className="relative z-10">
+                    <p className="text-white/30 text-[9px] uppercase tracking-[0.4em] mb-1">✦ Upcoming Event ✦</p>
+                    <h2 className="font-serif text-3xl font-black text-white tracking-tighter">{upcomingForm.title}</h2>
+                    <p className="text-white/60 text-xs font-bold uppercase tracking-widest mt-1">{upcomingForm.subtitle}</p>
+                    <div className="mt-3 flex items-center gap-3 justify-center">
+                      <div className="h-px w-8 bg-white/20" />
+                      <span className="text-white font-serif text-2xl font-black">{upcomingForm.event_date}</span>
+                      <div className="h-px w-8 bg-white/20" />
+                    </div>
+                    {upcomingForm.location && <p className="text-white/40 text-[9px] mt-1">📍 {upcomingForm.location}</p>}
+                    <div className="mt-3 px-4 py-1 bg-[#8C1B11]/70 rounded-full text-white text-[9px] font-black tracking-widest inline-block">
+                      {upcomingForm.cta_text}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit form */}
+              <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
+                <div className="p-5 border-b border-zinc-800 flex items-center gap-3">
+                  <div className="p-2 bg-[#8C1B11]/10 rounded-lg"><CalendarDays size={18} className="text-[#8C1B11]" /></div>
+                  <div>
+                    <h2 className="font-semibold text-white">Upcoming Event Details</h2>
+                    <p className="text-xs text-zinc-400">Changes go live instantly when saved.</p>
+                  </div>
+                </div>
+                <div className="p-5 grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Event Title</label>
+                    <input value={upcomingForm.title} onChange={updateUpcoming('title')} className={inputCls + ' text-lg font-bold'} placeholder="BIG VOICES FEST" />
+                  </div>
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Subtitle</label>
+                    <input value={upcomingForm.subtitle} onChange={updateUpcoming('subtitle')} className={inputCls} placeholder="Season 2: Millennial Edition" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Display Date</label>
+                    <input value={upcomingForm.event_date} onChange={updateUpcoming('event_date')} className={inputCls} placeholder="6TH JUNE" />
+                    <p className="text-[10px] text-zinc-600">The large date shown on screen</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Date Label</label>
+                    <input value={upcomingForm.save_the_date_text} onChange={updateUpcoming('save_the_date_text')} className={inputCls} placeholder="SAVE THE DATE" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                      Actual Date (for countdown) <span className="text-zinc-600 normal-case font-normal">optional</span>
+                    </label>
+                    <input type="datetime-local" value={upcomingForm.date_iso} onChange={updateUpcoming('date_iso')} className={inputCls} />
+                    <p className="text-[10px] text-zinc-600">Shows a live countdown timer when set</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                      Location <span className="text-zinc-600 normal-case font-normal">optional</span>
+                    </label>
+                    <input value={upcomingForm.location} onChange={updateUpcoming('location')} className={inputCls} placeholder="e.g. Nairobi, Kenya" />
+                  </div>
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Button Text</label>
+                    <input value={upcomingForm.cta_text} onChange={updateUpcoming('cta_text')} className={inputCls} placeholder="Join the Movement" />
+                  </div>
+                </div>
+                <div className="px-5 pb-5">
+                  <button onClick={saveUpcoming} disabled={savingUpcoming}
+                    className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-lg text-sm">
+                    {savingUpcoming ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                    {savingUpcoming ? 'Saving…' : 'Save & Publish'}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ── PAST EVENTS TAB ── */}
+      {activeTab === 'past' && (
+        <div className="space-y-4">
+          {/* DB notice if seeded */}
+          {isSeeded && (
+            <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
+              <AlertCircle size={18} className="text-amber-400 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-bold text-amber-300">Using demo data</p>
+                <p className="text-amber-300/70 mt-1 text-xs leading-relaxed">
+                  To enable persistent past events, run this in your{' '}
+                  <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline">Supabase SQL Editor</a>:
+                </p>
+                <code className="mt-2 block rounded-lg bg-black/40 px-3 py-2 text-[10px] text-amber-200/80 leading-relaxed font-mono whitespace-pre">{`CREATE TABLE past_events (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  title text NOT NULL,
+  category text DEFAULT 'Event',
+  description text,
+  image_url text,
+  highlight_stat text,
+  event_month_year text,
+  display_order integer DEFAULT 0,
+  created_at timestamptz DEFAULT now()
+);
+ALTER TABLE past_events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON past_events FOR SELECT USING (true);
+CREATE POLICY "Auth write" ON past_events FOR ALL USING (auth.role() = 'authenticated');`}</code>
+              </div>
+            </div>
+          )}
+
+          {/* Add button */}
+          {!showAddForm && (
+            <button onClick={() => setShowAddForm(true)}
+              className="flex items-center gap-2 border border-dashed border-zinc-700 hover:border-[#8C1B11] text-zinc-400 hover:text-white px-5 py-3 rounded-xl font-bold transition-all duration-200 text-sm w-full justify-center group">
+              <Plus size={16} className="group-hover:rotate-90 transition-transform duration-200" /> Add Past Event
+            </button>
+          )}
+
+          {/* Add form */}
+          {showAddForm && (
+            <div className="bg-zinc-900/50 border border-[#8C1B11]/40 rounded-xl p-5">
+              <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Plus size={16} className="text-[#8C1B11]" /> New Past Event</h3>
+              <PastEventForm onSave={addPastEvent} onCancel={() => setShowAddForm(false)} saving={savingPast} />
+            </div>
+          )}
+
+          {/* Past events list */}
+          {loadingPast ? (
+            <div className="flex h-40 items-center justify-center"><Loader2 className="animate-spin text-[#8C1B11]" /></div>
+          ) : pastEvents.length === 0 ? (
+            <div className="text-center text-zinc-500 py-16">No past events yet. Add your first one above.</div>
+          ) : (
+            <div className="space-y-3">
+              {pastEvents.map((ev, idx) => (
+                <div key={ev.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
+                  {editingId === ev.id ? (
+                    <div className="p-5">
+                      <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Edit3 size={15} className="text-[#8C1B11]" /> Edit: {ev.title}</h3>
+                      <PastEventForm initial={ev} onSave={(data) => updatePastEvent(ev.id, data)} onCancel={() => setEditingId(null)} saving={savingPast} />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-4 p-4">
+                      {/* Order controls */}
+                      <div className="flex flex-col gap-1">
+                        <button onClick={() => moveEvent(ev.id, 'up')} disabled={idx === 0}
+                          className="p-1 text-zinc-600 hover:text-white disabled:opacity-20 transition-colors">
+                          <ChevronUp size={14} />
+                        </button>
+                        <button onClick={() => moveEvent(ev.id, 'down')} disabled={idx === pastEvents.length - 1}
+                          className="p-1 text-zinc-600 hover:text-white disabled:opacity-20 transition-colors">
+                          <ChevronDown size={14} />
+                        </button>
+                      </div>
+                      {/* Image thumbnail */}
+                      {ev.image_url && (
+                        <div className="h-14 w-20 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800 shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={ev.image_url} alt={ev.title} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      {/* Details */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-bold text-white text-sm truncate">{ev.title}</span>
+                          <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider shrink-0">{ev.category}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs text-zinc-500">
+                          <span>{ev.event_month_year}</span>
+                          {ev.highlight_stat && <span className="text-accent/70">{ev.highlight_stat}</span>}
+                        </div>
+                      </div>
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button onClick={() => setEditingId(ev.id)}
+                          className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+                          <Edit3 size={15} />
+                        </button>
+                        <button onClick={() => deletePastEvent(ev.id)}
+                          className="p-2 text-zinc-600 hover:text-red-400 hover:bg-red-950/30 rounded-lg transition-colors">
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
