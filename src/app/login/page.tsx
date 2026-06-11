@@ -1,66 +1,65 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
 import { login } from './actions'
+import { LoginForm } from './LoginForm'
 
-export default async function LoginPage(props: {
+export const metadata: Metadata = {
+  title: 'Admin Login — Wanjey Events',
+  robots: { index: false, follow: false },
+}
+
+/**
+ * This page is a Server Component.
+ * - searchParams are read server-side (no useSearchParams / Suspense needed)
+ * - The server action `login` is bound to the form action server-side
+ * - LoginForm is a client component only for the loading/pending UI
+ */
+export default async function LoginPage({
+  searchParams,
+}: {
   searchParams: Promise<{ error?: string }>
 }) {
-  const searchParams = await props.searchParams;
+  const params = await searchParams
+
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-zinc-950 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-md space-y-8 rounded-2xl bg-zinc-900 p-8 shadow-2xl border border-zinc-800">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
-            Admin Portal
-          </h2>
-          <p className="mt-2 text-center text-sm text-zinc-400">
-            Sign in to manage Wanjey Events
-          </p>
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-zinc-950 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-[500px] w-[500px] rounded-full bg-[#8C1B11]/10 blur-[120px]" />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-md">
+        {/* Brand header */}
+        <div className="mb-8 flex flex-col items-center gap-4">
+          <div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-[#8C1B11]/40 shadow-[0_0_30px_rgba(140,27,17,0.3)]">
+            <Image
+              src="/assets/logo.jpeg"
+              alt="Wanjey Events"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="font-serif text-2xl font-bold text-white tracking-tight">
+              Wanjey<span className="text-[#8C1B11]">Admin</span>
+            </h1>
+            <p className="mt-1 text-sm text-zinc-400">
+              Sign in to manage your dashboard
+            </p>
+          </div>
         </div>
-        
-        {searchParams?.error && (
-          <div className="bg-red-950/50 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm text-center">
-            {searchParams.error}
-          </div>
-        )}
 
-        <form className="mt-8 space-y-6" action={login}>
-          <div className="space-y-4 rounded-md shadow-sm">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="relative block w-full rounded-lg border-0 bg-zinc-800/50 py-3 px-4 text-white ring-1 ring-inset ring-zinc-700 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-[#8C1B11] sm:text-sm sm:leading-6 transition-all"
-                placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="relative block w-full rounded-lg border-0 bg-zinc-800/50 py-3 px-4 text-white ring-1 ring-inset ring-zinc-700 placeholder:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-[#8C1B11] sm:text-sm sm:leading-6 transition-all"
-                placeholder="Password"
-              />
-            </div>
-          </div>
+        {/*
+          LoginForm is a client component for pending UI.
+          The actual form action (login server action) is bound here
+          server-side via the `action` prop so redirect() works correctly.
+        */}
+        <LoginForm error={params.error} serverAction={login} />
 
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-lg bg-[#8C1B11] px-3 py-3 text-sm font-semibold text-white hover:bg-[#a12015] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8C1B11] transition-all duration-300"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+        <p className="mt-6 text-center text-xs text-zinc-600">
+          © {new Date().getFullYear()} Wanjey Events &amp; Marketing
+        </p>
       </div>
     </div>
   )
