@@ -16,7 +16,7 @@ type MediaItem = {
 }
 
 export default function MediaManagerPage() {
-  const [activeFolder, setActiveFolder] = useState('bigvoices')
+  const [activeFolder, setActiveFolder] = useState('past')
   const [media, setMedia] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -123,7 +123,7 @@ export default function MediaManagerPage() {
         
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
           <span className="text-xs text-zinc-500 px-2 py-1 bg-white/60 border border-accent/25 rounded-md shadow-sm">
-            Max {activeFolder === 'bigvoices' ? '2 GB' : '100 MB'} per file
+            Max {activeFolder === 'upcoming' ? '2 GB' : '100 MB'} per file
           </span>
         <CldUploadWidget 
           key={activeFolder}
@@ -132,7 +132,7 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
-            maxFileSize: 2147483648,
+            maxFileSize: activeFolder === 'upcoming' ? 2147483648 : 104857600,
             maxImageWidth: 2500,
             maxChunkSize: 6000000,
             resourceType: 'auto',
@@ -174,21 +174,32 @@ export default function MediaManagerPage() {
         </div>
       </div>
 
-      <div className="flex gap-4 border-b border-accent/15 pb-4">
+      <div className="flex gap-4 border-b border-accent/15 pb-4 overflow-x-auto scrollbar-hide">
         <button
-          onClick={() => setActiveFolder('bigvoices')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors ${
-            activeFolder === 'bigvoices' 
+          onClick={() => setActiveFolder('past')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors whitespace-nowrap ${
+            activeFolder === 'past' 
               ? 'bg-accent text-white shadow-sm' 
               : 'text-zinc-500 hover:text-[#2D1A10] hover:bg-accent/5'
           }`}
         >
           <Folder size={18} />
-          BigVoices
+          Past Events
+        </button>
+        <button
+          onClick={() => setActiveFolder('upcoming')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors whitespace-nowrap ${
+            activeFolder === 'upcoming' 
+              ? 'bg-accent text-white shadow-sm' 
+              : 'text-zinc-500 hover:text-[#2D1A10] hover:bg-accent/5'
+          }`}
+        >
+          <Folder size={18} />
+          Upcoming Event
         </button>
         <button
           onClick={() => setActiveFolder('gallery')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors whitespace-nowrap ${
             activeFolder === 'gallery' 
               ? 'bg-accent text-white shadow-sm' 
               : 'text-zinc-500 hover:text-[#2D1A10] hover:bg-accent/5'

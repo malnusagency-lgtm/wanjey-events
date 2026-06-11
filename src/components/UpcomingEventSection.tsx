@@ -58,13 +58,24 @@ const UpcomingEventSection = () => {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const r = await fetch('/api/media?folder=bigvoices')
+        let r = await fetch('/api/media?folder=upcoming')
+        let items: MediaItem[] = []
         if (r.ok) {
           const data = await r.json()
-          const items = data.media?.map((item: any) => ({ type: item.type, src: item.url })) ?? []
-          setMediaItems(items)
-          setBgVideos(items.filter((i: any) => i.type === 'video'))
+          items = data.media?.map((item: any) => ({ type: item.type, src: item.url })) ?? []
         }
+        
+        // Fallback to legacy bigvoices folder if upcoming is empty
+        if (items.length === 0) {
+          const fallback = await fetch('/api/media?folder=bigvoices')
+          if (fallback.ok) {
+            const fallbackData = await fallback.json()
+            items = fallbackData.media?.map((item: any) => ({ type: item.type, src: item.url })) ?? []
+          }
+        }
+
+        setMediaItems(items)
+        setBgVideos(items.filter((i: any) => i.type === 'video'))
       } catch {}
     }
 
