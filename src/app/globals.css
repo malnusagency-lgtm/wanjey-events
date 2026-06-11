@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 20 60% 98%;
+    --background: 19 75% 96%;
     --foreground: 20 30% 10%;
 
     --card: 20 40% 99%;
@@ -73,7 +73,7 @@
   }
 
   html, body {
-    background: linear-gradient(180deg, #FFEFD5 0%, #FFF5F0 40%, #FFFFFF 100%) fixed !important;
+    background: linear-gradient(180deg, #FFE5D9 0%, #FFF0E8 50%, #FFFFFF 100%) fixed !important;
   }
 
   body {

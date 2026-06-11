@@ -66,12 +66,14 @@ export async function GET() {
       .select('*')
       .order('display_order', { ascending: true })
 
-    if (error || !data || data.length === 0) {
-      return NextResponse.json({ events: SEED_PAST_EVENTS, seeded: true })
+    if (error) {
+      console.error('Database fetch error:', error)
+      return NextResponse.json({ events: [], table_missing: true })
     }
-    return NextResponse.json({ events: data, seeded: false })
-  } catch {
-    return NextResponse.json({ events: SEED_PAST_EVENTS, seeded: true })
+    return NextResponse.json({ events: data || [], table_missing: false })
+  } catch (err) {
+    console.error('Fetch exception:', err)
+    return NextResponse.json({ events: [], table_missing: true })
   }
 }
 
