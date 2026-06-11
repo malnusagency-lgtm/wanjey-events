@@ -17,7 +17,7 @@ const navLinks = [
 ]
 
 const linkCls =
-  'flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors'
+  'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[#2D1A10]/70 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 transition-all duration-300 font-medium'
 
 export default function AdminMobileNav() {
   const [open, setOpen] = useState(false)
@@ -25,14 +25,14 @@ export default function AdminMobileNav() {
   return (
     <>
       {/* Mobile top bar — hidden on md+ */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-zinc-900 border-b border-zinc-800 shrink-0">
-        <Link href="/admin" className="text-lg font-bold text-white">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white/60 backdrop-blur-xl border-b border-accent/15 shrink-0">
+        <Link href="/admin" className="text-lg font-bold text-[#2D1A10] font-serif">
           Wanjey<span className="text-[#8C1B11]">Admin</span>
         </Link>
         <button
           onClick={() => setOpen(true)}
           aria-label="Open navigation menu"
-          className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          className="p-2 rounded-lg text-[#2D1A10]/70 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 transition-colors"
         >
           <Menu size={24} />
         </button>
@@ -41,7 +41,7 @@ export default function AdminMobileNav() {
       {/* Backdrop */}
       {open && (
         <div
-          className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
           onClick={() => setOpen(false)}
           aria-hidden="true"
         />
@@ -49,14 +49,14 @@ export default function AdminMobileNav() {
 
       {/* Slide-out drawer */}
       <div
-        className={`md:hidden fixed top-0 left-0 z-50 h-full w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col transform transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed top-0 left-0 z-50 h-full w-72 bg-white/95 backdrop-blur-2xl border-r border-accent/15 flex flex-col transform transition-transform duration-300 ease-in-out ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-5 border-b border-zinc-800">
+        <div className="flex items-center justify-between p-5 border-b border-accent/15">
           <Link
             href="/admin"
-            className="text-xl font-bold text-white"
+            className="text-xl font-bold text-[#2D1A10] font-serif"
             onClick={() => setOpen(false)}
           >
             Wanjey<span className="text-[#8C1B11]">Admin</span>
@@ -64,7 +64,7 @@ export default function AdminMobileNav() {
           <button
             onClick={() => setOpen(false)}
             aria-label="Close navigation"
-            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="p-2 rounded-lg text-[#2D1A10]/70 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 transition-colors"
           >
             <X size={22} />
           </button>
@@ -78,19 +78,19 @@ export default function AdminMobileNav() {
               className={linkCls}
               onClick={() => setOpen(false)}
             >
-              <Icon size={20} />
+              <Icon size={18} className="text-accent" />
               {label}
             </Link>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-zinc-800">
+        <div className="p-4 border-t border-accent/15">
           <form action={logout}>
             <button
               type="submit"
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-950/30 transition-colors"
+              className="flex w-full items-center gap-3 px-3.5 py-2.5 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50/60 transition-colors font-medium"
             >
-              <LogOut size={20} />
+              <LogOut size={18} />
               Sign Out
             </button>
           </form>

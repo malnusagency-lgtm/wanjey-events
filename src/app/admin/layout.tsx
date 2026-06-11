@@ -18,16 +18,16 @@ const navLinks = [
 ]
 
 const linkCls =
-  'flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors'
+  'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[#2D1A10]/70 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 transition-all duration-300 font-medium'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen bg-zinc-950 text-white overflow-hidden">
+    <div className="flex h-screen bg-transparent text-[#2D1A10] overflow-hidden">
 
-      {/* ── Desktop Sidebar (md+) — Server Component, no JS needed ── */}
-      <aside className="hidden md:flex w-64 border-r border-zinc-800 bg-zinc-900/50 flex-col shrink-0">
-        <div className="p-6 border-b border-zinc-800">
-          <Link href="/admin" className="text-xl font-bold text-white flex items-center gap-2">
+      {/* ── Desktop Sidebar (md+) — Server Component ── */}
+      <aside className="hidden md:flex w-64 border-r border-accent/15 bg-white/40 backdrop-blur-xl flex-col shrink-0 shadow-sm">
+        <div className="p-6 border-b border-accent/15">
+          <Link href="/admin" className="text-xl font-bold text-[#2D1A10] flex items-center gap-2 font-serif">
             Wanjey<span className="text-[#8C1B11]">Admin</span>
           </Link>
         </div>
@@ -35,19 +35,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex-1 p-4 space-y-1">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link key={href} href={href} className={linkCls}>
-              <Icon size={20} />
+              <Icon size={18} className="text-accent" />
               {label}
             </Link>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-zinc-800">
+        <div className="p-4 border-t border-accent/15">
           <form action={logout}>
             <button
               type="submit"
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-950/30 transition-colors"
+              className="flex w-full items-center gap-3 px-3.5 py-2.5 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50/60 transition-colors font-medium"
             >
-              <LogOut size={20} />
+              <LogOut size={18} />
               Sign Out
             </button>
           </form>

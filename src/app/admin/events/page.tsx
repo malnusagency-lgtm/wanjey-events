@@ -42,6 +42,8 @@ const defaultUpcoming: UpcomingEventForm = {
 
 const CATEGORIES = ['Festival', 'Brand Activation', 'Corporate Dinner', 'Lifestyle Event', 'Concert', 'Product Launch', 'Other']
 
+const inputCls = "w-full px-4 py-3 bg-white border border-accent/25 rounded-lg text-[#2D1A10] placeholder-zinc-400 focus:outline-none focus:border-[#8C1B11] focus:ring-1 focus:ring-[#8C1B11]/20 transition-colors text-sm font-semibold"
+
 function PastEventForm({
   initial,
   onSave,
@@ -69,39 +71,39 @@ function PastEventForm({
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5 sm:col-span-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Event Title *</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Event Title *</label>
           <input value={form.title} onChange={field('title')} placeholder="e.g. Big Voices Festival"
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm font-bold" />
+            className={inputCls} />
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Category</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Category</label>
           <select value={form.category} onChange={field('category')}
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-[#8C1B11] transition-colors text-sm">
+            className={inputCls}>
             {CATEGORIES.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Month & Year</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Month & Year</label>
           <input value={form.event_month_year} onChange={field('event_month_year')} placeholder="e.g. June 2023"
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm" />
+            className={inputCls} />
         </div>
 
         <div className="space-y-1.5 sm:col-span-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Highlight Stat</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Highlight Stat</label>
           <input value={form.highlight_stat} onChange={field('highlight_stat')} placeholder="e.g. 500+ Attendees, Sold Out, Viral Moment"
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm" />
+            className={inputCls} />
         </div>
 
         <div className="space-y-1.5 sm:col-span-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-            <ImageIcon size={12} /> Event Photo URL
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-2">
+            <ImageIcon size={12} className="text-accent" /> Event Photo URL
           </label>
           <input value={form.image_url} onChange={field('image_url')} placeholder="https://... or /assets/gallery/event-30.jpg"
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm font-mono" />
+            className={inputCls + ' font-mono'} />
           {form.image_url && (
-            <div className="relative h-28 rounded-lg overflow-hidden border border-zinc-800">
+            <div className="relative h-28 rounded-lg overflow-hidden border border-accent/15 mt-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={form.image_url} alt="preview" className="w-full h-full object-cover" />
             </div>
@@ -109,21 +111,21 @@ function PastEventForm({
         </div>
 
         <div className="space-y-1.5 sm:col-span-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Short Description</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Short Description</label>
           <textarea value={form.description} onChange={field('description')} rows={3}
             placeholder="A brief description of the event and what made it special..."
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors text-sm resize-none" />
+            className={inputCls + ' resize-none font-normal'} />
         </div>
       </div>
 
       <div className="flex items-center gap-3 pt-2">
         <button onClick={() => onSave(form)} disabled={saving || !form.title}
-          className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-6 py-2.5 rounded-lg font-bold transition-colors text-sm">
+          className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-6 py-2.5 rounded-lg font-bold transition-colors text-sm shadow-md">
           {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
           {saving ? 'Saving…' : 'Save Event'}
         </button>
         <button onClick={onCancel}
-          className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-6 py-2.5 rounded-lg font-bold transition-colors text-sm">
+          className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 px-6 py-2.5 rounded-lg font-bold transition-colors text-sm border border-zinc-200">
           <X size={15} /> Cancel
         </button>
       </div>
@@ -247,27 +249,25 @@ export default function EventsPage() {
     setPastEvents(newList)
   }
 
-  const inputCls = "w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-[#8C1B11] transition-colors"
-
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Event Editor</h1>
-          <p className="text-zinc-400 mt-1 text-sm">Manage upcoming and past events shown on your homepage.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10]">Event Editor</h1>
+          <p className="text-zinc-500 mt-1 text-sm">Manage upcoming and past events shown on your homepage.</p>
         </div>
         <Link href="/" target="_blank"
-          className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors border border-zinc-700 px-4 py-2 rounded-lg">
+          className="flex items-center gap-2 text-sm text-zinc-500 hover:text-[#8C1B11] transition-colors border border-accent/25 hover:bg-accent/5 px-4 py-2 rounded-lg font-semibold bg-white/40 shadow-sm">
           <Eye size={16} /> Preview
         </Link>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-zinc-900 rounded-xl border border-zinc-800 w-fit">
+      <div className="flex gap-1 p-1 bg-white/60 rounded-xl border border-accent/25 w-fit shadow-sm">
         {(['upcoming', 'past'] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === tab ? 'bg-[#8C1B11] text-white shadow-lg' : 'text-zinc-500 hover:text-white'}`}>
+            className={`px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === tab ? 'bg-[#8C1B11] text-white shadow-md' : 'text-zinc-500 hover:text-[#2D1A10]'}`}>
             {tab === 'upcoming' ? '📅 Upcoming Event' : '🏆 Past Events'}
           </button>
         ))}
@@ -283,21 +283,21 @@ export default function EventsPage() {
           ) : (
             <>
               {/* Live Preview */}
-              <div className="bg-zinc-950 rounded-xl border border-zinc-800 overflow-hidden">
-                <div className="px-4 py-3 border-b border-zinc-800 text-xs font-bold text-zinc-500 uppercase tracking-wider">Live Preview</div>
+              <div className="bg-white/60 rounded-xl border border-accent/25 overflow-hidden shadow-sm">
+                <div className="px-4 py-3 border-b border-accent/15 text-xs font-bold text-zinc-400 uppercase tracking-wider bg-white/30">Live Preview</div>
                 <div className="relative h-44 bg-black flex flex-col items-center justify-center text-center p-6">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/30" />
                   <div className="relative z-10">
-                    <p className="text-white/30 text-[9px] uppercase tracking-[0.4em] mb-1">✦ Upcoming Event ✦</p>
+                    <p className="text-white/40 text-[9px] uppercase tracking-[0.4em] mb-1">✦ Upcoming Event ✦</p>
                     <h2 className="font-serif text-3xl font-black text-white tracking-tighter">{upcomingForm.title}</h2>
-                    <p className="text-white/60 text-xs font-bold uppercase tracking-widest mt-1">{upcomingForm.subtitle}</p>
+                    <p className="text-white/70 text-xs font-bold uppercase tracking-widest mt-1">{upcomingForm.subtitle}</p>
                     <div className="mt-3 flex items-center gap-3 justify-center">
-                      <div className="h-px w-8 bg-white/20" />
+                      <div className="h-px w-8 bg-white/35" />
                       <span className="text-white font-serif text-2xl font-black">{upcomingForm.event_date}</span>
-                      <div className="h-px w-8 bg-white/20" />
+                      <div className="h-px w-8 bg-white/35" />
                     </div>
-                    {upcomingForm.location && <p className="text-white/40 text-[9px] mt-1">📍 {upcomingForm.location}</p>}
-                    <div className="mt-3 px-4 py-1 bg-[#8C1B11]/70 rounded-full text-white text-[9px] font-black tracking-widest inline-block">
+                    {upcomingForm.location && <p className="text-white/50 text-[9px] mt-1">📍 {upcomingForm.location}</p>}
+                    <div className="mt-3 px-4 py-1 bg-[#8C1B11]/80 rounded-full text-white text-[9px] font-black tracking-widest inline-block shadow-md">
                       {upcomingForm.cta_text}
                     </div>
                   </div>
@@ -305,47 +305,47 @@ export default function EventsPage() {
               </div>
 
               {/* Edit form */}
-              <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
-                <div className="p-5 border-b border-zinc-800 flex items-center gap-3">
-                  <div className="p-2 bg-[#8C1B11]/10 rounded-lg"><CalendarDays size={18} className="text-[#8C1B11]" /></div>
+              <div className="bg-white/60 border border-accent/25 rounded-xl overflow-hidden shadow-sm">
+                <div className="p-5 border-b border-accent/15 flex items-center gap-3 bg-white/30">
+                  <div className="p-2 bg-[#8C1B11]/10 rounded-lg text-[#8C1B11]"><CalendarDays size={18} /></div>
                   <div>
-                    <h2 className="font-semibold text-white">Upcoming Event Details</h2>
-                    <p className="text-xs text-zinc-400">Changes go live instantly when saved.</p>
+                    <h2 className="font-bold text-[#2D1A10] font-serif">Upcoming Event Details</h2>
+                    <p className="text-xs text-zinc-500">Changes go live instantly when saved.</p>
                   </div>
                 </div>
                 <div className="p-5 grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Event Title</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Event Title</label>
                     <input value={upcomingForm.title} onChange={updateUpcoming('title')} className={inputCls + ' text-lg font-bold'} placeholder="BIG VOICES FEST" />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Subtitle</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Subtitle</label>
                     <input value={upcomingForm.subtitle} onChange={updateUpcoming('subtitle')} className={inputCls} placeholder="Season 2: Millennial Edition" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Display Date</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Display Date</label>
                     <input value={upcomingForm.event_date} onChange={updateUpcoming('event_date')} className={inputCls} placeholder="6TH JUNE" />
-                    <p className="text-[10px] text-zinc-600">The large date shown on screen</p>
+                    <p className="text-[10px] text-zinc-400">The large date shown on screen</p>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Date Label</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Date Label</label>
                     <input value={upcomingForm.save_the_date_text} onChange={updateUpcoming('save_the_date_text')} className={inputCls} placeholder="SAVE THE DATE" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                      Actual Date (for countdown) <span className="text-zinc-600 normal-case font-normal">optional</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                      Actual Date (for countdown) <span className="text-zinc-400 normal-case font-normal">optional</span>
                     </label>
                     <input type="datetime-local" value={upcomingForm.date_iso} onChange={updateUpcoming('date_iso')} className={inputCls} />
-                    <p className="text-[10px] text-zinc-600">Shows a live countdown timer when set</p>
+                    <p className="text-[10px] text-zinc-400">Shows a live countdown timer when set</p>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                      Location <span className="text-zinc-600 normal-case font-normal">optional</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                      Location <span className="text-zinc-400 normal-case font-normal">optional</span>
                     </label>
                     <input value={upcomingForm.location} onChange={updateUpcoming('location')} className={inputCls} placeholder="e.g. Nairobi, Kenya" />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Button Text</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Button Text</label>
                     <input value={upcomingForm.cta_text} onChange={updateUpcoming('cta_text')} className={inputCls} placeholder="Join the Movement" />
                   </div>
                 </div>
@@ -367,15 +367,15 @@ export default function EventsPage() {
         <div className="space-y-4">
           {/* DB notice if seeded */}
           {isSeeded && (
-            <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
-              <AlertCircle size={18} className="text-amber-400 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-3 rounded-xl border border-amber-500/35 bg-amber-500/5 p-4 text-sm text-amber-900 shadow-sm">
+              <AlertCircle size={18} className="text-amber-600 mt-0.5 shrink-0" />
               <div>
-                <p className="font-bold text-amber-300">Using demo data</p>
-                <p className="text-amber-300/70 mt-1 text-xs leading-relaxed">
+                <p className="font-bold text-amber-800">Using demo data</p>
+                <p className="text-amber-700/80 mt-1 text-xs leading-relaxed font-semibold">
                   To enable persistent past events, run this in your{' '}
-                  <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline">Supabase SQL Editor</a>:
+                  <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline text-amber-900 hover:text-amber-950 font-bold">Supabase SQL Editor</a>:
                 </p>
-                <code className="mt-2 block rounded-lg bg-black/40 px-3 py-2 text-[10px] text-amber-200/80 leading-relaxed font-mono whitespace-pre">{`CREATE TABLE past_events (
+                <code className="mt-2 block rounded-lg bg-amber-950/5 border border-amber-500/20 px-3 py-2 text-[10px] text-amber-900 leading-relaxed font-mono whitespace-pre overflow-x-auto">{`CREATE TABLE past_events (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   title text NOT NULL,
   category text DEFAULT 'Event',
@@ -396,15 +396,15 @@ CREATE POLICY "Auth write" ON past_events FOR ALL USING (auth.role() = 'authenti
           {/* Add button */}
           {!showAddForm && (
             <button onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-2 border border-dashed border-zinc-700 hover:border-[#8C1B11] text-zinc-400 hover:text-white px-5 py-3 rounded-xl font-bold transition-all duration-200 text-sm w-full justify-center group">
+              className="flex items-center gap-2 border border-dashed border-accent/30 hover:border-[#8C1B11] bg-white/40 hover:bg-[#8C1B11]/5 text-[#2D1A10]/70 hover:text-[#8C1B11] px-5 py-3 rounded-xl font-bold transition-all duration-200 text-sm w-full justify-center group shadow-sm">
               <Plus size={16} className="group-hover:rotate-90 transition-transform duration-200" /> Add Past Event
             </button>
           )}
 
           {/* Add form */}
           {showAddForm && (
-            <div className="bg-zinc-900/50 border border-[#8C1B11]/40 rounded-xl p-5">
-              <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Plus size={16} className="text-[#8C1B11]" /> New Past Event</h3>
+            <div className="bg-white/60 border border-accent/25 rounded-xl p-5 shadow-sm">
+              <h3 className="font-bold text-[#2D1A10] mb-4 flex items-center gap-2 font-serif"><Plus size={16} className="text-[#8C1B11]" /> New Past Event</h3>
               <PastEventForm onSave={addPastEvent} onCancel={() => setShowAddForm(false)} saving={savingPast} />
             </div>
           )}
@@ -417,10 +417,10 @@ CREATE POLICY "Auth write" ON past_events FOR ALL USING (auth.role() = 'authenti
           ) : (
             <div className="space-y-3">
               {pastEvents.map((ev, idx) => (
-                <div key={ev.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
+                <div key={ev.id} className="bg-white/60 border border-accent/20 hover:border-accent/35 rounded-xl overflow-hidden shadow-sm transition-all duration-300">
                   {editingId === ev.id ? (
                     <div className="p-5">
-                      <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Edit3 size={15} className="text-[#8C1B11]" /> Edit: {ev.title}</h3>
+                      <h3 className="font-bold text-[#2D1A10] mb-4 flex items-center gap-2 font-serif"><Edit3 size={15} className="text-[#8C1B11]" /> Edit: {ev.title}</h3>
                       <PastEventForm initial={ev} onSave={(data) => updatePastEvent(ev.id, data)} onCancel={() => setEditingId(null)} saving={savingPast} />
                     </div>
                   ) : (
@@ -428,17 +428,17 @@ CREATE POLICY "Auth write" ON past_events FOR ALL USING (auth.role() = 'authenti
                       {/* Order controls */}
                       <div className="flex flex-col gap-1">
                         <button onClick={() => moveEvent(ev.id, 'up')} disabled={idx === 0}
-                          className="p-1 text-zinc-600 hover:text-white disabled:opacity-20 transition-colors">
+                          className="p-1 text-zinc-400 hover:text-[#8C1B11] disabled:opacity-20 transition-colors">
                           <ChevronUp size={14} />
                         </button>
                         <button onClick={() => moveEvent(ev.id, 'down')} disabled={idx === pastEvents.length - 1}
-                          className="p-1 text-zinc-600 hover:text-white disabled:opacity-20 transition-colors">
+                          className="p-1 text-zinc-400 hover:text-[#8C1B11] disabled:opacity-20 transition-colors">
                           <ChevronDown size={14} />
                         </button>
                       </div>
                       {/* Image thumbnail */}
                       {ev.image_url && (
-                        <div className="h-14 w-20 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800 shrink-0">
+                        <div className="h-14 w-20 rounded-lg overflow-hidden bg-zinc-100 border border-accent/15 shrink-0">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={ev.image_url} alt={ev.title} className="w-full h-full object-cover" />
                         </div>
@@ -446,22 +446,22 @@ CREATE POLICY "Auth write" ON past_events FOR ALL USING (auth.role() = 'authenti
                       {/* Details */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-bold text-white text-sm truncate">{ev.title}</span>
-                          <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider shrink-0">{ev.category}</span>
+                          <span className="font-bold text-[#2D1A10] text-sm truncate">{ev.title}</span>
+                          <span className="text-[10px] text-accent font-bold uppercase tracking-wider shrink-0 bg-accent/10 px-2 py-0.5 rounded-full">{ev.category}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-zinc-500">
+                        <div className="flex items-center gap-3 text-xs text-zinc-500 font-medium">
                           <span>{ev.event_month_year}</span>
-                          {ev.highlight_stat && <span className="text-accent/70">{ev.highlight_stat}</span>}
+                          {ev.highlight_stat && <span className="text-[#8C1B11] font-semibold">🏆 {ev.highlight_stat}</span>}
                         </div>
                       </div>
                       {/* Actions */}
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-1 shrink-0">
                         <button onClick={() => setEditingId(ev.id)}
-                          className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+                          className="p-2 text-zinc-500 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 rounded-lg transition-colors">
                           <Edit3 size={15} />
                         </button>
                         <button onClick={() => deletePastEvent(ev.id)}
-                          className="p-2 text-zinc-600 hover:text-red-400 hover:bg-red-950/30 rounded-lg transition-colors">
+                          className="p-2 text-zinc-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                           <Trash2 size={15} />
                         </button>
                       </div>

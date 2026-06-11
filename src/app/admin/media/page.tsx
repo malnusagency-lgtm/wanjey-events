@@ -117,12 +117,12 @@ export default function MediaManagerPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Media Manager</h1>
-          <p className="text-zinc-400 mt-1">Upload and manage assets for your website sections.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10]">Media Manager</h1>
+          <p className="text-zinc-500 mt-1">Upload and manage assets for your website sections.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-          <span className="text-xs text-zinc-500 px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md">
+          <span className="text-xs text-zinc-500 px-2 py-1 bg-white/60 border border-accent/25 rounded-md shadow-sm">
             Max {activeFolder === 'bigvoices' ? '2 GB' : '100 MB'} per file
           </span>
         <CldUploadWidget 
@@ -132,11 +132,8 @@ export default function MediaManagerPage() {
             folder: `wanjey/${activeFolder}`,
             multiple: true,
             maxFiles: 50,
-            // Set global max file size to 2GB
             maxFileSize: 2147483648,
-            // Auto-compress large images client-side to bypass the 10MB free tier image limit
             maxImageWidth: 2500,
-            // Chunked uploads: splits large videos into chunks
             maxChunkSize: 6000000,
             resourceType: 'auto',
           }}
@@ -166,7 +163,7 @@ export default function MediaManagerPage() {
             return (
               <button 
                 onClick={() => open()}
-                className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-lg"
+                className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg"
               >
                 <UploadCloud size={20} />
                 Upload to {activeFolder}
@@ -177,13 +174,13 @@ export default function MediaManagerPage() {
         </div>
       </div>
 
-      <div className="flex gap-4 border-b border-zinc-800 pb-4">
+      <div className="flex gap-4 border-b border-accent/15 pb-4">
         <button
           onClick={() => setActiveFolder('bigvoices')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors ${
             activeFolder === 'bigvoices' 
-              ? 'bg-zinc-800 text-white' 
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-accent text-white shadow-sm' 
+              : 'text-zinc-500 hover:text-[#2D1A10] hover:bg-accent/5'
           }`}
         >
           <Folder size={18} />
@@ -191,10 +188,10 @@ export default function MediaManagerPage() {
         </button>
         <button
           onClick={() => setActiveFolder('gallery')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors ${
             activeFolder === 'gallery' 
-              ? 'bg-zinc-800 text-white' 
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-accent text-white shadow-sm' 
+              : 'text-zinc-500 hover:text-[#2D1A10] hover:bg-accent/5'
           }`}
         >
           <Folder size={18} />
@@ -204,16 +201,16 @@ export default function MediaManagerPage() {
 
       {/* Bulk actions bar */}
       {!loading && media.length > 0 && (
-        <div className="flex items-center justify-between bg-zinc-900/40 border border-zinc-800/80 rounded-xl p-4 flex-wrap gap-4">
+        <div className="flex items-center justify-between bg-white/60 border border-accent/25 rounded-xl p-4 flex-wrap gap-4 shadow-sm">
           <div className="flex items-center gap-3">
             <button
               onClick={handleSelectAll}
-              className="flex items-center gap-2 text-sm text-zinc-300 hover:text-white transition-colors bg-zinc-800 hover:bg-zinc-700 px-3.5 py-2 rounded-lg font-medium"
+              className="flex items-center gap-2 text-sm text-[#2D1A10] hover:text-[#8C1B11] transition-colors bg-accent/10 hover:bg-accent/20 px-3.5 py-2 rounded-lg font-semibold"
             >
               {selectedIds.length === media.length ? <CheckSquare size={18} className="text-[#8C1B11]" /> : <Square size={18} />}
               {selectedIds.length === media.length ? 'Deselect All' : 'Select All'}
             </button>
-            <span className="text-sm text-zinc-400">
+            <span className="text-sm text-zinc-500">
               {selectedIds.length} of {media.length} selected
             </span>
           </div>
@@ -240,12 +237,12 @@ export default function MediaManagerPage() {
           <Loader2 className="w-8 h-8 animate-spin text-[#8C1B11]" />
         </div>
       ) : media.length === 0 ? (
-        <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[300px]">
-          <div className="bg-zinc-900 p-4 rounded-full mb-4">
-            <ImageIcon size={32} className="text-zinc-500" />
+        <div className="bg-white/40 border border-accent/25 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[300px] shadow-sm">
+          <div className="bg-accent/10 p-4 rounded-full mb-4 text-accent">
+            <ImageIcon size={32} />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">No media found in {activeFolder}</h3>
-          <p className="text-zinc-400 max-w-md">
+          <h3 className="text-xl font-bold text-[#2D1A10] mb-2 font-serif">No media found in {activeFolder}</h3>
+          <p className="text-zinc-500 max-w-md">
             Click the upload button above to add files. They will automatically appear on the website.
           </p>
         </div>
@@ -257,8 +254,8 @@ export default function MediaManagerPage() {
               <div 
                 key={item.id} 
                 onClick={() => handleToggleSelect(item.id)}
-                className={`group relative aspect-square rounded-xl border transition-all duration-300 bg-zinc-900 overflow-hidden cursor-pointer ${
-                  isSelected ? 'border-[#8C1B11] ring-2 ring-[#8C1B11]/30' : 'border-zinc-800 hover:border-zinc-700'
+                className={`group relative aspect-square rounded-xl border transition-all duration-300 bg-zinc-100 overflow-hidden cursor-pointer shadow-sm ${
+                  isSelected ? 'border-[#8C1B11] ring-2 ring-[#8C1B11]/30' : 'border-accent/15 hover:border-accent/40'
                 }`}
               >
                 {/* Checkbox badge */}
@@ -266,7 +263,7 @@ export default function MediaManagerPage() {
                   isSelected ? 'opacity-100 scale-100' : 'opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100'
                 }`}>
                   <div className={`p-1 rounded-md border backdrop-blur-md transition-colors ${
-                    isSelected ? 'bg-[#8C1B11] border-[#8C1B11] text-white' : 'bg-black/60 border-zinc-700 text-zinc-400'
+                    isSelected ? 'bg-[#8C1B11] border-[#8C1B11] text-white' : 'bg-white/60 border-accent/20 text-zinc-500'
                   }`}>
                     <CheckSquare size={16} className={isSelected ? 'block' : 'hidden'} />
                     <Square size={16} className={isSelected ? 'hidden' : 'block'} />
@@ -279,7 +276,7 @@ export default function MediaManagerPage() {
                   <Image src={item.url} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
                 )}
                 
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
+                <div className="absolute inset-0 bg-[#2D1A10]/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
                   <div className="flex justify-end">
                     <button 
                       onClick={(e) => {
@@ -293,7 +290,7 @@ export default function MediaManagerPage() {
                       {deletingId === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                     </button>
                   </div>
-                  <div className="text-xs text-white truncate px-1 bg-black/50 rounded p-1">
+                  <div className="text-xs text-white truncate px-1 bg-black/45 rounded p-1">
                     {item.id.split('/').pop()}
                   </div>
                 </div>

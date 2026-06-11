@@ -27,9 +27,9 @@ function SubmitButton() {
 
 export function LoginForm({ error }: { error?: string }) {
   return (
-    <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-8 shadow-2xl">
+    <div className="rounded-2xl bg-white/65 backdrop-blur-xl border border-accent/25 p-8 shadow-2xl">
       {error && (
-        <div className="mb-6 rounded-lg bg-red-950/50 border border-red-500/40 px-4 py-3 text-sm text-red-300 text-center">
+        <div className="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 text-center font-medium">
           {error}
         </div>
       )}
@@ -44,7 +44,7 @@ export function LoginForm({ error }: { error?: string }) {
         <div>
           <label
             htmlFor="email"
-            className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2"
+            className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2"
           >
             Email Address
           </label>
@@ -54,7 +54,7 @@ export function LoginForm({ error }: { error?: string }) {
             type="email"
             autoComplete="email"
             required
-            className="block w-full rounded-xl border-0 bg-zinc-800/60 py-3.5 px-4 text-white text-sm ring-1 ring-inset ring-zinc-700 placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-[#8C1B11] transition-all duration-200"
+            className="block w-full rounded-xl border border-accent/25 bg-white py-3.5 px-4 text-[#2D1A10] text-sm placeholder:text-zinc-400 focus:outline-none focus:border-[#8C1B11] focus:ring-2 focus:ring-[#8C1B11]/10 transition-all duration-200 font-semibold"
             placeholder="admin@wanjeyevents.com"
           />
         </div>
@@ -62,7 +62,7 @@ export function LoginForm({ error }: { error?: string }) {
         <div>
           <label
             htmlFor="password"
-            className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2"
+            className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2"
           >
             Password
           </label>
@@ -72,7 +72,7 @@ export function LoginForm({ error }: { error?: string }) {
             type="password"
             autoComplete="current-password"
             required
-            className="block w-full rounded-xl border-0 bg-zinc-800/60 py-3.5 px-4 text-white text-sm ring-1 ring-inset ring-zinc-700 placeholder:text-zinc-500 focus:ring-2 focus:ring-inset focus:ring-[#8C1B11] transition-all duration-200"
+            className="block w-full rounded-xl border border-accent/25 bg-white py-3.5 px-4 text-[#2D1A10] text-sm placeholder:text-zinc-400 focus:outline-none focus:border-[#8C1B11] focus:ring-2 focus:ring-[#8C1B11]/10 transition-all duration-200 font-semibold"
             placeholder="••••••••"
           />
         </div>

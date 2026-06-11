@@ -41,48 +41,48 @@ export default function DashboardStats() {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-sm">
+      <div className="rounded-xl border border-accent/25 bg-white/60 backdrop-blur-md p-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-blue-500/10 rounded-lg text-blue-500">
+          <div className="p-3 bg-accent/10 rounded-lg text-accent">
             <ImageIcon size={24} />
           </div>
           <div>
-            <p className="text-sm font-medium text-zinc-400">Total Images</p>
-            <h3 className="text-2xl font-bold text-white">
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : stats.images}
+            <p className="text-sm font-medium text-zinc-500">Total Images</p>
+            <h3 className="text-2xl font-bold text-[#2D1A10]">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin text-accent" /> : stats.images}
             </h3>
           </div>
         </div>
       </div>
 
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-sm">
+      <div className="rounded-xl border border-accent/25 bg-white/60 backdrop-blur-md p-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-purple-500/10 rounded-lg text-purple-500">
+          <div className="p-3 bg-[#8C1B11]/10 rounded-lg text-[#8C1B11]">
             <Video size={24} />
           </div>
           <div>
-            <p className="text-sm font-medium text-zinc-400">Total Videos</p>
-            <h3 className="text-2xl font-bold text-white">
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : stats.videos}
+            <p className="text-sm font-medium text-zinc-500">Total Videos</p>
+            <h3 className="text-2xl font-bold text-[#2D1A10]">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin text-[#8C1B11]" /> : stats.videos}
             </h3>
           </div>
         </div>
       </div>
 
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-sm flex flex-col justify-center">
+      <div className="rounded-xl border border-accent/25 bg-white/60 backdrop-blur-md p-6 shadow-sm flex flex-col justify-center">
         <div className="flex items-center gap-4 mb-3">
-          <div className="p-3 bg-amber-500/10 rounded-lg text-amber-500">
+          <div className="p-3 bg-accent/10 rounded-lg text-accent">
             <HardDrive size={24} />
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-center mb-1">
-              <p className="text-sm font-medium text-zinc-400">Storage Used</p>
-              <span className="text-xs text-zinc-500">{formatBytes(stats.bytes)} / 25 GB</span>
+              <p className="text-sm font-medium text-zinc-500">Storage Used</p>
+              <span className="text-xs text-zinc-400">{formatBytes(stats.bytes)} / 25 GB</span>
             </div>
             {loading ? (
-              <div className="h-2 w-full bg-zinc-800 rounded-full animate-pulse"></div>
+              <div className="h-2 w-full bg-zinc-200/60 rounded-full animate-pulse"></div>
             ) : (
-              <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-zinc-200/60 rounded-full overflow-hidden">
                 <div 
                   className={`h-full ${usagePercentage > 90 ? 'bg-red-500' : usagePercentage > 75 ? 'bg-amber-500' : 'bg-[#8C1B11]'}`}
                   style={{ width: `${Math.max(1, usagePercentage)}%` }}

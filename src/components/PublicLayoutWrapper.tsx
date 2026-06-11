@@ -16,7 +16,7 @@ export default function PublicLayoutWrapper({ children }: { children: React.Reac
 
   if (isAdminOrLogin) {
     return (
-      <div className="min-h-screen bg-zinc-950 text-white">
+      <div className="min-h-screen text-[#2D1A10]">
         <FilmGrain />
         <PremiumCursor />
         {children}
