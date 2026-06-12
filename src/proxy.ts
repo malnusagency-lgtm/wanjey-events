@@ -8,7 +8,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Only run middleware on routes that require authentication checks:
+     * Only run proxy middleware on routes that require authentication checks:
      * - /admin and all sub-routes (protected dashboard)
      * - /login (to redirect authenticated users away)
      *

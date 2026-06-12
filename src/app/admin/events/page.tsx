@@ -185,7 +185,10 @@ export default function EventsPage() {
         const data = await res.json()
         setUpcomingForm(data)
         toast.success('Upcoming event updated! Live on your site.')
-      } else { toast.error('Failed to save. Please try again.') }
+      } else {
+        const errData = await res.json().catch(() => ({}))
+        toast.error(errData.error || 'Failed to save. Please try again.')
+      }
     } catch { toast.error('Network error.') }
     finally { setSavingUpcoming(false) }
   }
@@ -204,7 +207,10 @@ export default function EventsPage() {
         setShowAddForm(false)
         setIsTableMissing(false)
         toast.success('Past event added!')
-      } else { toast.error('Failed to add event.') }
+      } else {
+        const errData = await res.json().catch(() => ({}))
+        toast.error(errData.error || 'Failed to add event.')
+      }
     } catch { toast.error('Network error.') }
     finally { setSavingPast(false) }
   }
@@ -223,7 +229,10 @@ export default function EventsPage() {
         setPastEvents(p => p.map(e => e.id === id ? updated : e))
         setEditingId(null)
         toast.success('Event updated!')
-      } else { toast.error('Failed to update.') }
+      } else {
+        const errData = await res.json().catch(() => ({}))
+        toast.error(errData.error || 'Failed to update.')
+      }
     } catch { toast.error('Network error.') }
     finally { setSavingPast(false) }
   }
@@ -235,7 +244,10 @@ export default function EventsPage() {
       if (res.ok) {
         setPastEvents(p => p.filter(e => e.id !== id))
         toast.success('Event deleted.')
-      } else { toast.error('Failed to delete.') }
+      } else {
+        const errData = await res.json().catch(() => ({}))
+        toast.error(errData.error || 'Failed to delete.')
+      }
     } catch { toast.error('Network error.') }
   }
 

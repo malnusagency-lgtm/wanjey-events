@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { CldUploadWidget } from 'next-cloudinary'
-import { UploadCloud, Folder, Image as ImageIcon, Video, Trash2, Loader2, CheckSquare, Square } from 'lucide-react'
+import { UploadCloud, Folder, Image as ImageIcon, Video, Trash2, Loader2, CheckSquare, Square, Copy } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 
@@ -84,6 +84,14 @@ export default function MediaManagerPage() {
       // Reset the file input value so onChange triggers again for same files
       e.target.value = ''
     }
+  }
+
+  const handleCopyUrl = (e: React.MouseEvent, url: string) => {
+    e.stopPropagation()
+    const absoluteUrl = url.startsWith('/') ? window.location.origin + url : url
+    navigator.clipboard.writeText(absoluteUrl)
+      .then(() => toast.success('Media URL copied to clipboard!'))
+      .catch(() => toast.error('Failed to copy URL'))
   }
 
   const handleDeleteSingle = async (publicId: string, resourceType: string) => {
@@ -365,7 +373,14 @@ export default function MediaManagerPage() {
                 )}
                 
                 <div className="absolute inset-0 bg-[#2D1A10]/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
-                  <div className="flex justify-end">
+                  <div className="flex justify-end gap-2">
+                    <button 
+                      onClick={(e) => handleCopyUrl(e, item.url)}
+                      className="p-2 bg-accent hover:bg-accent/80 text-white rounded-lg transition-colors z-20 shadow-md"
+                      title="Copy media URL"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
