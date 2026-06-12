@@ -11,7 +11,7 @@ const services = [
 
 export default function ServicesMarquee() {
   return (
-    <div className="relative flex overflow-hidden py-10">
+    <div className="relative flex overflow-x-auto scrollbar-hide py-10">
       <div className="flex animate-marquee whitespace-nowrap gap-6 px-6">
         {/* Double items for seamless loop */}
         {[...services, ...services].map((s, i) => (
@@ -32,9 +32,6 @@ export default function ServicesMarquee() {
           display: flex;
           width: max-content;
           animation: marquee 35s linear infinite;
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
         }
         @keyframes marquee {
           0% { transform: translateX(0); }

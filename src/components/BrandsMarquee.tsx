@@ -17,7 +17,7 @@ const brands = [
 
 export default function BrandsMarquee() {
   return (
-    <div className="relative w-full overflow-hidden border-y border-[#CAA365]/30 bg-gradient-to-r from-[#FFE5D9]/75 via-[#FFF0E8]/80 to-[#FFE5D9]/75 py-6 z-10 shadow-sm">
+    <div className="relative w-full overflow-hidden border-y border-[#CAA365]/30 bg-[#FFE5D9] py-6 z-10 shadow-sm">
       <div className="flex items-center">
         {/* Subtitle label left */}
         <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#FFE5D9] via-[#FFE5D9]/90 to-transparent z-20 px-6 flex items-center shrink-0 pointer-events-none md:pr-16">
@@ -40,7 +40,7 @@ export default function BrandsMarquee() {
         </div>
 
         {/* Right fade */}
-        <div className="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-[#FFE5D9] via-[#FFE5D9]/60 to-transparent z-20 w-16 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-[#FFE5D9] via-[#FFE5D9]/80 to-transparent z-20 w-16 pointer-events-none" />
       </div>
 
       <style jsx>{`
