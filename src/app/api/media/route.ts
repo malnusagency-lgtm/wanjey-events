@@ -50,6 +50,15 @@ export async function GET(request: Request) {
 
   // Always collect local media
   const localMedia = getLocalMedia(folder);
+  const isCloudNameDisabled = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME === 'dgd0puzlc';
+
+  if (isCloudNameDisabled) {
+    console.warn('Cloudinary account dgd0puzlc is disabled. Defaulting directly to local storage.');
+    const media = localMedia.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    return NextResponse.json({ media, cloudinary_disabled: true });
+  }
 
   try {
     // Fetch images and videos separately using api.resources (works on all Cloudinary plans)

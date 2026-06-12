@@ -56,7 +56,7 @@ export default function AboutPage() {
             quality={95}
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
+          <div className="absolute inset-0 bg-black/10 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           {/* Gold shimmer strip */}
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--accent))] to-transparent opacity-60" />
         </div>
@@ -178,9 +178,23 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <div className="gradient-separator" />
-
+      {/* ── FIXED BACKGROUND BREAKOUT ── */}
+      <section className="relative py-20 md:py-28 overflow-hidden w-full" style={{ clipPath: "inset(0)" }}>
+        <div
+          className="fixed inset-0 z-[-1] bg-cover bg-center pointer-events-none"
+          style={{
+            backgroundImage: 'url("/assets/gallery/event-31.jpg")',
+            height: "100vh",
+            width: "100vw"
+          }}
+        />
+        <div className="absolute inset-0 bg-black/45 z-0" />
+        <div className="container relative z-10 text-center py-10">
+          <h3 className="font-serif text-3xl md:text-5xl font-black text-white tracking-tighter leading-tight uppercase drop-shadow-lg max-w-3xl mx-auto">
+            Creating Memorable Brand Experiences
+          </h3>
+        </div>
+      </section>
       {/* ── CAREER TIMELINE ── */}
       <section className="py-12 md:py-20">
         <div className="container">

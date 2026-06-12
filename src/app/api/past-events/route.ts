@@ -90,9 +90,9 @@ export async function POST(request: Request) {
 
     if (error) throw error
     return NextResponse.json(data)
-  } catch (error) {
+  } catch (error: any) {
     console.error('Past event create error:', error)
-    return NextResponse.json({ error: 'Failed to create event' }, { status: 500 })
+    return NextResponse.json({ error: error.message || 'Failed to create event', details: error }, { status: 500 })
   }
 }
 
@@ -120,9 +120,9 @@ export async function PUT(request: Request) {
 
     if (error) throw error
     return NextResponse.json(data)
-  } catch (error) {
+  } catch (error: any) {
     console.error('Past event update error:', error)
-    return NextResponse.json({ error: 'Failed to update event' }, { status: 500 })
+    return NextResponse.json({ error: error.message || 'Failed to update event', details: error }, { status: 500 })
   }
 }
 
@@ -139,8 +139,8 @@ export async function DELETE(request: Request) {
     const { error } = await supabase.from('past_events').delete().eq('id', id)
     if (error) throw error
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Past event delete error:', error)
-    return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 })
+    return NextResponse.json({ error: error.message || 'Failed to delete event', details: error }, { status: 500 })
   }
 }

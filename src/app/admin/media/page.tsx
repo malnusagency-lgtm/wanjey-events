@@ -33,10 +33,14 @@ export default function MediaManagerPage() {
         const data = await response.json()
         setMedia(data.media || [])
         setIsCloudinaryDisabled(!!data.cloudinary_disabled)
+      } else {
+        console.warn('API returned non-ok status. Defaulting to local storage.')
+        setIsCloudinaryDisabled(true)
       }
     } catch (error) {
       console.error('Failed to fetch media:', error)
-      toast.error('Failed to load media assets')
+      setIsCloudinaryDisabled(true)
+      toast.error('Failed to load media assets. Defaulting to local storage.')
     } finally {
       setLoading(false)
     }

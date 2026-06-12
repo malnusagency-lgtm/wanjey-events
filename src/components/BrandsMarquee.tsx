@@ -22,7 +22,7 @@ export default function BrandsMarquee() {
         {/* Subtitle label left */}
         <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#FFE5D9] via-[#FFE5D9]/90 to-transparent z-20 px-6 flex items-center shrink-0 pointer-events-none md:pr-16">
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2D1A10]/60 mr-2">
-            Trusted By
+            Collaborated With
           </span>
           <div className="h-4 w-px bg-[#CAA365]/35 hidden md:block" />
         </div>

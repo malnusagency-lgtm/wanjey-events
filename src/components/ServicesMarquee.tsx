@@ -86,7 +86,7 @@ export default function ServicesMarquee() {
   return (
     <div 
       ref={containerRef}
-      className="relative flex overflow-x-auto scrollbar-hide py-10 select-none cursor-grab active:cursor-grabbing"
+      className="relative flex overflow-x-auto scrollbar-hide py-12 select-none cursor-grab active:cursor-grabbing border-y border-[#CAA365]/30 bg-[#FFE5D9] shadow-sm my-6"
     >
       <div className="flex whitespace-nowrap gap-6 px-6">
         {[...services, ...services, ...services].map((s, i) => (
