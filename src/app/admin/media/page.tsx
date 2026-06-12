@@ -173,7 +173,7 @@ export default function MediaManagerPage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10] flex items-center gap-2 font-serif">
             Media Manager
-            {isCloudinaryDisabled && (
+            {(isCloudinaryDisabled || (!loading && !cloudName)) && (
               <span className="text-[10px] bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
                 Offline Mode (Local Storage)
               </span>
@@ -190,7 +190,12 @@ export default function MediaManagerPage() {
           <span className="text-xs text-zinc-500 px-2 py-1 bg-white/60 border border-accent/25 rounded-md shadow-sm">
             Max {activeFolder === 'upcoming' ? '2 GB' : '100 MB'} per file
           </span>
-          {isCloudinaryDisabled ? (
+          {loading ? (
+            <div className="flex items-center gap-2 bg-zinc-100 text-zinc-500 px-5 py-2.5 rounded-lg text-sm font-semibold border border-zinc-200">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Checking Cloudinary…
+            </div>
+          ) : isCloudinaryDisabled || !cloudName ? (
             <label className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg cursor-pointer text-sm">
               {uploadingLocal ? (
                 <>
@@ -200,7 +205,7 @@ export default function MediaManagerPage() {
               ) : (
                 <>
                   <UploadCloud size={20} />
-                  Upload to {activeFolder}
+                  Upload to {activeFolder} (Local)
                 </>
               )}
               <input

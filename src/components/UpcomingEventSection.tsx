@@ -6,6 +6,7 @@ import { ArrowRight, MapPin, Clock } from 'lucide-react'
 import AnimatedSection from './AnimatedSection'
 import MediaModal from './MediaModal'
 import BookingCTA3D from './BookingCTA3D'
+import Link from 'next/link'
 
 type MediaItem = { id?: string; src: string; type: 'video' | 'image' }
 
@@ -18,6 +19,7 @@ type EventData = {
   date_iso?: string
   location?: string
   no_event?: boolean
+  booking_link?: string
 }
 
 function useCountdown(dateIso?: string) {
@@ -234,16 +236,30 @@ const UpcomingEventSection = () => {
           {/* CTA Button */}
           <AnimatedSection delay={0.7}>
             <div className="mt-8 sm:mt-10">
-              <MagneticButton intensity={40}>
-                <Button
-                  onClick={() => setIsModalOpen(true)}
-                  size="lg"
-                  className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
-                >
-                  {eventData.cta_text}
-                  <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
-                </Button>
-              </MagneticButton>
+              {eventData.booking_link ? (
+                <Link href={eventData.booking_link} target="_blank" rel="noopener noreferrer">
+                  <MagneticButton intensity={40}>
+                    <Button
+                      size="lg"
+                      className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
+                    >
+                      {eventData.cta_text}
+                      <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
+                    </Button>
+                  </MagneticButton>
+                </Link>
+              ) : (
+                <MagneticButton intensity={40}>
+                  <Button
+                    onClick={() => setIsModalOpen(true)}
+                    size="lg"
+                    className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
+                  >
+                    {eventData.cta_text}
+                    <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
+                  </Button>
+                </MagneticButton>
+              )}
             </div>
           </AnimatedSection>
 

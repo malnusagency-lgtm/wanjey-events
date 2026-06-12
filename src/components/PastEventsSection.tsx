@@ -7,6 +7,7 @@ import AnimatedSection from './AnimatedSection'
 import { ArrowLeft, ArrowRight, Trophy, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import MagneticButton from './MagneticButton'
+import { parseImageUrl } from '@/lib/utils'
 
 type PastEvent = {
   id: string
@@ -17,6 +18,8 @@ type PastEvent = {
   highlight_stat: string
   event_month_year: string
   display_order: number
+  cta_link?: string
+  cta_text?: string
 }
 
 export default function PastEventsSection() {
@@ -96,12 +99,11 @@ export default function PastEventsSection() {
             key={ev.id}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
           >
-            <Image
-              src={ev.image_url}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={parseImageUrl(ev.image_url)}
               alt={ev.title}
-              fill
               className="h-full w-full object-cover grayscale-[0.1] contrast-[1.05]"
-              priority={idx === 0}
             />
           </div>
         ))}
@@ -162,13 +164,17 @@ export default function PastEventsSection() {
 
             {/* Explore Gallery Button */}
             <div className="mt-8 sm:mt-10">
-              <Link href="/gallery">
+              <Link 
+                href={activeEvent.cta_link || '/gallery'}
+                target={activeEvent.cta_link ? '_blank' : undefined}
+                rel={activeEvent.cta_link ? 'noopener noreferrer' : undefined}
+              >
                 <MagneticButton intensity={40}>
                   <Button
                     size="lg"
                     className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
                   >
-                    Explore Gallery
+                    {activeEvent.cta_text || 'Explore Gallery'}
                     <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </Button>
                 </MagneticButton>

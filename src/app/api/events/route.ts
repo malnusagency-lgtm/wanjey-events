@@ -42,6 +42,7 @@ export async function PUT(request: Request) {
         location: body.location || null,
         save_the_date_text: body.save_the_date_text,
         cta_text: body.cta_text,
+        booking_link: body.booking_link || null,
         is_active: true,
         updated_at: new Date().toISOString(),
       })

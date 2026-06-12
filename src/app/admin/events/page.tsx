@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { parseImageUrl } from '@/lib/utils'
 
 type PastEvent = {
   id: string
@@ -17,6 +18,8 @@ type PastEvent = {
   highlight_stat: string
   event_month_year: string
   display_order: number
+  cta_link?: string
+  cta_text?: string
 }
 
 type UpcomingEventForm = {
@@ -28,6 +31,7 @@ type UpcomingEventForm = {
   location: string
   save_the_date_text: string
   cta_text: string
+  booking_link?: string
 }
 
 const defaultUpcoming: UpcomingEventForm = {
@@ -38,6 +42,7 @@ const defaultUpcoming: UpcomingEventForm = {
   location: '',
   save_the_date_text: 'SAVE THE DATE',
   cta_text: 'Join the Movement',
+  booking_link: '',
 }
 
 const CATEGORIES = ['Festival', 'Brand Activation', 'Corporate Dinner', 'Lifestyle Event', 'Concert', 'Product Launch', 'Other']
@@ -62,6 +67,8 @@ function PastEventForm({
     image_url: initial?.image_url ?? '',
     highlight_stat: initial?.highlight_stat ?? '',
     event_month_year: initial?.event_month_year ?? '',
+    cta_link: initial?.cta_link ?? '',
+    cta_text: initial?.cta_text ?? '',
   })
 
   const field = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
@@ -100,14 +107,30 @@ function PastEventForm({
           <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-2">
             <ImageIcon size={12} className="text-accent" /> Event Photo URL
           </label>
-          <input value={form.image_url} onChange={field('image_url')} placeholder="https://... or /assets/gallery/event-30.jpg"
+          <input value={form.image_url} onChange={field('image_url')} placeholder="https://... or Google Drive sharing link"
             className={inputCls + ' font-mono'} />
           {form.image_url && (
             <div className="relative h-28 rounded-lg overflow-hidden border border-accent/15 mt-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={form.image_url} alt="preview" className="w-full h-full object-cover" />
+              <img src={parseImageUrl(form.image_url)} alt="preview" className="w-full h-full object-cover" />
             </div>
           )}
+        </div>
+
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+            Custom CTA Link (Optional)
+          </label>
+          <input value={form.cta_link} onChange={field('cta_link')} placeholder="e.g. YouTube video link or Drive folder (defaults to Gallery redirect)"
+            className={inputCls + ' font-mono'} />
+        </div>
+
+        <div className="space-y-1.5 sm:col-span-2">
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+            Custom CTA Button Text (Optional)
+          </label>
+          <input value={form.cta_text} onChange={field('cta_text')} placeholder="e.g. Watch Video (defaults to Explore Gallery)"
+            className={inputCls} />
         </div>
 
         <div className="space-y-1.5 sm:col-span-2">
@@ -360,6 +383,13 @@ export default function EventsPage() {
                     <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Button Text</label>
                     <input value={upcomingForm.cta_text} onChange={updateUpcoming('cta_text')} className={inputCls} placeholder="Join the Movement" />
                   </div>
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                      Booking / Ticket Link (Optional)
+                    </label>
+                    <input value={upcomingForm.booking_link || ''} onChange={updateUpcoming('booking_link')} className={inputCls + ' font-mono'} placeholder="e.g. https://tickets.example.com or booking page" />
+                    <p className="text-[10px] text-zinc-400">If set, clicking the homepage hero button redirects directly here instead of launching the contact modal.</p>
+                  </div>
                 </div>
                 <div className="px-5 pb-5">
                   <button onClick={saveUpcoming} disabled={savingUpcoming}
@@ -456,7 +486,7 @@ CREATE POLICY "Allow authenticated delete" ON past_events FOR DELETE USING (auth
                       {ev.image_url && (
                         <div className="h-14 w-20 rounded-lg overflow-hidden bg-zinc-100 border border-accent/15 shrink-0">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={ev.image_url} alt={ev.title} className="w-full h-full object-cover" />
+                          <img src={parseImageUrl(ev.image_url)} alt={ev.title} className="w-full h-full object-cover" />
                         </div>
                       )}
                       {/* Details */}

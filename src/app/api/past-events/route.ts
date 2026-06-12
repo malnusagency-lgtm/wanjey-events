@@ -84,6 +84,8 @@ export async function POST(request: Request) {
         highlight_stat: body.highlight_stat,
         event_month_year: body.event_month_year,
         display_order: body.display_order ?? 0,
+        cta_link: body.cta_link,
+        cta_text: body.cta_text,
       })
       .select()
       .single()
@@ -113,6 +115,8 @@ export async function PUT(request: Request) {
         highlight_stat: body.highlight_stat,
         event_month_year: body.event_month_year,
         display_order: body.display_order,
+        cta_link: body.cta_link,
+        cta_text: body.cta_text,
       })
       .eq('id', body.id)
       .select()
