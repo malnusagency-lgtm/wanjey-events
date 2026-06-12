@@ -24,6 +24,8 @@ export default function MediaManagerPage() {
   const [bulkDeleting, setBulkDeleting] = useState(false)
   const [isCloudinaryDisabled, setIsCloudinaryDisabled] = useState(false)
   const [uploadingLocal, setUploadingLocal] = useState(false)
+  const [cloudName, setCloudName] = useState<string | null>(null)
+  const [apiKey, setApiKey] = useState<string | null>(null)
 
   const fetchMedia = async (folder: string) => {
     setLoading(true)
@@ -33,6 +35,8 @@ export default function MediaManagerPage() {
         const data = await response.json()
         setMedia(data.media || [])
         setIsCloudinaryDisabled(!!data.cloudinary_disabled)
+        setCloudName(data.cloud_name || null)
+        setApiKey(data.api_key || null)
       } else {
         console.warn('API returned non-ok status. Defaulting to local storage.')
         setIsCloudinaryDisabled(true)
@@ -210,8 +214,14 @@ export default function MediaManagerPage() {
             </label>
           ) : (
             <CldUploadWidget 
-              key={activeFolder}
+              key={activeFolder + '-' + (cloudName || '')}
               signatureEndpoint="/api/cloudinary/sign"
+              config={{
+                cloud: {
+                  cloudName: cloudName || undefined,
+                  apiKey: apiKey || undefined,
+                }
+              }}
               options={{
                 folder: `wanjey/${activeFolder}`,
                 multiple: true,

@@ -86,14 +86,24 @@ export async function GET(request: Request) {
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    return NextResponse.json({ media, cloudinary_disabled: false });
+    return NextResponse.json({
+      media,
+      cloudinary_disabled: false,
+      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY
+    });
   } catch (error: any) {
     // If Cloudinary fails (e.g. disabled customer), fall back to local media
     console.warn('Cloudinary API Error, falling back to local files:', error.message || error);
     const media = localMedia.sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
-    return NextResponse.json({ media, cloudinary_disabled: true });
+    return NextResponse.json({
+      media,
+      cloudinary_disabled: true,
+      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY
+    });
   }
 }
 
