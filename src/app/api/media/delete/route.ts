@@ -1,14 +1,9 @@
-import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import fs from 'fs';
 import path from 'path';
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { r2Client, R2_BUCKET_NAME } from '@/utils/r2';
 
 function deleteLocalFile(publicId: string) {
   if (publicId.startsWith('local/')) {
@@ -29,6 +24,20 @@ function deleteLocalFile(publicId: string) {
   return false;
 }
 
+async function deleteR2File(key: string) {
+  try {
+    const command = new DeleteObjectCommand({
+      Bucket: R2_BUCKET_NAME,
+      Key: key,
+    });
+    await r2Client.send(command);
+    return true;
+  } catch (err) {
+    console.error(`Error deleting R2 key ${key}:`, err);
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   // Check authentication
   const supabase = await createClient();
@@ -40,22 +49,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const r2Configured = !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && R2_BUCKET_NAME);
+
   try {
     const body = await request.json();
-    const { public_id, resource_type, items } = body;
+    const { public_id, items } = body;
 
     // Handle bulk delete
     if (items && Array.isArray(items)) {
       const results = await Promise.all(
-        items.map(async (item: { public_id: string; resource_type: string }) => {
+        items.map(async (item: { public_id: string }) => {
           if (item.public_id.startsWith('local/')) {
             const success = deleteLocalFile(item.public_id);
             return { result: success ? 'ok' : 'not found', public_id: item.public_id };
-          } else {
-            return cloudinary.uploader.destroy(item.public_id, {
-              resource_type: item.resource_type || 'image',
-            });
+          } else if (r2Configured) {
+            const success = await deleteR2File(item.public_id);
+            return { result: success ? 'ok' : 'error', public_id: item.public_id };
           }
+          return { result: 'skipped (unsupported)', public_id: item.public_id };
         })
       );
       return NextResponse.json({ success: true, results });
@@ -71,14 +82,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, result: success ? 'deleted' : 'not_found' });
     }
 
-    // Cloudinary destroy method requires resource_type for videos
-    const result = await cloudinary.uploader.destroy(public_id, {
-      resource_type: resource_type || 'image',
-    });
+    if (r2Configured) {
+      const success = await deleteR2File(public_id);
+      return NextResponse.json({ success: true, result: success ? 'deleted' : 'error' });
+    }
 
-    return NextResponse.json({ success: true, result });
-  } catch (error) {
-    console.error('Cloudinary Delete Error:', error);
-    return NextResponse.json({ error: 'Failed to delete media' }, { status: 500 });
+    return NextResponse.json({ error: 'Storage provider not configured for deletion' }, { status: 400 });
+  } catch (error: any) {
+    console.error('Delete Error:', error);
+    return NextResponse.json({ error: error.message || 'Failed to delete media' }, { status: 500 });
   }
 }

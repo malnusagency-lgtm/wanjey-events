@@ -1,13 +1,8 @@
-import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { r2Client, R2_BUCKET_NAME, R2_PUBLIC_DOMAIN } from '@/utils/r2';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,61 +46,68 @@ export async function GET(request: Request) {
   // Always collect local media
   const localMedia = getLocalMedia(folder);
 
-  try {
-    // Fetch images and videos separately using api.resources (works on all Cloudinary plans)
-    const [imageResult, videoResult] = await Promise.all([
-      cloudinary.api.resources({
-        type: 'upload',
-        prefix: `wanjey/${folder}/`,
-        resource_type: 'image',
-        max_results: 100,
-      }),
-      cloudinary.api.resources({
-        type: 'upload',
-        prefix: `wanjey/${folder}/`,
-        resource_type: 'video',
-        max_results: 100,
-      }),
-    ]);
+  const r2Configured = !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && R2_BUCKET_NAME);
 
-    const mapResource = (resource: any, type: string) => ({
-      id: resource.public_id,
-      url: resource.secure_url,
-      type,
-      width: resource.width,
-      height: resource.height,
-      created_at: resource.created_at,
-    });
-
-    const cloudinaryMedia = [
-      ...imageResult.resources.map((r: any) => mapResource(r, 'image')),
-      ...videoResult.resources.map((r: any) => mapResource(r, 'video')),
-    ];
-
-    const media = [...cloudinaryMedia, ...localMedia].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-
-    return NextResponse.json({
-      media,
-      cloudinary_disabled: false,
-      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY
-    });
-  } catch (error: any) {
-    console.warn('Cloudinary API Error:', error.message || error);
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const isCloudinaryDisabled = !cloudName;
+  if (!r2Configured) {
+    // Fall back to local media if R2 is not configured
     const media = localMedia.sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
     return NextResponse.json({
       media,
-      cloudinary_disabled: isCloudinaryDisabled,
-      cloud_name: cloudName || null,
-      api_key: process.env.CLOUDINARY_API_KEY || null,
+      r2_disabled: true,
+      cloudinary_disabled: true, // Cloudinary is retired
+    });
+  }
+
+  try {
+    const prefix = `wanjey/${folder}/`;
+    const command = new ListObjectsV2Command({
+      Bucket: R2_BUCKET_NAME,
+      Prefix: prefix,
+    });
+
+    const response = await r2Client.send(command);
+    const r2Media = (response.Contents || [])
+      .filter(item => item.Key && item.Key !== prefix) // filter out prefix folder placeholder itself
+      .map(item => {
+        const key = item.Key!;
+        const ext = path.extname(key).toLowerCase();
+        const isVideo = ['.mp4', '.mov', '.webm', '.avi', '.m4v'].includes(ext);
+        
+        // Construct R2 public URL
+        const cleanDomain = R2_PUBLIC_DOMAIN.replace(/\/$/, '');
+        const url = `${cleanDomain}/${key}`;
+
+        return {
+          id: key,
+          url: url,
+          type: isVideo ? 'video' : 'image',
+          width: 1200,
+          height: 800,
+          created_at: item.LastModified ? item.LastModified.toISOString() : new Date().toISOString(),
+        };
+      });
+
+    const media = [...r2Media, ...localMedia].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    return NextResponse.json({
+      media,
+      r2_disabled: false,
+      cloudinary_disabled: true,
+    });
+  } catch (error: any) {
+    console.error('Cloudflare R2 listing error, falling back to local files:', error.message || error);
+    const media = localMedia.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    return NextResponse.json({
+      media,
+      r2_disabled: false, // Keep R2 mode active for client UI feedback
+      cloudinary_disabled: true,
       error_message: error.message || String(error)
     });
   }
 }
-

@@ -1,14 +1,9 @@
-import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import fs from 'fs';
 import path from 'path';
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { r2Client, R2_BUCKET_NAME } from '@/utils/r2';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,22 +50,42 @@ export async function GET() {
 
   const localStats = getLocalStats();
 
-  try {
-    // api.resources doesn't give a total count directly, so we fetch all and count
-    const [allImages, allVideos] = await Promise.all([
-      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'image', max_results: 500 }),
-      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'video', max_results: 500 }),
-    ]);
+  const r2Configured = !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && R2_BUCKET_NAME);
 
-    const cloudinaryBytes = [...allImages.resources, ...allVideos.resources].reduce((acc, curr) => acc + curr.bytes, 0);
+  if (!r2Configured) {
+    return NextResponse.json(localStats);
+  }
+
+  try {
+    const command = new ListObjectsV2Command({
+      Bucket: R2_BUCKET_NAME,
+      Prefix: 'wanjey/',
+    });
+
+    const response = await r2Client.send(command);
+    const contents = response.Contents || [];
+
+    let r2Images = 0;
+    let r2Videos = 0;
+    let r2Bytes = 0;
+
+    for (const item of contents) {
+      if (!item.Key) continue;
+      const ext = path.extname(item.Key).toLowerCase();
+      const isVideo = ['.mp4', '.mov', '.webm', '.avi', '.m4v'].includes(ext);
+      if (isVideo) r2Videos++;
+      else r2Images++;
+
+      r2Bytes += item.Size || 0;
+    }
 
     return NextResponse.json({
-      totalImages: allImages.resources.length + localStats.totalImages,
-      totalVideos: allVideos.resources.length + localStats.totalVideos,
-      totalBytes: cloudinaryBytes + localStats.totalBytes,
+      totalImages: r2Images + localStats.totalImages,
+      totalVideos: r2Videos + localStats.totalVideos,
+      totalBytes: r2Bytes + localStats.totalBytes,
     });
   } catch (error: any) {
-    console.warn('Cloudinary Stats Error, returning local stats only:', error.message || error);
+    console.warn('R2 Stats Error, returning local stats only:', error.message || error);
     return NextResponse.json(localStats);
   }
 }

@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CldUploadWidget } from 'next-cloudinary'
-import { UploadCloud, Folder, Image as ImageIcon, Video, Trash2, Loader2, CheckSquare, Square, Copy } from 'lucide-react'
+import { UploadCloud, Folder, Image as ImageIcon, Trash2, Loader2, CheckSquare, Square, Copy } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
+import { parseImageUrl } from '@/lib/utils'
 
 type MediaItem = {
   id: string;
@@ -22,10 +22,8 @@ export default function MediaManagerPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [bulkDeleting, setBulkDeleting] = useState(false)
-  const [isCloudinaryDisabled, setIsCloudinaryDisabled] = useState(false)
-  const [uploadingLocal, setUploadingLocal] = useState(false)
-  const [cloudName, setCloudName] = useState<string | null>(null)
-  const [apiKey, setApiKey] = useState<string | null>(null)
+  const [isR2Disabled, setIsR2Disabled] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const fetchMedia = async (folder: string) => {
     setLoading(true)
@@ -34,19 +32,17 @@ export default function MediaManagerPage() {
       if (response.ok) {
         const data = await response.json()
         setMedia(data.media || [])
-        setIsCloudinaryDisabled(!!data.cloudinary_disabled)
-        setCloudName(data.cloud_name || null)
-        setApiKey(data.api_key || null)
+        setIsR2Disabled(!!data.r2_disabled)
         if (data.error_message) {
-          toast.error(`Cloudinary Error: ${data.error_message}. Please check your Cloudinary account configuration.`);
+          toast.error(`Cloudflare R2 Error: ${data.error_message}. Falling back to Local Storage.`);
         }
       } else {
         console.warn('API returned non-ok status. Defaulting to local storage.')
-        setIsCloudinaryDisabled(true)
+        setIsR2Disabled(true)
       }
     } catch (error) {
       console.error('Failed to fetch media:', error)
-      setIsCloudinaryDisabled(true)
+      setIsR2Disabled(true)
       toast.error('Failed to load media assets. Defaulting to local storage.')
     } finally {
       setLoading(false)
@@ -58,11 +54,11 @@ export default function MediaManagerPage() {
     fetchMedia(activeFolder)
   }, [activeFolder])
 
-  const handleLocalUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    setUploadingLocal(true)
+    setUploading(true)
     const formData = new FormData()
     formData.append('folder', activeFolder)
     for (let i = 0; i < files.length; i++) {
@@ -77,18 +73,17 @@ export default function MediaManagerPage() {
 
       if (response.ok) {
         const data = await response.json()
-        toast.success(`Successfully uploaded ${data.files.length} asset(s) locally!`)
+        toast.success(`Successfully uploaded ${data.files.length} asset(s) to ${isR2Disabled ? 'Local Storage' : 'Cloudflare R2'}!`)
         fetchMedia(activeFolder)
       } else {
         const errData = await response.json()
         toast.error(errData.error || 'Failed to upload assets')
       }
     } catch (error) {
-      console.error('Local upload error:', error)
-      toast.error('An error occurred during local upload')
+      console.error('Upload error:', error)
+      toast.error('An error occurred during upload')
     } finally {
-      setUploadingLocal(false)
-      // Reset the file input value so onChange triggers again for same files
+      setUploading(false)
       e.target.value = ''
     }
   }
@@ -103,7 +98,6 @@ export default function MediaManagerPage() {
 
   const handleDeleteSingle = async (publicId: string, resourceType: string) => {
     setDeletingId(publicId)
-    // Remove from selection if it was selected
     setSelectedIds(prev => prev.filter(item => item !== publicId))
     
     try {
@@ -176,16 +170,20 @@ export default function MediaManagerPage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10] flex items-center gap-2 font-serif">
             Media Manager
-            {(isCloudinaryDisabled || (!loading && !cloudName)) && (
+            {isR2Disabled ? (
               <span className="text-[10px] bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
                 Offline Mode (Local Storage)
+              </span>
+            ) : (
+              <span className="text-[10px] bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                Cloudflare R2 Storage
               </span>
             )}
           </h1>
           <p className="text-zinc-500 mt-1 text-sm font-medium">
-            {isCloudinaryDisabled 
-              ? 'Uploading and managing files locally on the server (Cloudinary is disabled).'
-              : 'Upload and manage assets for your website sections.'}
+            {isR2Disabled 
+              ? 'Uploading and managing files locally on the server (Cloudflare R2 is unconfigured).'
+              : 'Upload and manage assets directly in your Cloudflare R2 bucket.'}
           </p>
         </div>
         
@@ -196,11 +194,11 @@ export default function MediaManagerPage() {
           {loading ? (
             <div className="flex items-center gap-2 bg-zinc-100 text-zinc-500 px-5 py-2.5 rounded-lg text-sm font-semibold border border-zinc-200">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Checking Cloudinary…
+              Checking Storage…
             </div>
-          ) : isCloudinaryDisabled || !cloudName ? (
+          ) : (
             <label className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg cursor-pointer text-sm">
-              {uploadingLocal ? (
+              {uploading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
                   Uploading…
@@ -208,71 +206,18 @@ export default function MediaManagerPage() {
               ) : (
                 <>
                   <UploadCloud size={20} />
-                  Upload to {activeFolder} (Local)
+                  Upload to {activeFolder}
                 </>
               )}
               <input
                 type="file"
                 multiple
-                onChange={handleLocalUpload}
+                onChange={handleUpload}
                 className="hidden"
-                disabled={uploadingLocal}
+                disabled={uploading}
                 accept="image/*,video/*"
               />
             </label>
-          ) : (
-            <CldUploadWidget 
-              key={activeFolder + '-' + (cloudName || '')}
-              signatureEndpoint="/api/cloudinary/sign"
-              config={{
-                cloud: {
-                  cloudName: cloudName || undefined,
-                  apiKey: apiKey || undefined,
-                }
-              }}
-              options={{
-                folder: `wanjey/${activeFolder}`,
-                multiple: true,
-                maxFiles: 50,
-                maxFileSize: activeFolder === 'upcoming' ? 2147483648 : 104857600,
-                maxImageWidth: 2500,
-                maxChunkSize: 6000000,
-                resourceType: 'auto',
-              }}
-              onSuccess={(result: any) => {
-                console.log('Upload success:', result)
-                if (result?.info && typeof result.info === 'object') {
-                  const newItem: MediaItem = {
-                    id: result.info.public_id,
-                    url: result.info.secure_url,
-                    type: result.info.resource_type,
-                    width: result.info.width,
-                    height: result.info.height,
-                    created_at: result.info.created_at,
-                  }
-                  setMedia(prev => [newItem, ...prev.filter(item => item.id !== newItem.id)])
-                  toast.success('Asset uploaded successfully')
-                } else {
-                  fetchMedia(activeFolder)
-                }
-              }}
-              onError={(error) => {
-                console.error('Upload Error:', error)
-                toast.error('Upload failed: ' + (typeof error === 'string' ? error : 'Check file type/size'))
-              }}
-            >
-              {({ open }) => {
-                return (
-                  <button 
-                    onClick={() => open()}
-                    className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg text-sm"
-                  >
-                    <UploadCloud size={20} />
-                    Upload to {activeFolder}
-                  </button>
-                )
-              }}
-            </CldUploadWidget>
           )}
         </div>
       </div>
@@ -387,7 +332,7 @@ export default function MediaManagerPage() {
                 {item.type === 'video' ? (
                   <video src={item.url} className="w-full h-full object-cover" muted playsInline />
                 ) : (
-                  <Image src={item.url} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
+                  <Image src={parseImageUrl(item.url)} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
                 )}
                 
                 <div className="absolute inset-0 bg-[#2D1A10]/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
