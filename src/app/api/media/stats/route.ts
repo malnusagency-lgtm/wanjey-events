@@ -54,12 +54,6 @@ export async function GET() {
   }
 
   const localStats = getLocalStats();
-  const isCloudNameDisabled = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME === 'dgd0puzlc';
-
-  if (isCloudNameDisabled) {
-    console.warn('Cloudinary account dgd0puzlc is disabled. Returning local stats only.');
-    return NextResponse.json(localStats);
-  }
 
   try {
     // api.resources doesn't give a total count directly, so we fetch all and count
