@@ -37,6 +37,9 @@ export default function MediaManagerPage() {
         setIsCloudinaryDisabled(!!data.cloudinary_disabled)
         setCloudName(data.cloud_name || null)
         setApiKey(data.api_key || null)
+        if (data.error_message) {
+          toast.error(`Cloudinary Error: ${data.error_message}. Please check your Cloudinary account configuration.`);
+        }
       } else {
         console.warn('API returned non-ok status. Defaulting to local storage.')
         setIsCloudinaryDisabled(true)

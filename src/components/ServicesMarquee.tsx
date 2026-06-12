@@ -86,17 +86,17 @@ export default function ServicesMarquee() {
   return (
     <div 
       ref={containerRef}
-      className="relative flex overflow-x-auto scrollbar-hide py-12 select-none cursor-grab active:cursor-grabbing border-y border-[#CAA365]/30 bg-[#FFE5D9] shadow-sm my-6"
+      className="relative flex overflow-x-auto scrollbar-hide py-12 select-none cursor-grab active:cursor-grabbing border-y border-[#CAA365]/30 bg-[#2D1A10] shadow-sm my-6"
     >
       <div className="flex whitespace-nowrap gap-6 px-6">
         {[...services, ...services, ...services].map((s, i) => (
           <div key={i} className="min-w-[300px] md:min-w-[400px]">
-            <div className="glass-card group bg-accent/5 backdrop-blur-md border border-accent/10 hover:bg-accent/10 hover:border-accent/20 transition-all duration-500 rounded-2xl relative overflow-hidden flex flex-col h-full p-8 md:p-10 whitespace-normal pointer-events-auto">
+            <div className="glass-card group bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-500 rounded-2xl relative overflow-hidden flex flex-col h-full p-8 md:p-10 whitespace-normal pointer-events-auto">
               <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-accent-foreground border border-accent/20 transition-transform duration-500 group-hover:scale-110 shadow-[0_10px_30px_-10px_rgba(202,163,101,0.5)] animate-float-slow">
                 <s.icon className="h-8 w-8" />
               </div>
-              <h3 className="relative z-10 mt-6 font-serif text-xl font-bold tracking-wide transition-colors duration-300">{s.title}</h3>
-              <p className="relative z-10 mt-3 text-[14px] leading-[1.7] text-muted-foreground font-medium">{s.desc}</p>
+              <h3 className="relative z-10 mt-6 font-serif text-xl font-bold tracking-wide text-[#FFE5B4] group-hover:text-white transition-colors duration-300">{s.title}</h3>
+              <p className="relative z-10 mt-3 text-[14px] leading-[1.7] text-white/70 font-medium">{s.desc}</p>
             </div>
           </div>
         ))}
