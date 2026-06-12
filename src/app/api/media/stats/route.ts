@@ -1,7 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
+import fs from 'fs';
+import path from 'path';
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -11,21 +12,39 @@ cloudinary.config({
 
 export const dynamic = 'force-dynamic';
 
+function getLocalStats() {
+  let totalImages = 0;
+  let totalVideos = 0;
+  let totalBytes = 0;
+
+  const folders = ['past', 'upcoming', 'gallery'];
+  for (const folder of folders) {
+    const dirPath = path.join(process.cwd(), 'public', 'uploads', folder);
+    if (fs.existsSync(dirPath)) {
+      try {
+        const files = fs.readdirSync(dirPath);
+        for (const file of files) {
+          if (file.startsWith('.')) continue;
+          const ext = path.extname(file).toLowerCase();
+          const isVideo = ['.mp4', '.mov', '.webm', '.avi', '.m4v'].includes(ext);
+          if (isVideo) totalVideos++;
+          else totalImages++;
+
+          const stat = fs.statSync(path.join(dirPath, file));
+          totalBytes += stat.size;
+        }
+      } catch (err) {
+        console.error(`Error reading local stats for ${folder}:`, err);
+      }
+    }
+  }
+
+  return { totalImages, totalVideos, totalBytes };
+}
+
 export async function GET() {
   // Check authentication
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-      },
-    }
-  );
-
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -34,28 +53,24 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  try {
-    // Use api.resources which works on all Cloudinary plans (including free)
-    const [imagesResult, videosResult] = await Promise.all([
-      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'image', max_results: 1 }),
-      cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'video', max_results: 1 }),
-    ]);
+  const localStats = getLocalStats();
 
+  try {
     // api.resources doesn't give a total count directly, so we fetch all and count
     const [allImages, allVideos] = await Promise.all([
       cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'image', max_results: 500 }),
       cloudinary.api.resources({ type: 'upload', prefix: 'wanjey/', resource_type: 'video', max_results: 500 }),
     ]);
 
-    const totalBytes = [...allImages.resources, ...allVideos.resources].reduce((acc, curr) => acc + curr.bytes, 0);
+    const cloudinaryBytes = [...allImages.resources, ...allVideos.resources].reduce((acc, curr) => acc + curr.bytes, 0);
 
     return NextResponse.json({
-      totalImages: allImages.resources.length,
-      totalVideos: allVideos.resources.length,
-      totalBytes: totalBytes,
+      totalImages: allImages.resources.length + localStats.totalImages,
+      totalVideos: allVideos.resources.length + localStats.totalVideos,
+      totalBytes: cloudinaryBytes + localStats.totalBytes,
     });
-  } catch (error) {
-    console.error('Cloudinary Stats Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
+  } catch (error: any) {
+    console.warn('Cloudinary Stats Error, returning local stats only:', error.message || error);
+    return NextResponse.json(localStats);
   }
 }

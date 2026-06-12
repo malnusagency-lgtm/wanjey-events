@@ -22,6 +22,8 @@ export default function MediaManagerPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [bulkDeleting, setBulkDeleting] = useState(false)
+  const [isCloudinaryDisabled, setIsCloudinaryDisabled] = useState(false)
+  const [uploadingLocal, setUploadingLocal] = useState(false)
 
   const fetchMedia = async (folder: string) => {
     setLoading(true)
@@ -30,6 +32,7 @@ export default function MediaManagerPage() {
       if (response.ok) {
         const data = await response.json()
         setMedia(data.media || [])
+        setIsCloudinaryDisabled(!!data.cloudinary_disabled)
       }
     } catch (error) {
       console.error('Failed to fetch media:', error)
@@ -43,6 +46,41 @@ export default function MediaManagerPage() {
     setSelectedIds([])
     fetchMedia(activeFolder)
   }, [activeFolder])
+
+  const handleLocalUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingLocal(true)
+    const formData = new FormData()
+    formData.append('folder', activeFolder)
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i])
+    }
+
+    try {
+      const response = await fetch('/api/media/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        toast.success(`Successfully uploaded ${data.files.length} asset(s) locally!`)
+        fetchMedia(activeFolder)
+      } else {
+        const errData = await response.json()
+        toast.error(errData.error || 'Failed to upload assets')
+      }
+    } catch (error) {
+      console.error('Local upload error:', error)
+      toast.error('An error occurred during local upload')
+    } finally {
+      setUploadingLocal(false)
+      // Reset the file input value so onChange triggers again for same files
+      e.target.value = ''
+    }
+  }
 
   const handleDeleteSingle = async (publicId: string, resourceType: string) => {
     setDeletingId(publicId)
@@ -117,60 +155,95 @@ export default function MediaManagerPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10]">Media Manager</h1>
-          <p className="text-zinc-500 mt-1">Upload and manage assets for your website sections.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10] flex items-center gap-2 font-serif">
+            Media Manager
+            {isCloudinaryDisabled && (
+              <span className="text-[10px] bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                Offline Mode (Local Storage)
+              </span>
+            )}
+          </h1>
+          <p className="text-zinc-500 mt-1 text-sm font-medium">
+            {isCloudinaryDisabled 
+              ? 'Uploading and managing files locally on the server (Cloudinary is disabled).'
+              : 'Upload and manage assets for your website sections.'}
+          </p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
           <span className="text-xs text-zinc-500 px-2 py-1 bg-white/60 border border-accent/25 rounded-md shadow-sm">
             Max {activeFolder === 'upcoming' ? '2 GB' : '100 MB'} per file
           </span>
-        <CldUploadWidget 
-          key={activeFolder}
-          signatureEndpoint="/api/cloudinary/sign"
-          options={{
-            folder: `wanjey/${activeFolder}`,
-            multiple: true,
-            maxFiles: 50,
-            maxFileSize: activeFolder === 'upcoming' ? 2147483648 : 104857600,
-            maxImageWidth: 2500,
-            maxChunkSize: 6000000,
-            resourceType: 'auto',
-          }}
-          onSuccess={(result: any) => {
-            console.log('Upload success:', result)
-            if (result?.info && typeof result.info === 'object') {
-              const newItem: MediaItem = {
-                id: result.info.public_id,
-                url: result.info.secure_url,
-                type: result.info.resource_type,
-                width: result.info.width,
-                height: result.info.height,
-                created_at: result.info.created_at,
-              }
-              setMedia(prev => [newItem, ...prev.filter(item => item.id !== newItem.id)])
-              toast.success('Asset uploaded successfully')
-            } else {
-              fetchMedia(activeFolder)
-            }
-          }}
-          onError={(error) => {
-            console.error('Upload Error:', error)
-            toast.error('Upload failed: ' + (typeof error === 'string' ? error : 'Check file type/size'))
-          }}
-        >
-          {({ open }) => {
-            return (
-              <button 
-                onClick={() => open()}
-                className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg"
-              >
-                <UploadCloud size={20} />
-                Upload to {activeFolder}
-              </button>
-            )
-          }}
-        </CldUploadWidget>
+          {isCloudinaryDisabled ? (
+            <label className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg cursor-pointer text-sm">
+              {uploadingLocal ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Uploading…
+                </>
+              ) : (
+                <>
+                  <UploadCloud size={20} />
+                  Upload to {activeFolder}
+                </>
+              )}
+              <input
+                type="file"
+                multiple
+                onChange={handleLocalUpload}
+                className="hidden"
+                disabled={uploadingLocal}
+                accept="image/*,video/*"
+              />
+            </label>
+          ) : (
+            <CldUploadWidget 
+              key={activeFolder}
+              signatureEndpoint="/api/cloudinary/sign"
+              options={{
+                folder: `wanjey/${activeFolder}`,
+                multiple: true,
+                maxFiles: 50,
+                maxFileSize: activeFolder === 'upcoming' ? 2147483648 : 104857600,
+                maxImageWidth: 2500,
+                maxChunkSize: 6000000,
+                resourceType: 'auto',
+              }}
+              onSuccess={(result: any) => {
+                console.log('Upload success:', result)
+                if (result?.info && typeof result.info === 'object') {
+                  const newItem: MediaItem = {
+                    id: result.info.public_id,
+                    url: result.info.secure_url,
+                    type: result.info.resource_type,
+                    width: result.info.width,
+                    height: result.info.height,
+                    created_at: result.info.created_at,
+                  }
+                  setMedia(prev => [newItem, ...prev.filter(item => item.id !== newItem.id)])
+                  toast.success('Asset uploaded successfully')
+                } else {
+                  fetchMedia(activeFolder)
+                }
+              }}
+              onError={(error) => {
+                console.error('Upload Error:', error)
+                toast.error('Upload failed: ' + (typeof error === 'string' ? error : 'Check file type/size'))
+              }}
+            >
+              {({ open }) => {
+                return (
+                  <button 
+                    onClick={() => open()}
+                    className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] text-white px-5 py-2.5 rounded-lg font-bold transition-colors shadow-lg text-sm"
+                  >
+                    <UploadCloud size={20} />
+                    Upload to {activeFolder}
+                  </button>
+                )
+              }}
+            </CldUploadWidget>
+          )}
         </div>
       </div>
 

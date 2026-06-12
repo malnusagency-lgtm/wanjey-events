@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
 import AmbientGlow from "@/components/AmbientGlow";
+import ProjectsMarquee from "@/components/ProjectsMarquee";
 import {
   Heart, Users,
   ArrowRight, ExternalLink, Quote, Star,
@@ -38,16 +39,6 @@ const philosophy = [
 ];
 
 
-
-const projects = [
-  "Big Voices Festival",
-  "The Don Effect",
-  "Sunday Hangout",
-  "Desagu Goat Eating",
-  "Corporate & Hospitality Campaigns",
-  "Influencer & Brand Ambassador Programs",
-  "Talent Management & Partnerships",
-];
 
 export default function AboutPage() {
   return (
@@ -272,18 +263,9 @@ export default function AboutPage() {
             </p>
           </AnimatedSection>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
-            {projects.map((project, i) => (
-              <AnimatedSection key={project} delay={i * 0.06}>
-                <div className="glass-card p-6 flex items-center gap-4 group hover:border-accent/40">
-                  <div className="h-8 w-8 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center shrink-0 group-hover:bg-accent/25 transition-colors">
-                    <Star className="h-4 w-4 text-accent" />
-                  </div>
-                  <span className="font-semibold text-[14px] text-foreground">{project}</span>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
+          <AnimatedSection>
+            <ProjectsMarquee />
+          </AnimatedSection>
 
           <AnimatedSection delay={0.3} className="mt-10 text-center">
             <p className="text-muted-foreground text-sm max-w-xl mx-auto leading-relaxed">

@@ -7,9 +7,9 @@ interface Props {
 
 const InfiniteMarquee = ({ text }: Props) => {
   return (
-    <div className="relative flex w-full overflow-hidden border-y border-border/40 bg-accent/5 py-4 md:py-6">
+    <div className="relative flex w-full overflow-hidden border-y border-[#CAA365]/30 bg-[#FFE5D9] py-5 md:py-6 z-10 shadow-sm">
       <motion.div
-        className="flex whitespace-nowrap font-serif text-xl font-black tracking-widest text-accent sm:text-3xl md:text-5xl"
+        className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#2D1A10] sm:text-2xl md:text-4xl"
         initial={{ x: "0%" }}
         animate={{ x: "-50%" }}
         transition={{
