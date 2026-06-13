@@ -70,41 +70,62 @@ export default function MediaManagerPage() {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
-        // 1. Get presigned upload URL from server
-        const urlResponse = await fetch('/api/media/upload/presigned', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            filename: file.name,
-            folder: activeFolder,
-            contentType: file.type,
-          }),
-        });
+        try {
+          // 1. Get presigned upload URL from server
+          const urlResponse = await fetch('/api/media/upload/presigned', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: file.name,
+              folder: activeFolder,
+              contentType: file.type,
+            }),
+          });
 
-        if (!urlResponse.ok) {
-          const err = await urlResponse.json().catch(() => ({ error: 'Failed to generate upload URL' }));
-          throw new Error(err.error || 'Failed to generate upload URL');
+          if (!urlResponse.ok) {
+            const err = await urlResponse.json().catch(() => ({}));
+            throw new Error(err.error || 'Failed to generate upload URL');
+          }
+
+          const { uploadUrl } = await urlResponse.json();
+
+          // 2. Upload file directly from browser to Cloudflare R2
+          const uploadResponse = await fetch(uploadUrl, {
+            method: 'PUT',
+            body: file,
+            headers: {
+              'Content-Type': file.type || 'application/octet-stream',
+            },
+          });
+
+          if (!uploadResponse.ok) {
+            throw new Error(`R2 direct upload failed`);
+          }
+
+          uploadedFilesCount.push(file.name);
+        } catch (directErr: any) {
+          console.warn(`Direct R2 upload failed for ${file.name}, trying server fallback...`, directErr);
+          
+          // Fallback to server-side upload endpoint (formData POST)
+          const formData = new FormData();
+          formData.append('folder', activeFolder);
+          formData.append('files', file);
+
+          const serverResponse = await fetch('/api/media/upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!serverResponse.ok) {
+            const err = await serverResponse.json().catch(() => ({}));
+            throw new Error(err.error || `Server-side upload failed for ${file.name}`);
+          }
+
+          uploadedFilesCount.push(file.name);
         }
-
-        const { uploadUrl } = await urlResponse.json();
-
-        // 2. Upload file directly from browser to Cloudflare R2!
-        const uploadResponse = await fetch(uploadUrl, {
-          method: 'PUT',
-          body: file,
-          headers: {
-            'Content-Type': file.type || 'application/octet-stream',
-          },
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error(`Cloudflare R2 rejected upload for ${file.name}`);
-        }
-
-        uploadedFilesCount.push(file.name);
       }
 
-      toast.success(`Successfully uploaded ${uploadedFilesCount.length} asset(s) directly to Cloudflare R2!`, { id: uploadToastId });
+      toast.success(`Successfully uploaded ${uploadedFilesCount.length} asset(s) to Cloudflare R2!`, { id: uploadToastId });
       fetchMedia(activeFolder);
     } catch (error: any) {
       console.error('Upload error:', error);

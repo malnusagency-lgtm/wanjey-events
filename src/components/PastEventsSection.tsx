@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, Trophy, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import MagneticButton from './MagneticButton'
 import { parseImageUrl } from '@/lib/utils'
+import MediaModal from './MediaModal'
 
 type PastEvent = {
   id: string
@@ -28,6 +29,27 @@ export default function PastEventsSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [hovered, setHovered] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Media Modal state for past events section media
+  const [mediaItems, setMediaItems] = useState<any[]>([])
+  const [bgVideos, setBgVideos] = useState<any[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Fetch past events media
+  useEffect(() => {
+    const fetchMedia = async () => {
+      try {
+        const r = await fetch('/api/media?folder=past')
+        if (r.ok) {
+          const data = await r.json()
+          const items = data.media?.map((item: any) => ({ type: item.type, src: item.url })) ?? []
+          setMediaItems(items)
+          setBgVideos(items.filter((i: any) => i.type === 'video'))
+        }
+      } catch {}
+    }
+    fetchMedia()
+  }, [])
 
   // Fetch past events
   useEffect(() => {
@@ -162,23 +184,48 @@ export default function PastEventsSection() {
                 style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
             </div>
 
-            {/* Explore Gallery Button */}
-            <div className="mt-8 sm:mt-10">
-              <Link 
-                href={activeEvent.cta_link || '/gallery'}
-                target={activeEvent.cta_link ? '_blank' : undefined}
-                rel={activeEvent.cta_link ? 'noopener noreferrer' : undefined}
-              >
+            {/* Explore Gallery / Section Media Buttons */}
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+              {activeEvent.cta_link ? (
+                <>
+                  <Link 
+                    href={activeEvent.cta_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MagneticButton intensity={30}>
+                      <Button
+                        size="lg"
+                        className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {activeEvent.cta_text || (activeEvent.cta_link.includes('drive.google.com') ? 'View on Drive' : 'Open Link')}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                      </Button>
+                    </MagneticButton>
+                  </Link>
+
+                  <MagneticButton intensity={20}>
+                    <Button
+                      onClick={() => setIsModalOpen(true)}
+                      size="lg"
+                      className="bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] transition-all duration-500 rounded-full border border-white/10 backdrop-blur-sm"
+                    >
+                      View More Media
+                    </Button>
+                  </MagneticButton>
+                </>
+              ) : (
                 <MagneticButton intensity={40}>
                   <Button
+                    onClick={() => setIsModalOpen(true)}
                     size="lg"
                     className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
                   >
-                    {activeEvent.cta_text || (activeEvent.cta_link?.includes('drive.google.com') ? 'View on Drive' : 'Explore Gallery')}
+                    {activeEvent.cta_text || 'Explore Gallery'}
                     <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </Button>
                 </MagneticButton>
-              </Link>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -211,6 +258,13 @@ export default function PastEventsSection() {
           </div>
         )}
       </div>
+
+      <MediaModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        items={[...mediaItems]}
+        bgVideos={bgVideos}
+      />
     </section>
   )
 }

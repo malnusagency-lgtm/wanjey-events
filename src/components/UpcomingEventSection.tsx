@@ -7,6 +7,7 @@ import AnimatedSection from './AnimatedSection'
 import MediaModal from './MediaModal'
 import BookingCTA3D from './BookingCTA3D'
 import Link from 'next/link'
+import { parseImageUrl } from '@/lib/utils'
 
 type MediaItem = { id?: string; src: string; type: 'video' | 'image' }
 
@@ -55,6 +56,16 @@ const UpcomingEventSection = () => {
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Gallery slideshow state for fallback
+  const [galleryImages, setGalleryImages] = useState<string[]>([
+    '/assets/gallery/event-30.jpg',
+    '/assets/gallery/event-12.jpg',
+    '/assets/gallery/event-31.jpg',
+    '/assets/gallery/event-50.jpg',
+    '/assets/gallery/event-64.jpg'
+  ])
+  const [galleryIndex, setGalleryIndex] = useState(0)
+
   const countdown = useCountdown(eventData?.date_iso)
 
   useEffect(() => {
@@ -96,8 +107,21 @@ const UpcomingEventSection = () => {
       setLoading(false)
     }
 
+    const fetchGallery = async () => {
+      try {
+        const r = await fetch('/api/media?folder=gallery')
+        if (r.ok) {
+          const data = await r.json()
+          if (data?.media && data.media.length > 0) {
+            setGalleryImages(data.media.map((item: any) => item.url))
+          }
+        }
+      } catch {}
+    }
+
     fetchMedia()
     fetchEvent()
+    fetchGallery()
   }, [])
 
   useEffect(() => {
@@ -105,6 +129,14 @@ const UpcomingEventSection = () => {
     const t = setInterval(() => setBgIndex(p => (p + 1) % bgVideos.length), 5000)
     return () => clearInterval(t)
   }, [bgVideos.length])
+
+  // Gallery slideshow interval
+  useEffect(() => {
+    if (eventData) return
+    if (galleryImages.length === 0) return
+    const t = setInterval(() => setGalleryIndex(p => (p + 1) % galleryImages.length), 5000)
+    return () => clearInterval(t)
+  }, [galleryImages.length, eventData])
 
   const renderTitle = (title: string) => {
     const words = title.trim().split(/\s+/)
@@ -122,8 +154,96 @@ const UpcomingEventSection = () => {
     )
   }
 
-  // No event → show 3D booking CTA
-  if (!eventData) return <BookingCTA3D />
+  // No active event scheduled -> render minimal services listing with gallery slideshow
+  if (!eventData) {
+    return (
+      <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
+        {/* Gallery Slideshow Background */}
+        <div className="absolute inset-0 z-0">
+          {galleryImages.map((src, idx) => (
+            <div
+              key={src}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === galleryIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={parseImageUrl(src)}
+                alt="Gallery Background"
+                className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
+              />
+            </div>
+          ))}
+          {/* Gold & Chocolate Gradient Overlay */}
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/90 via-[#CAA365]/35 to-[#130B07]/60" />
+          {/* Gold Radial Vignette */}
+          <div className="absolute inset-0 z-20"
+            style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 40%, rgba(202, 163, 101, 0.35) 100%)' }} />
+        </div>
+
+        {/* Minimal Services List Overlay */}
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center max-w-4xl mx-auto">
+          {/* Label */}
+          <AnimatedSection delay={0.1}>
+            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4">
+              ✦ Wanjey Events & Marketing ✦
+            </p>
+          </AnimatedSection>
+
+          {/* Minimal Title */}
+          <AnimatedSection delay={0.25}>
+            <h2 className="font-serif text-3xl font-black leading-tight text-white sm:text-5xl md:text-6xl tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+              Crafting Premium Experiences
+            </h2>
+          </AnimatedSection>
+
+          {/* Minimal Services Grid */}
+          <AnimatedSection delay={0.4} className="mt-8 w-full max-w-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+              {[
+                { title: "Corporate Events", desc: "Product launches, conferences & dinners." },
+                { title: "Brand Activations", desc: "Experiential marketing & campaigns." },
+                { title: "Digital Marketing", desc: "Social strategy & content production." },
+                { title: "Event Amplification", desc: "Live coverage & influencer integration." }
+              ].map((service, idx) => (
+                <div key={idx} className="p-5 rounded-2xl border border-white/10 bg-black/45 backdrop-blur-md hover:border-accent/40 transition-all duration-300">
+                  <h3 className="font-serif font-bold text-white text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
+                  <p className="text-white/60 text-xs mt-1 leading-relaxed">{service.desc}</p>
+                </div>
+              ))}
+            </div>
+          </AnimatedSection>
+
+          {/* CTAs */}
+          <AnimatedSection delay={0.6}>
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/contact">
+                <MagneticButton intensity={30}>
+                  <Button
+                    size="lg"
+                    className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-10 h-14 text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500"
+                  >
+                    Book a Consultation
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </MagneticButton>
+              </Link>
+              
+              <Link href="/packages">
+                <MagneticButton intensity={20}>
+                  <Button
+                    size="lg"
+                    className="bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-10 h-14 text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+                  >
+                    View Our Packages
+                  </Button>
+                </MagneticButton>
+              </Link>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+    )
+  }
 
   const showCountdown = !!eventData.date_iso && !countdown.expired
 
