@@ -9,10 +9,9 @@ export async function GET() {
     const { data, error } = await supabase
       .from('upcoming_event')
       .select('*')
-      .eq('is_active', true)
       .order('updated_at', { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
 
     if (error || !data) {
       return new Response(JSON.stringify({ no_event: true }), {

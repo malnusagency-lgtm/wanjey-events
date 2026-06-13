@@ -5,8 +5,11 @@ CREATE TABLE IF NOT EXISTS upcoming_event (
   title text NOT NULL DEFAULT 'BIG VOICES FEST',
   subtitle text DEFAULT 'Season 2: Millennial Edition',
   event_date text DEFAULT '6TH JUNE',
+  date_iso text,
+  location text,
   save_the_date_text text DEFAULT 'SAVE THE DATE',
   cta_text text DEFAULT 'Join the Movement',
+  booking_link text,
   is_active boolean DEFAULT true,
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );

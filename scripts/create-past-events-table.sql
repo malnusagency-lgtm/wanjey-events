@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS past_events (
   highlight_stat text,
   event_month_year text,
   display_order integer DEFAULT 0,
+  cta_link text,
+  cta_text text,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

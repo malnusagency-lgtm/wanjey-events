@@ -86,7 +86,7 @@ const UpcomingEventSection = () => {
         const r = await fetch('/api/events')
         if (r.ok) {
           const data = await r.json()
-          if (data?.no_event) {
+          if (data?.no_event || data?.is_active === false) {
             setEventData(null)
           } else {
             setEventData(data)
