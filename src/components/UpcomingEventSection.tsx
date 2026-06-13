@@ -160,19 +160,30 @@ const UpcomingEventSection = () => {
       <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
         {/* Gallery Slideshow Background */}
         <div className="absolute inset-0 z-0">
-          {galleryImages.map((src, idx) => (
-            <div
-              key={src}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === galleryIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={parseImageUrl(src)}
-                alt="Gallery Background"
-                className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
-              />
-            </div>
-          ))}
+          {galleryImages.map((src, idx) => {
+            const prevGalleryIndex = (galleryIndex === 0 ? galleryImages.length - 1 : galleryIndex - 1)
+            const isActive = idx === galleryIndex
+            const isPrev = idx === prevGalleryIndex
+            return (
+              <div
+                key={src}
+                className={`absolute inset-0 transition-all duration-[6000ms] ease-in-out transform ${
+                  isActive 
+                    ? 'opacity-100 z-20 scale-105 translate-x-1' 
+                    : isPrev 
+                      ? 'opacity-100 z-10 scale-100' 
+                      : 'opacity-0 z-0 scale-100'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={parseImageUrl(src)}
+                  alt="Gallery Background"
+                  className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
+                />
+              </div>
+            )
+          })}
           {/* Gold & Chocolate Gradient Overlay */}
           <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/90 via-[#CAA365]/35 to-[#130B07]/60" />
           {/* Gold Radial Vignette */}
@@ -253,19 +264,30 @@ const UpcomingEventSection = () => {
 
         {/* ── Dynamic Background Videos ── */}
         <div className="absolute inset-0 z-0">
-          {bgVideos.map((item, idx) => (
-            <div
-              key={item.src}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === bgIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-            >
-              <video
-                src={item.src}
-                autoPlay muted loop playsInline
-                preload={idx <= 1 ? 'auto' : 'none'}
-                className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
-              />
-            </div>
-          ))}
+          {bgVideos.map((item, idx) => {
+            const prevBgIndex = (bgIndex === 0 ? bgVideos.length - 1 : bgIndex - 1)
+            const isActive = idx === bgIndex
+            const isPrev = idx === prevBgIndex
+            return (
+              <div
+                key={item.src}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                  isActive 
+                    ? 'opacity-100 z-20' 
+                    : isPrev 
+                      ? 'opacity-100 z-10' 
+                      : 'opacity-0 z-0'
+                }`}
+              >
+                <video
+                  src={item.src}
+                  autoPlay muted loop playsInline
+                  preload={idx <= 1 ? 'auto' : 'none'}
+                  className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
+                />
+              </div>
+            )
+          })}
           {/* Gold & Chocolate Gradient Overlay */}
           <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/85 via-[#CAA365]/35 to-[#130B07]/55" />
           {/* Gold Radial Vignette */}

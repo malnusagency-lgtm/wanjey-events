@@ -34,6 +34,7 @@ export default function PastEventsSection() {
   const [mediaItems, setMediaItems] = useState<any[]>([])
   const [bgVideos, setBgVideos] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [bgIndex, setBgIndex] = useState(0)
 
   // Fetch past events media
   useEffect(() => {
@@ -81,6 +82,20 @@ export default function PastEventsSection() {
     }
   }, [events.length, hovered])
 
+  const uploadedImages = mediaItems.filter(i => i.type === 'image').map(i => i.src)
+  const bgSources = uploadedImages.length > 0 
+    ? uploadedImages 
+    : events.map(ev => ev.image_url)
+
+  // Background slideshow interval
+  useEffect(() => {
+    if (bgSources.length <= 1) return
+    const t = setInterval(() => {
+      setBgIndex(prev => (prev + 1) % bgSources.length)
+    }, 5000)
+    return () => clearInterval(t)
+  }, [bgSources.length])
+
   const handlePrev = () => {
     setCurrentIndex(prev => (prev === 0 ? events.length - 1 : prev - 1))
   }
@@ -116,19 +131,44 @@ export default function PastEventsSection() {
     >
       {/* ── Dynamic Background Images ── */}
       <div className="absolute inset-0 z-0">
-        {events.map((ev, idx) => (
-          <div
-            key={ev.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={parseImageUrl(ev.image_url)}
-              alt={ev.title}
-              className="h-full w-full object-cover grayscale-[0.1] contrast-[1.05]"
-            />
-          </div>
-        ))}
+        {bgSources.map((src, idx) => {
+          const currentBgIndex = bgIndex % (bgSources.length || 1)
+          const prevBgIndex = bgSources.length > 0 
+            ? (currentBgIndex === 0 ? bgSources.length - 1 : currentBgIndex - 1)
+            : 0
+          const isActive = idx === currentBgIndex
+          const isPrev = idx === prevBgIndex
+          
+          // Cinematic pan/zoom directions based on index
+          const translateClasses = [
+            'translate-x-1 translate-y-0.5',
+            '-translate-x-1 -translate-y-0.5',
+            'translate-x-0.5 -translate-y-1',
+            '-translate-x-0.5 translate-y-1',
+            'translate-x-1 -translate-y-1',
+          ]
+          const trans = translateClasses[idx % translateClasses.length]
+          
+          return (
+            <div
+              key={src}
+              className={`absolute inset-0 transition-all duration-[6000ms] ease-in-out transform ${
+                isActive 
+                  ? `opacity-100 z-20 scale-105 ${trans}` 
+                  : isPrev 
+                    ? 'opacity-100 z-10 scale-100' 
+                    : 'opacity-0 z-0 scale-100'
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={parseImageUrl(src)}
+                alt="Past Event Background"
+                className="h-full w-full object-cover contrast-[1.02]"
+              />
+            </div>
+          )
+        })}
         {/* Gold & Chocolate Gradient Overlay */}
         <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/90 via-[#CAA365]/35 to-[#130B07]/60" />
         {/* Gold Radial Vignette */}
