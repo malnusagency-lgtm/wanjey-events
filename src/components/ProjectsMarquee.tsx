@@ -21,7 +21,7 @@ export default function ProjectsMarquee() {
     return (
       <div className="relative flex w-full overflow-hidden border-y border-[#CAA365]/30 bg-transparent py-5 md:py-6 shadow-sm my-1 z-10">
         <motion.div
-          className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#E07A5F] sm:text-2xl md:text-4xl"
+          className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#CAA365] sm:text-2xl md:text-4xl"
           initial={{ x: direction === "left" ? "0%" : "-50%" }}
           animate={{ x: direction === "left" ? "-50%" : "0%" }}
           transition={{
