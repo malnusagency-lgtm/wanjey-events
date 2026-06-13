@@ -332,7 +332,8 @@ export default function MediaManagerPage() {
                 {item.type === 'video' ? (
                   <video src={item.url} className="w-full h-full object-cover" muted playsInline />
                 ) : (
-                  <Image src={parseImageUrl(item.url)} alt={item.id} fill className="object-cover" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw" />
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={parseImageUrl(item.url)} alt={item.id} className="w-full h-full object-cover" />
                 )}
                 
                 <div className="absolute inset-0 bg-[#2D1A10]/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
