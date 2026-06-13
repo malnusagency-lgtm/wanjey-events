@@ -58,12 +58,27 @@ export async function GET() {
 
     if (error) {
       console.error('Database fetch error:', error)
-      return NextResponse.json({ events: [], table_missing: true })
+      return new Response(JSON.stringify({ events: [], table_missing: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
+        },
+      });
     }
-    return NextResponse.json({ events: data || [], table_missing: false })
+    return new Response(JSON.stringify({ events: data || [], table_missing: false }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
+      },
+    });
   } catch (err) {
     console.error('Fetch exception:', err)
-    return NextResponse.json({ events: [], table_missing: true })
+    return new Response(JSON.stringify({ events: [], table_missing: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
+      },
+    });
   }
 }
 

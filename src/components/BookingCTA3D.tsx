@@ -241,20 +241,29 @@ export default function BookingCTA3D() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-2"
           >
-            <MagneticButton intensity={35}>
+            <MagneticButton intensity={30}>
               <Link href="/contact">
-                <button className="group relative inline-flex items-center gap-3 rounded-full px-8 py-4 md:px-12 md:py-5 font-black uppercase tracking-[0.2em] text-sm md:text-base text-accent-foreground transition-all duration-500 overflow-hidden"
+                <button className="group relative inline-flex items-center gap-3 rounded-full px-8 py-4 md:px-10 md:py-4.5 font-black uppercase tracking-[0.18em] text-xs md:text-sm text-[#2D1A10] transition-all duration-500 overflow-hidden"
                   style={{
                     background: 'linear-gradient(135deg, hsl(43 65% 52%), hsl(43 45% 42%))',
-                    boxShadow: '0 0 60px -10px hsl(43 45% 55% / 0.7), 0 20px 40px -15px hsl(43 45% 40% / 0.4)',
+                    boxShadow: '0 0 40px -10px hsl(43 45% 55% / 0.6)',
                   }}
                 >
-                  {/* Button shimmer */}
                   <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%)' }} />
                   Book a Consultation
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1.5 transition-transform duration-300" />
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                </button>
+              </Link>
+            </MagneticButton>
+
+            <MagneticButton intensity={20}>
+              <Link href="/packages">
+                <button className="group relative inline-flex items-center gap-3 rounded-full px-8 py-4 md:px-10 md:py-4.5 font-black uppercase tracking-[0.18em] text-xs md:text-sm text-white border border-white/20 hover:border-accent/40 bg-white/5 hover:bg-white/10 transition-all duration-500 overflow-hidden">
+                  View Packages
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                 </button>
               </Link>
             </MagneticButton>

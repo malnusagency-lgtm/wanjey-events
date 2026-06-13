@@ -32,6 +32,7 @@ type UpcomingEventForm = {
   save_the_date_text: string
   cta_text: string
   booking_link?: string
+  is_active: boolean
 }
 
 const defaultUpcoming: UpcomingEventForm = {
@@ -43,6 +44,7 @@ const defaultUpcoming: UpcomingEventForm = {
   save_the_date_text: 'SAVE THE DATE',
   cta_text: 'Join the Movement',
   booking_link: '',
+  is_active: true,
 }
 
 const CATEGORIES = ['Festival', 'Brand Activation', 'Corporate Dinner', 'Lifestyle Event', 'Concert', 'Product Launch', 'Other']
@@ -176,7 +178,15 @@ export default function EventsPage() {
   useEffect(() => {
     fetch('/api/events')
       .then(r => r.json())
-      .then(data => { if (data && !data.no_event && !data.error) setUpcomingForm(data) })
+      .then(data => {
+        if (data && !data.error) {
+          if (data.no_event) {
+            setUpcomingForm(p => ({ ...p, is_active: false }))
+          } else {
+            setUpcomingForm({ ...data, is_active: data.is_active ?? true })
+          }
+        }
+      })
       .catch(console.error)
       .finally(() => setLoadingUpcoming(false))
   }, [])
@@ -320,23 +330,31 @@ export default function EventsPage() {
               {/* Live Preview */}
               <div className="bg-white/60 rounded-xl border border-accent/25 overflow-hidden shadow-sm">
                 <div className="px-4 py-3 border-b border-accent/15 text-xs font-bold text-zinc-400 uppercase tracking-wider bg-white/30">Live Preview</div>
-                <div className="relative h-44 bg-black flex flex-col items-center justify-center text-center p-6">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/30" />
-                  <div className="relative z-10">
-                    <p className="text-white/40 text-[9px] uppercase tracking-[0.4em] mb-1">✦ Upcoming Event ✦</p>
-                    <h2 className="font-serif text-3xl font-black text-white tracking-tighter">{upcomingForm.title}</h2>
-                    <p className="text-white/70 text-xs font-bold uppercase tracking-widest mt-1">{upcomingForm.subtitle}</p>
-                    <div className="mt-3 flex items-center gap-3 justify-center">
-                      <div className="h-px w-8 bg-white/35" />
-                      <span className="text-white font-serif text-2xl font-black">{upcomingForm.event_date}</span>
-                      <div className="h-px w-8 bg-white/35" />
-                    </div>
-                    {upcomingForm.location && <p className="text-white/50 text-[9px] mt-1">📍 {upcomingForm.location}</p>}
-                    <div className="mt-3 px-4 py-1 bg-[#8C1B11]/80 rounded-full text-white text-[9px] font-black tracking-widest inline-block shadow-md">
-                      {upcomingForm.cta_text}
+                {!upcomingForm.is_active ? (
+                  <div className="relative h-44 bg-[#0e0b04] flex flex-col items-center justify-center text-center p-6">
+                    <p className="text-accent/60 text-[9px] uppercase tracking-[0.35em] mb-1">✦ Homepage Switcher Active ✦</p>
+                    <h3 className="font-serif text-2xl font-black text-white uppercase">Let&apos;s Build Your Event</h3>
+                    <p className="text-white/40 text-[10px] uppercase tracking-wider mt-1">Booking Advertisement & packages Active</p>
+                  </div>
+                ) : (
+                  <div className="relative h-44 bg-black flex flex-col items-center justify-center text-center p-6">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/30" />
+                    <div className="relative z-10">
+                      <p className="text-white/40 text-[9px] uppercase tracking-[0.4em] mb-1">✦ Upcoming Event ✦</p>
+                      <h2 className="font-serif text-3xl font-black text-white tracking-tighter">{upcomingForm.title}</h2>
+                      <p className="text-white/70 text-xs font-bold uppercase tracking-widest mt-1">{upcomingForm.subtitle}</p>
+                      <div className="mt-3 flex items-center gap-3 justify-center">
+                        <div className="h-px w-8 bg-white/35" />
+                        <span className="text-white font-serif text-2xl font-black">{upcomingForm.event_date}</span>
+                        <div className="h-px w-8 bg-white/35" />
+                      </div>
+                      {upcomingForm.location && <p className="text-white/50 text-[9px] mt-1">📍 {upcomingForm.location}</p>}
+                      <div className="mt-3 px-4 py-1 bg-[#8C1B11]/80 rounded-full text-white text-[9px] font-black tracking-widest inline-block shadow-md">
+                        {upcomingForm.cta_text}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Edit form */}
@@ -389,6 +407,18 @@ export default function EventsPage() {
                     </label>
                     <input value={upcomingForm.booking_link || ''} onChange={updateUpcoming('booking_link')} className={inputCls + ' font-mono'} placeholder="e.g. https://tickets.example.com or booking page" />
                     <p className="text-[10px] text-zinc-400">If set, clicking the homepage hero button redirects directly here instead of launching the contact modal.</p>
+                  </div>
+                  <div className="space-y-1.5 sm:col-span-2 flex items-center gap-3 pt-2">
+                    <input
+                      type="checkbox"
+                      id="is_active"
+                      checked={upcomingForm.is_active ?? true}
+                      onChange={(e) => setUpcomingForm(p => ({ ...p, is_active: e.target.checked }))}
+                      className="h-4 w-4 rounded border-accent/25 text-[#8C1B11] focus:ring-[#8C1B11]/20 cursor-pointer"
+                    />
+                    <label htmlFor="is_active" className="text-sm font-bold text-[#2D1A10] cursor-pointer select-none">
+                      Active Upcoming Event (Deactivate to show Booking Advertisement CTA on homepage)
+                    </label>
                   </div>
                 </div>
                 <div className="px-5 pb-5">

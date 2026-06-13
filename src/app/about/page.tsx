@@ -6,6 +6,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
 import AmbientGlow from "@/components/AmbientGlow";
 import ProjectsMarquee from "@/components/ProjectsMarquee";
+import BrandsMarquee from "@/components/BrandsMarquee";
 import {
   Heart, Users,
   ArrowRight, ExternalLink, Quote, Star,
@@ -282,9 +283,13 @@ export default function AboutPage() {
           </AnimatedSection>
 
           <AnimatedSection delay={0.3} className="mt-10 text-center">
-            <p className="text-muted-foreground text-sm max-w-xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-sm max-w-xl mx-auto leading-relaxed mb-6">
               I have also worked alongside leading brands, public figures, artists, influencers, and corporate organizations — helping them strengthen audience engagement, visibility, and brand impact.
             </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.4} className="w-full">
+            <BrandsMarquee />
           </AnimatedSection>
         </div>
       </section>

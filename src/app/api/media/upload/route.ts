@@ -27,32 +27,11 @@ export async function POST(request: Request) {
 
     const r2Configured = !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && R2_BUCKET_NAME);
 
-    // If R2 is not configured, fall back to local disk storage
     if (!r2Configured) {
-      const fs = require('fs');
-      const dirPath = path.join(process.cwd(), 'public', 'uploads', folder);
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-      }
-
-      const uploadedFiles = [];
-      for (const file of files) {
-        if (!file.name) continue;
-        const ext = path.extname(file.name);
-        const baseName = path.basename(file.name, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
-        const cleanName = `${baseName}${ext}`;
-        const filePath = path.join(dirPath, cleanName);
-
-        const buffer = Buffer.from(await file.arrayBuffer());
-        fs.writeFileSync(filePath, buffer);
-
-        uploadedFiles.push({
-          id: `local/${folder}/${cleanName}`,
-          name: cleanName,
-          url: `/uploads/${folder}/${cleanName}`,
-        });
-      }
-      return NextResponse.json({ success: true, files: uploadedFiles });
+      return NextResponse.json(
+        { error: 'Cloudflare R2 is not configured. Please set the R2 environment variables.' },
+        { status: 500 }
+      );
     }
 
     // Otherwise, upload to Cloudflare R2!

@@ -1,4 +1,5 @@
 'use client';
+import { motion } from "framer-motion";
 
 const brands = [
   "Safaricom",
@@ -16,49 +17,30 @@ const brands = [
 ];
 
 export default function BrandsMarquee() {
+  const text = brands.map(b => b.toUpperCase()).join(" ✦ ") + " ✦ ";
+  
   return (
-    <div className="relative w-full overflow-hidden border-y border-[#CAA365]/30 bg-[#FFE5D9] py-6 z-10 shadow-sm">
-      <div className="flex items-center">
-        {/* Subtitle label left */}
-        <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#FFE5D9] via-[#FFE5D9]/90 to-transparent z-20 px-6 flex items-center shrink-0 pointer-events-none md:pr-16">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2D1A10]/60 mr-2">
-            Collaborated With
-          </span>
-          <div className="h-4 w-px bg-[#CAA365]/35 hidden md:block" />
+    <div className="relative flex w-full overflow-hidden border-y border-[#CAA365]/30 bg-[#2D1A10] py-5 md:py-6 z-10 shadow-sm">
+      <motion.div
+        className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#FFE5B4] sm:text-2xl md:text-4xl"
+        initial={{ x: "0%" }}
+        animate={{ x: "-50%" }}
+        transition={{
+          repeat: Infinity,
+          ease: "linear",
+          duration: 35, // Smooth scrolling speed
+        }}
+      >
+        <div className="flex shrink-0">
+          <span className="mx-6 md:mx-12">{text}</span>
+          <span className="mx-6 md:mx-12">{text}</span>
         </div>
-
-        {/* Scrolling list */}
-        <div className="flex animate-marquee-brands whitespace-nowrap gap-12 px-6">
-          {[...brands, ...brands, ...brands].map((brand, i) => (
-            <div key={i} className="flex items-center gap-4">
-              <span 
-                className="font-sans text-[15px] md:text-[18px] font-black uppercase tracking-[0.25em] text-[#FFE5B4] hover:text-[#2D1A10] transition-colors cursor-pointer"
-                style={{
-                  textShadow: '1px 1px 0px #2D1A10, -1px -1px 0px #2D1A10, 1px -1px 0px #2D1A10, -1px 1px 0px #2D1A10'
-                }}
-              >
-                {brand}
-              </span>
-              <span className="text-[#CAA365] font-bold text-lg">✦</span>
-            </div>
-          ))}
+        <div className="flex shrink-0">
+          <span className="mx-6 md:mx-12">{text}</span>
+          <span className="mx-6 md:mx-12">{text}</span>
         </div>
-
-        {/* Right fade */}
-        <div className="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-[#FFE5D9] via-[#FFE5D9]/80 to-transparent z-20 w-16 pointer-events-none" />
-      </div>
-
-      <style jsx>{`
-        .animate-marquee-brands {
-          display: flex;
-          width: max-content;
-          animation: marquee-brands 45s linear infinite;
-        }
-        @keyframes marquee-brands {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
-        }
-      `}</style>
+      </motion.div>
     </div>
   );
 }
+

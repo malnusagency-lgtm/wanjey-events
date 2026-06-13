@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { UploadCloud, Folder, Image as ImageIcon, Trash2, Loader2, CheckSquare, Square, Copy } from 'lucide-react'
+import { UploadCloud, Folder, Image as ImageIcon, Trash2, Loader2, CheckSquare, Square, Copy, Download } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import { parseImageUrl } from '@/lib/utils'
@@ -24,6 +24,7 @@ export default function MediaManagerPage() {
   const [bulkDeleting, setBulkDeleting] = useState(false)
   const [isR2Disabled, setIsR2Disabled] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [bulkDownloading, setBulkDownloading] = useState(false)
 
   const fetchMedia = async (folder: string) => {
     setLoading(true)
@@ -32,18 +33,20 @@ export default function MediaManagerPage() {
       if (response.ok) {
         const data = await response.json()
         setMedia(data.media || [])
-        setIsR2Disabled(!!data.r2_disabled)
-        if (data.error_message) {
-          toast.error(`Cloudflare R2 Error: ${data.error_message}. Falling back to Local Storage.`);
+        setIsR2Disabled(false)
+        if (data.error) {
+          toast.error(`Cloudflare R2 Error: ${data.error}`);
+          setIsR2Disabled(true)
         }
       } else {
-        console.warn('API returned non-ok status. Defaulting to local storage.')
+        const errData = await response.json()
+        toast.error(errData.error || 'Failed to load media assets from Cloudflare R2.')
         setIsR2Disabled(true)
       }
     } catch (error) {
       console.error('Failed to fetch media:', error)
       setIsR2Disabled(true)
-      toast.error('Failed to load media assets. Defaulting to local storage.')
+      toast.error('Failed to load media assets from Cloudflare R2.')
     } finally {
       setLoading(false)
     }
@@ -59,32 +62,56 @@ export default function MediaManagerPage() {
     if (!files || files.length === 0) return;
 
     setUploading(true)
-    const formData = new FormData()
-    formData.append('folder', activeFolder)
-    for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i])
-    }
+    const uploadToastId = toast.loading(`Uploading ${files.length} file(s)...`)
 
     try {
-      const response = await fetch('/api/media/upload', {
-        method: 'POST',
-        body: formData,
-      })
+      const uploadedFilesCount = [];
 
-      if (response.ok) {
-        const data = await response.json()
-        toast.success(`Successfully uploaded ${data.files.length} asset(s) to ${isR2Disabled ? 'Local Storage' : 'Cloudflare R2'}!`)
-        fetchMedia(activeFolder)
-      } else {
-        const errData = await response.json()
-        toast.error(errData.error || 'Failed to upload assets')
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // 1. Get presigned upload URL from server
+        const urlResponse = await fetch('/api/media/upload/presigned', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            filename: file.name,
+            folder: activeFolder,
+            contentType: file.type,
+          }),
+        });
+
+        if (!urlResponse.ok) {
+          const err = await urlResponse.json().catch(() => ({ error: 'Failed to generate upload URL' }));
+          throw new Error(err.error || 'Failed to generate upload URL');
+        }
+
+        const { uploadUrl } = await urlResponse.json();
+
+        // 2. Upload file directly from browser to Cloudflare R2!
+        const uploadResponse = await fetch(uploadUrl, {
+          method: 'PUT',
+          body: file,
+          headers: {
+            'Content-Type': file.type || 'application/octet-stream',
+          },
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error(`Cloudflare R2 rejected upload for ${file.name}`);
+        }
+
+        uploadedFilesCount.push(file.name);
       }
-    } catch (error) {
-      console.error('Upload error:', error)
-      toast.error('An error occurred during upload')
+
+      toast.success(`Successfully uploaded ${uploadedFilesCount.length} asset(s) directly to Cloudflare R2!`, { id: uploadToastId });
+      fetchMedia(activeFolder);
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast.error(error.message || 'An error occurred during upload', { id: uploadToastId });
     } finally {
-      setUploading(false)
-      e.target.value = ''
+      setUploading(false);
+      e.target.value = '';
     }
   }
 
@@ -134,6 +161,57 @@ export default function MediaManagerPage() {
     }
   }
 
+  const handleDownloadSelected = async () => {
+    if (selectedIds.length === 0) return
+
+    setBulkDownloading(true)
+    const toastId = toast.loading(`Preparing download of ${selectedIds.length} file(s)...`)
+
+    try {
+      const JSZip = (await import('jszip')).default
+      const zip = new JSZip()
+
+      const itemsToDownload = media.filter(item => selectedIds.includes(item.id))
+
+      // Download each file via download API proxy to avoid CORS
+      await Promise.all(
+        itemsToDownload.map(async (item) => {
+          try {
+            const response = await fetch(`/api/media/download?key=${encodeURIComponent(item.id)}`)
+            if (!response.ok) throw new Error('Failed to fetch file')
+            
+            const blob = await response.blob()
+            const filename = item.id.split('/').pop() || 'file'
+            zip.file(filename, blob)
+          } catch (err) {
+            console.error(`Error downloading item ${item.id}:`, err)
+            toast.error(`Could not download ${item.id.split('/').pop()}`)
+          }
+        })
+      )
+
+      // Generate zip file
+      const content = await zip.generateAsync({ type: 'blob' })
+
+      // Trigger download
+      const url = window.URL.createObjectURL(content)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `wanjey-media-${activeFolder}-${Date.now()}.zip`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+
+      toast.success('Download completed successfully!', { id: toastId })
+    } catch (error) {
+      console.error('Failed to package ZIP:', error)
+      toast.error('An error occurred during bulk download', { id: toastId })
+    } finally {
+      setBulkDownloading(false)
+    }
+  }
+
   const handleDeleteSelected = async () => {
     if (selectedIds.length === 0) return
 
@@ -171,8 +249,8 @@ export default function MediaManagerPage() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#2D1A10] flex items-center gap-2 font-serif">
             Media Manager
             {isR2Disabled ? (
-              <span className="text-[10px] bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                Offline Mode (Local Storage)
+              <span className="text-[10px] bg-red-500/10 text-red-600 border border-red-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                Cloudflare R2 Error / Unconfigured
               </span>
             ) : (
               <span className="text-[10px] bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
@@ -182,7 +260,7 @@ export default function MediaManagerPage() {
           </h1>
           <p className="text-zinc-500 mt-1 text-sm font-medium">
             {isR2Disabled 
-              ? 'Uploading and managing files locally on the server (Cloudflare R2 is unconfigured).'
+              ? 'Please configure your Cloudflare R2 credentials in your environment variables.'
               : 'Upload and manage assets directly in your Cloudflare R2 bucket.'}
           </p>
         </div>
@@ -275,18 +353,32 @@ export default function MediaManagerPage() {
           </div>
 
           {selectedIds.length > 0 && (
-            <button
-              onClick={handleDeleteSelected}
-              disabled={bulkDeleting}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-5 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg"
-            >
-              {bulkDeleting ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                <Trash2 size={16} />
-              )}
-              Delete Selected ({selectedIds.length})
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleDownloadSelected}
+                disabled={bulkDownloading}
+                className="flex items-center gap-2 bg-[#CAA365] hover:bg-[#b58f50] disabled:opacity-60 text-white px-5 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg"
+              >
+                {bulkDownloading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Download size={16} />
+                )}
+                Download Selected ({selectedIds.length})
+              </button>
+              <button
+                onClick={handleDeleteSelected}
+                disabled={bulkDeleting}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-5 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg"
+              >
+                {bulkDeleting ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Trash2 size={16} />
+                )}
+                Delete Selected ({selectedIds.length})
+              </button>
+            </div>
           )}
         </div>
       )}

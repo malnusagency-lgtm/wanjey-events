@@ -16,18 +16,12 @@ const row2 = [
 
 export default function ProjectsMarquee() {
   const renderRow = (items: string[], direction: "left" | "right") => {
-    const textStr = items.join("   ✦   ") + "   ✦   ";
+    const textStr = items.map(item => item.toUpperCase()).join("   ✦   ") + "   ✦   ";
     
     return (
-      <div className="relative flex w-full overflow-hidden border-y border-[#CAA365]/25 bg-[#FFE5D9] py-5 my-1.5 shadow-sm">
-        {/* Left fade gradient */}
-        <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#FFE5D9] via-[#FFE5D9]/50 to-transparent z-20 w-16 pointer-events-none" />
-        
+      <div className="relative flex w-full overflow-hidden border-y border-[#CAA365]/30 bg-[#2D1A10] py-5 md:py-6 shadow-sm my-1 z-10">
         <motion.div
-          className="flex whitespace-nowrap font-serif text-[14px] md:text-[17px] font-black uppercase tracking-[0.22em] text-[#FFE5B4]"
-          style={{
-            textShadow: '1px 1px 0px #2D1A10, -1px -1px 0px #2D1A10, 1px -1px 0px #2D1A10, -1px 1px 0px #2D1A10'
-          }}
+          className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#FFE5B4] sm:text-2xl md:text-4xl"
           initial={{ x: direction === "left" ? "0%" : "-50%" }}
           animate={{ x: direction === "left" ? "-50%" : "0%" }}
           transition={{
@@ -37,27 +31,23 @@ export default function ProjectsMarquee() {
           }}
         >
           <div className="flex shrink-0">
-            <span className="mx-4">{textStr}</span>
-            <span className="mx-4">{textStr}</span>
-            <span className="mx-4">{textStr}</span>
+            <span className="mx-6 md:mx-12">{textStr}</span>
+            <span className="mx-6 md:mx-12">{textStr}</span>
           </div>
           <div className="flex shrink-0">
-            <span className="mx-4">{textStr}</span>
-            <span className="mx-4">{textStr}</span>
-            <span className="mx-4">{textStr}</span>
+            <span className="mx-6 md:mx-12">{textStr}</span>
+            <span className="mx-6 md:mx-12">{textStr}</span>
           </div>
         </motion.div>
-        
-        {/* Right fade gradient */}
-        <div className="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-[#FFE5D9] via-[#FFE5D9]/50 to-transparent z-20 w-16 pointer-events-none" />
       </div>
     );
   };
 
   return (
-    <div className="w-full py-4 overflow-hidden flex flex-col gap-1">
+    <div className="w-full py-4 overflow-hidden flex flex-col gap-3">
       {renderRow(row1, "left")}
       {renderRow(row2, "right")}
     </div>
   );
 }
+

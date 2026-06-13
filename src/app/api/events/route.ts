@@ -15,12 +15,26 @@ export async function GET() {
       .single()
 
     if (error || !data) {
-      // Return explicit no_event flag so the UI can show the booking CTA
-      return NextResponse.json({ no_event: true })
+      return new Response(JSON.stringify({ no_event: true }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
+        },
+      });
     }
-    return NextResponse.json(data)
+    return new Response(JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
+      },
+    });
   } catch {
-    return NextResponse.json({ no_event: true })
+    return new Response(JSON.stringify({ no_event: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
+      },
+    });
   }
 }
 
@@ -43,7 +57,7 @@ export async function PUT(request: Request) {
         save_the_date_text: body.save_the_date_text,
         cta_text: body.cta_text,
         booking_link: body.booking_link || null,
-        is_active: true,
+        is_active: body.is_active !== undefined ? body.is_active : true,
         updated_at: new Date().toISOString(),
       })
       .select()

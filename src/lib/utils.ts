@@ -16,5 +16,13 @@ export function parseImageUrl(url: string | null | undefined): string {
   if (idMatch && idMatch[1]) {
     return `https://docs.google.com/uc?export=download&id=${idMatch[1]}`;
   }
+
+  // CDN Cache-control rewrite for R2 urls to bypass rate limiting without a custom domain
+  if (cleanUrl.includes('.r2.dev/')) {
+    const parts = cleanUrl.split('.r2.dev/');
+    if (parts.length === 2) {
+      return `/api/media/download?key=${encodeURIComponent(parts[1])}`;
+    }
+  }
   return cleanUrl;
 }

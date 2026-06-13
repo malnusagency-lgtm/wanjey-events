@@ -43,21 +43,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Folder parameter is required' }, { status: 400 });
   }
 
-  // Always collect local media
-  const localMedia = getLocalMedia(folder);
-
   const r2Configured = !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && R2_BUCKET_NAME);
 
   if (!r2Configured) {
-    // Fall back to local media if R2 is not configured
-    const media = localMedia.sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    return NextResponse.json(
+      { error: 'Cloudflare R2 is not configured. Please set the R2 environment variables.' },
+      { status: 500 }
     );
-    return NextResponse.json({
-      media,
-      r2_disabled: true,
-      cloudinary_disabled: true, // Cloudinary is retired
-    });
   }
 
   try {
@@ -89,25 +81,28 @@ export async function GET(request: Request) {
         };
       });
 
-    const media = [...r2Media, ...localMedia].sort(
+    const media = r2Media.sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    return NextResponse.json({
-      media,
-      r2_disabled: false,
-      cloudinary_disabled: true,
-    });
-  } catch (error: any) {
-    console.error('Cloudflare R2 listing error, falling back to local files:', error.message || error);
-    const media = localMedia.sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    return new Response(
+      JSON.stringify({
+        media,
+        r2_disabled: false,
+        cloudinary_disabled: true,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=10, stale-while-revalidate=30',
+        },
+      }
     );
-    return NextResponse.json({
-      media,
-      r2_disabled: false, // Keep R2 mode active for client UI feedback
-      cloudinary_disabled: true,
-      error_message: error.message || String(error)
-    });
+  } catch (error: any) {
+    console.error('Cloudflare R2 listing error:', error.message || error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to list media from Cloudflare R2' },
+      { status: 500 }
+    );
   }
 }

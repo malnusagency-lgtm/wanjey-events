@@ -51,6 +51,13 @@ export async function POST(request: Request) {
 
   const r2Configured = !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && R2_BUCKET_NAME);
 
+  if (!r2Configured) {
+    return NextResponse.json(
+      { error: 'Cloudflare R2 is not configured. Please set the R2 environment variables.' },
+      { status: 500 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { public_id, items } = body;
