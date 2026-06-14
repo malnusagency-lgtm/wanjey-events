@@ -87,14 +87,14 @@ export default function PastEventsSection() {
     ? uploadedImages 
     : events.map(ev => ev.image_url)
 
-  // Background slideshow interval
+  // Background slideshow interval (only runs if we have custom uploaded folder images)
   useEffect(() => {
-    if (bgSources.length <= 1) return
+    if (uploadedImages.length <= 1) return
     const t = setInterval(() => {
-      setBgIndex(prev => (prev + 1) % bgSources.length)
+      setBgIndex(prev => (prev + 1) % uploadedImages.length)
     }, 5000)
     return () => clearInterval(t)
-  }, [bgSources.length])
+  }, [uploadedImages.length])
 
   const handlePrev = () => {
     setCurrentIndex(prev => (prev === 0 ? events.length - 1 : prev - 1))
@@ -132,10 +132,12 @@ export default function PastEventsSection() {
       {/* ── Dynamic Background Images ── */}
       <div className="absolute inset-0 z-0">
         {bgSources.map((src, idx) => {
-          const currentBgIndex = bgIndex % (bgSources.length || 1)
-          const prevBgIndex = bgSources.length > 0 
-            ? (currentBgIndex === 0 ? bgSources.length - 1 : currentBgIndex - 1)
-            : 0
+          const currentBgIndex = uploadedImages.length > 0
+            ? bgIndex % (uploadedImages.length || 1)
+            : currentIndex
+          const prevBgIndex = uploadedImages.length > 0
+            ? (currentBgIndex === 0 ? uploadedImages.length - 1 : currentBgIndex - 1)
+            : (currentIndex === 0 ? events.length - 1 : currentIndex - 1)
           const isActive = idx === currentBgIndex
           const isPrev = idx === prevBgIndex
           
@@ -152,7 +154,7 @@ export default function PastEventsSection() {
           return (
             <div
               key={src}
-              className={`absolute inset-0 transition-opacity transition-transform duration-[6000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
+              className={`absolute inset-0 transition-opacity transition-transform duration-[2000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
                 isActive 
                   ? `opacity-100 z-20 scale-105 ${trans}` 
                   : isPrev 
@@ -164,6 +166,8 @@ export default function PastEventsSection() {
               <img
                 src={parseImageUrl(src)}
                 alt="Past Event Background"
+                loading={idx === 0 ? 'eager' : 'lazy'}
+                fetchPriority={idx === 0 ? 'high' : 'low'}
                 className="h-full w-full object-cover contrast-[1.02]"
               />
             </div>

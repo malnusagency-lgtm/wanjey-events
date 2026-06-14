@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
 import { Check, Star, CheckCircle2 } from "lucide-react";
+import ProjectsMarquee from "@/components/ProjectsMarquee";
 
 const differentiators = [
   "Professional corporate execution",
@@ -67,7 +68,9 @@ export default function PackagesPage() {
             {packages.map((pkg, i) => (
               <AnimatedSection key={pkg.name} delay={i * 0.08}>
                 <div className={`glass-card relative flex h-full flex-col p-8 transition-all duration-500 ${
-                  pkg.featured ? "border-accent/40 bg-accent/10 scale-105 shadow-accent/20 z-10" : ""
+                  pkg.featured 
+                    ? "border-2 border-accent bg-[#CAA365]/10 shadow-[0_15px_45px_rgba(202,163,101,0.25)] md:scale-105 md:-translate-y-3 z-10" 
+                    : ""
                 }`}>
                   {pkg.featured && (
                     <span className="absolute -top-3 left-8 inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-foreground shadow-lg">
@@ -106,6 +109,17 @@ export default function PackagesPage() {
             All packages can be customised based on client needs.
           </p>
         </div>
+      </section>
+
+      {/* Project Marquee Section */}
+      <section className="py-8 overflow-hidden bg-accent/[0.02] border-t border-accent/5">
+        <div className="container">
+          <AnimatedSection className="text-center max-w-4xl mx-auto mb-6">
+            <p className="section-label">Featured Projects</p>
+            <h2 className="font-serif text-xl sm:text-3xl font-bold uppercase tracking-tight text-foreground/90 mt-1">Our Successful Campaigns</h2>
+          </AnimatedSection>
+        </div>
+        <ProjectsMarquee />
       </section>
 
       {/* Why Choose Us */}

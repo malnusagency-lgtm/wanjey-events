@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import MagneticButton from './MagneticButton'
-import { ArrowRight, MapPin, Clock } from 'lucide-react'
+import { ArrowRight, MapPin } from 'lucide-react'
 import AnimatedSection from './AnimatedSection'
 import MediaModal from './MediaModal'
-import BookingCTA3D from './BookingCTA3D'
 import Link from 'next/link'
 import { parseImageUrl } from '@/lib/utils'
 
@@ -52,7 +51,6 @@ const UpcomingEventSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [bgIndex, setBgIndex] = useState(0)
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([])
-  const [bgVideos, setBgVideos] = useState<MediaItem[]>([])
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -64,7 +62,6 @@ const UpcomingEventSection = () => {
     '/assets/gallery/event-50.jpg',
     '/assets/gallery/event-64.jpg'
   ])
-  const [galleryIndex, setGalleryIndex] = useState(0)
 
   const countdown = useCountdown(eventData?.date_iso)
 
@@ -88,7 +85,6 @@ const UpcomingEventSection = () => {
         }
 
         setMediaItems(items)
-        setBgVideos(items.filter((i: any) => i.type === 'video'))
       } catch {}
     }
 
@@ -124,19 +120,17 @@ const UpcomingEventSection = () => {
     fetchGallery()
   }, [])
 
-  useEffect(() => {
-    if (bgVideos.length === 0) return
-    const t = setInterval(() => setBgIndex(p => (p + 1) % bgVideos.length), 5000)
-    return () => clearInterval(t)
-  }, [bgVideos.length])
+  // Unified background media slideshow sources
+  const bgSources: MediaItem[] = mediaItems.length > 0 
+    ? mediaItems 
+    : galleryImages.map(src => ({ type: 'image', src }))
 
-  // Gallery slideshow interval
+  // Slideshow interval for backgrounds
   useEffect(() => {
-    if (eventData) return
-    if (galleryImages.length === 0) return
-    const t = setInterval(() => setGalleryIndex(p => (p + 1) % galleryImages.length), 5000)
+    if (bgSources.length <= 1) return
+    const t = setInterval(() => setBgIndex(p => (p + 1) % bgSources.length), 6000)
     return () => clearInterval(t)
-  }, [galleryImages.length, eventData])
+  }, [bgSources.length])
 
   const renderTitle = (title: string) => {
     const words = title.trim().split(/\s+/)
@@ -154,47 +148,81 @@ const UpcomingEventSection = () => {
     )
   }
 
+  // Render Background slideshow markup
+  const renderBackgroundSlideshow = () => (
+    <div className="absolute inset-0 z-0">
+      {bgSources.map((item, idx) => {
+        const currentBgIndex = bgIndex % (bgSources.length || 1)
+        const prevBgIndex = bgSources.length > 0 
+          ? (currentBgIndex === 0 ? bgSources.length - 1 : currentBgIndex - 1)
+          : 0
+        const isActive = idx === currentBgIndex
+        const isPrev = idx === prevBgIndex
+
+        // Pan/zoom Ken Burns styles based on index
+        const translateClasses = [
+          'translate-x-1 translate-y-0.5',
+          '-translate-x-1 -translate-y-0.5',
+          'translate-x-0.5 -translate-y-1',
+          '-translate-x-0.5 translate-y-1',
+          'translate-x-1 -translate-y-1',
+        ]
+        const trans = translateClasses[idx % translateClasses.length]
+
+        return (
+          <div
+            key={item.src}
+            className={`absolute inset-0 transition-opacity transition-transform duration-[3000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
+              isActive 
+                ? `opacity-100 z-20 scale-105 ${trans}` 
+                : isPrev 
+                  ? 'opacity-100 z-10 scale-100' 
+                  : 'opacity-0 z-0 scale-100'
+            }`}
+          >
+            {item.type === 'video' ? (
+              <video
+                src={item.src}
+                autoPlay muted loop playsInline
+                preload={idx === currentBgIndex || idx === prevBgIndex ? 'auto' : 'none'}
+                className="h-full w-full object-cover contrast-[1.02]"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={parseImageUrl(item.src)}
+                alt="Event Background"
+                loading={idx === 0 ? 'eager' : 'lazy'}
+                fetchPriority={idx === 0 ? 'high' : 'low'}
+                className="h-full w-full object-cover contrast-[1.02]"
+              />
+            )}
+          </div>
+        )
+      })}
+      {/* Dark vignette overlay for text legibility and color contrast */}
+      <div className="absolute inset-0 z-20 bg-black/45" />
+    </div>
+  )
+
   // No active event scheduled -> render minimal services listing with gallery slideshow
   if (!eventData) {
     return (
       <section className="relative min-h-[640px] h-[85vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
-        {/* Gallery Slideshow Background */}
-        <div className="absolute inset-0 z-0">
-          {galleryImages.map((src, idx) => {
-            const prevGalleryIndex = (galleryIndex === 0 ? galleryImages.length - 1 : galleryIndex - 1)
-            const isActive = idx === galleryIndex
-            const isPrev = idx === prevGalleryIndex
-            return (
-              <div
-                key={src}
-                className={`absolute inset-0 transition-opacity transition-transform duration-[6000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
-                  isActive 
-                    ? 'opacity-100 z-20 scale-105 translate-x-1' 
-                    : isPrev 
-                      ? 'opacity-100 z-10 scale-100' 
-                      : 'opacity-0 z-0 scale-100'
-                }`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={parseImageUrl(src)}
-                  alt="Gallery Background"
-                  className="h-full w-full object-cover contrast-[1.02]"
-                />
-              </div>
-            )
-          })}
-          {/* Clear, subtle vignette overlay for maximum image clarity and color vibrancy */}
-          <div className="absolute inset-0 z-20 bg-black/25" />
-        </div>
+        {renderBackgroundSlideshow()}
 
         {/* Minimal Services List Overlay */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center max-w-4xl mx-auto">
-          {/* Label */}
+          {/* "Book Us" CTA replacing the text label */}
           <AnimatedSection delay={0.1}>
-            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-3 sm:mb-4">
-              ✦ Wanjey Events & Marketing ✦
-            </p>
+            <Link href="/packages" className="inline-block mb-3 sm:mb-4">
+              <Button
+                size="sm"
+                className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
+              >
+                Book Us
+              </Button>
+            </Link>
           </AnimatedSection>
 
           {/* Minimal Title */}
@@ -213,10 +241,12 @@ const UpcomingEventSection = () => {
                 { title: "Digital Marketing", desc: "Social strategy & content production." },
                 { title: "Event Amplification", desc: "Live coverage & influencer integration." }
               ].map((service, idx) => (
-                <div key={idx} className="p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-md hover:border-accent/40 transition-all duration-300 flex flex-col justify-center">
-                  <h3 className="font-serif font-bold text-white text-[11px] sm:text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
-                  <p className="hidden sm:block text-white/60 text-xs mt-1 leading-relaxed">{service.desc}</p>
-                </div>
+                <Link href="/services" key={idx} className="block group h-full">
+                  <div className="p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-accent/25 bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] transition-all duration-300 flex flex-col justify-center h-full hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                    <h3 className="font-serif font-bold text-[11px] sm:text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
+                    <p className="hidden sm:block text-xs mt-1 leading-relaxed opacity-90">{service.desc}</p>
+                  </div>
+                </Link>
               ))}
             </div>
           </AnimatedSection>
@@ -258,45 +288,20 @@ const UpcomingEventSection = () => {
   return (
     <>
       <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
-
-        {/* ── Dynamic Background Videos ── */}
-        <div className="absolute inset-0 z-0">
-          {bgVideos.map((item, idx) => {
-            const prevBgIndex = (bgIndex === 0 ? bgVideos.length - 1 : bgIndex - 1)
-            const isActive = idx === bgIndex
-            const isPrev = idx === prevBgIndex
-            return (
-              <div
-                key={item.src}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out will-change-[opacity] ${
-                  isActive 
-                    ? 'opacity-100 z-20' 
-                    : isPrev 
-                      ? 'opacity-100 z-10' 
-                      : 'opacity-0 z-0'
-                }`}
-              >
-                <video
-                  src={item.src}
-                  autoPlay muted loop playsInline
-                  preload={idx <= 1 ? 'auto' : 'none'}
-                  className="h-full w-full object-cover contrast-[1.02]"
-                />
-              </div>
-            )
-          })}
-          {/* Clear, subtle vignette overlay for maximum video clarity and color vibrancy */}
-          <div className="absolute inset-0 z-20 bg-black/25" />
-        </div>
+        {renderBackgroundSlideshow()}
 
         {/* ── Content Overlay ── */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
-
-          {/* UPCOMING label */}
+          {/* "Book Us" CTA replacing the text label */}
           <AnimatedSection delay={0.1}>
-            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4 md:mb-6">
-              ✦ Upcoming Event ✦
-            </p>
+            <Link href="/packages" className="inline-block mb-4 md:mb-6">
+              <Button
+                size="sm"
+                className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
+              >
+                Book Us
+              </Button>
+            </Link>
           </AnimatedSection>
 
           {/* Event title */}
@@ -369,42 +374,65 @@ const UpcomingEventSection = () => {
             </AnimatedSection>
           )}
 
-          {/* CTA Button */}
+          {/* CTA Buttons — Display main ticket link AND consult/packages dashboard links */}
           <AnimatedSection delay={0.7}>
-            <div className="mt-8 sm:mt-10">
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 w-full max-w-2xl">
               {eventData.booking_link ? (
-                <Link href={eventData.booking_link} target="_blank" rel="noopener noreferrer">
+                <Link href={eventData.booking_link} target="_blank" rel="noopener noreferrer" className="flex-1 w-full">
                   <MagneticButton intensity={40}>
                     <Button
                       size="lg"
-                      className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
+                      className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                     >
-                      {eventData.cta_text || (eventData.booking_link?.includes('drive.google.com') ? 'View on Drive' : 'Get Tickets')}
-                      <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
+                      {eventData.cta_text || 'Get Tickets'}
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                     </Button>
                   </MagneticButton>
                 </Link>
               ) : (
-                <MagneticButton intensity={40}>
+                <MagneticButton intensity={40} className="flex-1 w-full">
                   <Button
                     onClick={() => setIsModalOpen(true)}
                     size="lg"
-                    className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
+                    className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                   >
                     {eventData.cta_text || 'Join the Movement'}
-                    <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </Button>
                 </MagneticButton>
               )}
+
+              <Link href="/contact" className="flex-1 w-full">
+                <MagneticButton intensity={20}>
+                  <Button
+                    size="lg"
+                    className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+                  >
+                    Consult
+                  </Button>
+                </MagneticButton>
+              </Link>
+
+              <Link href="/packages" className="flex-1 w-full">
+                <MagneticButton intensity={15}>
+                  <Button
+                    size="lg"
+                    className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+                  >
+                    Packages
+                  </Button>
+                </MagneticButton>
+              </Link>
             </div>
-          </AnimatedSection>        </div>
+          </AnimatedSection>
+        </div>
       </section>
 
       <MediaModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         items={[...mediaItems]}
-        bgVideos={bgVideos}
+        bgVideos={mediaItems.filter(i => i.type === 'video')}
         title={eventData.title}
         subtitle={eventData.subtitle}
       />

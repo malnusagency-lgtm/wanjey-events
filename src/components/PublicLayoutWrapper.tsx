@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
+import ChatbotWidget from "@/components/ChatbotWidget";
 import SmoothScroll from "@/components/SmoothScroll";
 import FilmGrain from "@/components/FilmGrain";
 import PremiumCursor from "@/components/PremiumCursor";
@@ -34,6 +35,7 @@ export default function PublicLayoutWrapper({ children }: { children: React.Reac
       <main className="min-h-screen">{children}</main>
       <Footer />
       <WhatsAppWidget />
+      <ChatbotWidget />
       <BackToTop />
     </>
   );
