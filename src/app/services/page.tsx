@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Services — Wanjey Events & Marketing",
     description: "Corporate events, brand activations, digital marketing, and event amplification in Kenya.",
-    url: "https://misswanjey.co.ke/services",
+    url: "https://wanjeyevents.com/services",
   },
 };
 

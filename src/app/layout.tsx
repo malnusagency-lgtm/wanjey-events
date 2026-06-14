@@ -20,7 +20,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://misswanjey.co.ke"),
+  metadataBase: new URL("https://wanjeyevents.com"),
   title: {
     default: "Wanjey Events & Marketing — Nairobi, Kenya",
     template: "%s | Wanjey Events & Marketing",
@@ -45,6 +45,35 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${outfit.variable} ${fraunces.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Wanjey Events & Marketing",
+              "image": "https://wanjeyevents.com/assets/logo.jpeg",
+              "@id": "https://wanjeyevents.com/#localbusiness",
+              "url": "https://wanjeyevents.com",
+              "telephone": "+254790381039",
+              "email": "hello@misswanjey.co.ke",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Nairobi",
+                "addressLocality": "Nairobi",
+                "addressRegion": "Nairobi County",
+                "postalCode": "00100",
+                "addressCountry": "KE"
+              },
+              "sameAs": [
+                "https://www.instagram.com/wanjey_events.marketing?igsh=MTNjZGN2MTc1ZjVuOQ==",
+                "https://www.tiktok.com/@wanjey_events?_r=1&_t=ZS-94O6gd06jWn"
+              ]
+            })
+          }}
+        />
+      </head>
       <body>
         <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
         <Toaster />

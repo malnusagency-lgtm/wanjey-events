@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://misswanjey.co.ke";
+  const base = "https://wanjeyevents.com";
   const routes = ["/", "/about", "/services", "/packages", "/gallery", "/contact"];
 
   return routes.map((route) => ({

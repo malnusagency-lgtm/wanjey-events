@@ -3,6 +3,6 @@ import type { MetadataRoute } from "next";
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: "https://misswanjey.co.ke/sitemap.xml",
+    sitemap: "https://wanjeyevents.com/sitemap.xml",
   };
 }

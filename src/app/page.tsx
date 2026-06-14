@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Wanjey Events & Marketing",
     description: "Premium event management and brand marketing in Kenya.",
-    url: "https://misswanjey.co.ke",
+    url: "https://wanjeyevents.com",
   },
 };
 

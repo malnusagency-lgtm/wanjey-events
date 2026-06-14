@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "About Miss Wanjey",
     description:
       "The story, philosophy, and journey behind Wanjey Events & Marketing.",
-    url: "https://misswanjey.co.ke/about",
+    url: "https://wanjeyevents.com/about",
   },
 };
 
