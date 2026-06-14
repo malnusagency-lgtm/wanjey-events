@@ -157,7 +157,7 @@ const UpcomingEventSection = () => {
   // No active event scheduled -> render minimal services listing with gallery slideshow
   if (!eventData) {
     return (
-      <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
+      <section className="relative min-h-[640px] h-[85vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
         {/* Gallery Slideshow Background */}
         <div className="absolute inset-0 z-0">
           {galleryImages.map((src, idx) => {
@@ -195,57 +195,57 @@ const UpcomingEventSection = () => {
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center max-w-4xl mx-auto">
           {/* Label */}
           <AnimatedSection delay={0.1}>
-            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4">
+            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-3 sm:mb-4">
               ✦ Wanjey Events & Marketing ✦
             </p>
           </AnimatedSection>
 
           {/* Minimal Title */}
           <AnimatedSection delay={0.25}>
-            <h2 className="font-serif text-3xl font-black leading-tight text-white sm:text-5xl md:text-6xl tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <h2 className="font-serif text-2xl sm:text-5xl md:text-6xl font-black leading-tight text-white tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
               Crafting Premium Experiences
             </h2>
           </AnimatedSection>
 
           {/* Minimal Services Grid */}
-          <AnimatedSection delay={0.4} className="mt-8 w-full max-w-2xl">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+          <AnimatedSection delay={0.4} className="mt-6 sm:mt-8 w-full max-w-2xl px-2">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 text-left">
               {[
                 { title: "Corporate Events", desc: "Product launches, conferences & dinners." },
                 { title: "Brand Activations", desc: "Experiential marketing & campaigns." },
                 { title: "Digital Marketing", desc: "Social strategy & content production." },
                 { title: "Event Amplification", desc: "Live coverage & influencer integration." }
               ].map((service, idx) => (
-                <div key={idx} className="p-5 rounded-2xl border border-white/10 bg-black/45 backdrop-blur-md hover:border-accent/40 transition-all duration-300">
-                  <h3 className="font-serif font-bold text-white text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
-                  <p className="text-white/60 text-xs mt-1 leading-relaxed">{service.desc}</p>
+                <div key={idx} className="p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-md hover:border-accent/40 transition-all duration-300 flex flex-col justify-center">
+                  <h3 className="font-serif font-bold text-white text-[11px] sm:text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
+                  <p className="hidden sm:block text-white/60 text-xs mt-1 leading-relaxed">{service.desc}</p>
                 </div>
               ))}
             </div>
           </AnimatedSection>
 
           {/* CTAs */}
-          <AnimatedSection delay={0.6}>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/contact">
-                <MagneticButton intensity={30}>
+          <AnimatedSection delay={0.6} className="w-full max-w-md">
+            <div className="mt-8 sm:mt-10 flex flex-row gap-3 sm:gap-4 justify-center items-center px-2">
+              <Link href="/contact" className="flex-1">
+                <MagneticButton intensity={20}>
                   <Button
                     size="lg"
-                    className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-10 h-14 text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500"
+                    className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-3 sm:px-10 h-11 sm:h-14 text-[10px] sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500"
                   >
-                    Book a Consultation
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    Consult
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Button>
                 </MagneticButton>
               </Link>
               
-              <Link href="/packages">
-                <MagneticButton intensity={20}>
+              <Link href="/packages" className="flex-1">
+                <MagneticButton intensity={15}>
                   <Button
                     size="lg"
-                    className="bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-10 h-14 text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+                    className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-3 sm:px-10 h-11 sm:h-14 text-[10px] sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
                   >
-                    View Our Packages
+                    Packages
                   </Button>
                 </MagneticButton>
               </Link>

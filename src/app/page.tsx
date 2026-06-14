@@ -14,9 +14,8 @@ import UpcomingEventSection from "@/components/UpcomingEventSection";
 import PastEventsSection from "@/components/PastEventsSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
 import BrandsMarquee from "@/components/BrandsMarquee";
-import FAQ from "@/components/FAQ";
 import OurProcess from "@/components/OurProcess";
-import { Calendar, Megaphone, BarChart3, Zap, CheckCircle2, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
+import { Calendar, Megaphone, BarChart3, Zap, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Strategic Events & Marketing That Elevate Your Brand",
@@ -34,14 +33,6 @@ const services = [
   { icon: Megaphone, title: "Brand Activations", desc: "Experiential marketing, in-store activations, and promotional campaigns that captivate audiences.", image: "/assets/gallery/event-31.jpg" },
   { icon: BarChart3, title: "Digital Marketing", desc: "Social media strategy, content production, campaign management, and influencer collaborations.", image: "/assets/gallery/event-64.jpg" },
   { icon: Zap, title: "Event Amplification", desc: "Live social coverage, influencer integration, and post-event marketing for maximum reach.", image: "/assets/gallery/event-50.jpg" },
-];
-
-const differentiators = [
-  "Professional corporate execution",
-  "End-to-end project management",
-  "Integrated digital amplification",
-  "Strong brand storytelling",
-  "Reliable and detail-oriented team",
 ];
 
 const stats = [
@@ -136,39 +127,7 @@ export default function HomePage() {
 
       <PastEventsSection />
 
-      {/* FAQ Section */}
-      <FAQ />
 
-      {/* Why Choose Us */}
-      <section className="py-10 md:py-14">
-        <div className="container">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <div className="glass-card p-6 md:p-10">
-              <AnimatedSection delay={0.1}>
-                <p className="section-label font-bold">Why Choose Us</p>
-              </AnimatedSection>
-              <AnimatedSection delay={0.2}>
-                <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
-              </AnimatedSection>
-              <AnimatedSection delay={0.3}>
-                <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
-                  With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
-                </p>
-              </AnimatedSection>
-            </div>
-            <div className="grid gap-3">
-              {differentiators.map((d, i) => (
-                <AnimatedSection key={d} delay={i * 0.06}>
-                  <div className="glass-card flex items-center gap-4 p-5 bg-accent/5">
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
-                    <span className="text-[15px] font-bold">{d}</span>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Strategic Approach — last section before footer */}
       <OurProcess />

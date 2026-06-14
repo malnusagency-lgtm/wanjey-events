@@ -169,11 +169,8 @@ export default function PastEventsSection() {
             </div>
           )
         })}
-        {/* Gold & Chocolate Gradient Overlay */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/90 via-[#CAA365]/35 to-[#130B07]/60" />
-        {/* Gold Radial Vignette */}
-        <div className="absolute inset-0 z-20"
-          style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 40%, rgba(202, 163, 101, 0.35) 100%)' }} />
+        {/* Clear, subtle vignette overlay for maximum image clarity and color vibrancy */}
+        <div className="absolute inset-0 z-20 bg-black/25" />
       </div>
 
       {/* ── Content Overlay ── */}
@@ -185,7 +182,7 @@ export default function PastEventsSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col items-center max-w-5xl"
+            className="flex flex-col items-center max-w-4xl bg-[#130B07]/75 backdrop-blur-md border border-[#CAA365]/35 p-6 sm:p-10 md:p-12 rounded-3xl shadow-2xl relative z-10"
           >
             {/* Label */}
             <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4 md:mb-6">
@@ -206,21 +203,21 @@ export default function PastEventsSection() {
             </div>
 
             {/* Title */}
-            <h2 className="font-serif text-4xl font-black leading-none text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl uppercase">
+            <h2 className="font-serif text-3xl font-black leading-none text-white sm:text-5xl md:text-7xl tracking-tighter drop-shadow-2xl uppercase">
               {renderTitle(activeEvent.title)}
             </h2>
 
             {/* Date Block */}
-            <div className="mt-6 md:mt-8 flex flex-col items-center">
-              <div className="h-px w-20 mb-4"
+            <div className="mt-4 md:mt-6 flex flex-col items-center">
+              <div className="h-px w-20 mb-3"
                 style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
-              <span className="font-serif text-4xl font-black text-white sm:text-6xl md:text-[5.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
+              <span className="font-serif text-3xl font-black text-white sm:text-5xl md:text-[4.5rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
                 {activeEvent.event_month_year}
               </span>
-              <p className="mt-4 font-sans text-sm md:text-base font-medium text-white/70 max-w-xl mx-auto leading-relaxed drop-shadow-md text-balance">
+              <p className="mt-3 font-sans text-xs sm:text-sm md:text-base font-medium text-white/80 max-w-xl mx-auto leading-relaxed drop-shadow-md text-balance">
                 {activeEvent.description}
               </p>
-              <div className="h-px w-20 mt-4"
+              <div className="h-px w-20 mt-3"
                 style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
             </div>
 

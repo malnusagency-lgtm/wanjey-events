@@ -32,7 +32,7 @@ const FAQItem = ({ faq, index }: { faq: typeof faqs[0], index: number }) => {
 
   return (
     <AnimatedSection delay={index * 0.05}>
-      <div className={`glass-card mb-4 overflow-hidden border transition-all duration-300 ${isOpen ? 'border-accent/40 bg-accent/5' : 'border-accent/10'}`}>
+      <div className={`glass-card mb-4 overflow-hidden transition-all duration-300 ${isOpen ? 'border-[#8C1B11]/60 bg-accent/10' : ''}`}>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="flex w-full items-center justify-between p-6 text-left"

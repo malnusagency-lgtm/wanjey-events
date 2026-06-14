@@ -59,7 +59,7 @@ export default function OurProcess() {
 function stepCard(step: typeof steps[0], index: number) {
   return (
     <AnimatedSection delay={index * 0.1} className="relative z-10 h-full">
-      <div className="glass-card group p-8 h-full flex flex-col items-center text-center hover:bg-white/60">
+      <div className="glass-card group p-8 h-full flex flex-col items-center text-center">
         <div className={`mb-8 flex h-20 w-20 items-center justify-center rounded-2xl ${step.color} border border-current/20 shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
           <step.icon className="h-10 w-10" />
         </div>

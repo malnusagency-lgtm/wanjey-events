@@ -3,7 +3,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
-import { Check, Star } from "lucide-react";
+import { Check, Star, CheckCircle2 } from "lucide-react";
+
+const differentiators = [
+  "Professional corporate execution",
+  "End-to-end project management",
+  "Integrated digital amplification",
+  "Strong brand storytelling",
+  "Reliable and detail-oriented team",
+];
 
 export const metadata: Metadata = {
   title: "Packages",
@@ -97,6 +105,37 @@ export default function PackagesPage() {
           <p className="mt-12 text-center text-sm text-muted-foreground">
             All packages can be customised based on client needs.
           </p>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-12 md:py-20 border-t border-accent/10 bg-accent/5">
+        <div className="container">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <div className="glass-card p-6 md:p-10">
+              <AnimatedSection delay={0.1}>
+                <p className="section-label font-bold text-accent">Why Choose Us</p>
+              </AnimatedSection>
+              <AnimatedSection delay={0.2}>
+                <h2 className="section-heading tracking-tight leading-[1.1] font-bold text-foreground">Built on Trust, Driven by Excellence</h2>
+              </AnimatedSection>
+              <AnimatedSection delay={0.3}>
+                <p className="mt-6 text-muted-foreground leading-[1.8] text-[16px] md:text-lg max-w-lg font-medium">
+                  With years of experience delivering premium corporate events across Kenya, we bring strategic thinking, creative execution, and measurable results to every project.
+                </p>
+              </AnimatedSection>
+            </div>
+            <div className="grid gap-3">
+              {differentiators.map((d, i) => (
+                <AnimatedSection key={d} delay={i * 0.06}>
+                  <div className="glass-card flex items-center gap-4 p-5">
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
+                    <span className="text-[15px] font-bold">{d}</span>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </PageTransition>

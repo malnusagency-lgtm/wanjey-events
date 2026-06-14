@@ -15,6 +15,8 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: '500+ Attendees',
     event_month_year: 'June 2023',
     display_order: 0,
+    cta_link: 'https://drive.google.com/drive/folders/1abc123',
+    cta_text: 'Watch Festival Highlights',
   },
   {
     id: 'seed-2',
@@ -25,6 +27,8 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: 'Sold Out',
     event_month_year: 'October 2023',
     display_order: 1,
+    cta_link: 'https://drive.google.com/drive/folders/2def456',
+    cta_text: 'Watch Brand Recap',
   },
   {
     id: 'seed-3',
@@ -35,6 +39,8 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: '200+ Guests',
     event_month_year: 'March 2024',
     display_order: 2,
+    cta_link: 'https://drive.google.com/drive/folders/3ghi789',
+    cta_text: 'Watch Event Reel',
   },
   {
     id: 'seed-4',
@@ -45,6 +51,8 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: 'Viral Moment',
     event_month_year: 'August 2023',
     display_order: 3,
+    cta_link: 'https://drive.google.com/drive/folders/4jkl012',
+    cta_text: 'Watch Highlights',
   },
 ]
 

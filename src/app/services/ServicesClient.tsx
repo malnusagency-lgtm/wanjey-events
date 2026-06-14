@@ -8,6 +8,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import PageTransition from "@/components/PageTransition";
 import AmbientGlow from "@/components/AmbientGlow";
 import InfiniteMarquee from "@/components/InfiniteMarquee";
+import FAQ from "@/components/FAQ";
 import { Calendar, Megaphone, BarChart3, Zap, ArrowRight, Star } from "lucide-react";
 
 const sections = [
@@ -57,7 +58,7 @@ const ParallaxCard = ({ s, i }: { s: typeof sections[0], i: number }) => {
     <AnimatedSection key={s.title} delay={i * 0.08}>
       <div 
         ref={containerRef}
-        className="glass-card group overflow-hidden flex flex-col md:flex-row bg-accent/5 backdrop-blur-md border border-accent/10 hover:border-accent/30 transition-all duration-500 rounded-2xl h-full min-h-[420px]"
+        className="glass-card group overflow-hidden flex flex-col md:flex-row h-full min-h-[420px]"
       >
         <div className="relative h-72 w-full md:h-auto md:w-1/2 overflow-hidden">
           <motion.div 
@@ -139,7 +140,7 @@ export default function ServicesClient() {
             {/* Double the items for seamless loop */}
             {[...testimonials, ...testimonials].map((t, i) => (
               <div key={i} className="min-w-[320px] md:min-w-[400px]">
-                <div className="glass-card flex flex-col p-8 h-full bg-accent/5 backdrop-blur-sm border-accent/10">
+                <div className="glass-card flex flex-col p-8 h-full">
                   <div className="flex gap-1 mb-5">
                     {Array.from({ length: 5 }).map((_, j) => (
                       <Star key={j} className="h-4 w-4 fill-accent text-accent animate-rotate-slow" />
@@ -177,6 +178,8 @@ export default function ServicesClient() {
           }
         `}</style>
       </section>
+
+      <FAQ />
     </PageTransition>
   );
 }
