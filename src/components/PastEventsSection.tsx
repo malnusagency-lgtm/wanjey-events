@@ -116,11 +116,19 @@ export default function PastEventsSection() {
   const parseDriveEmbedUrl = (url: string | null | undefined): string | null => {
     if (!url) return null
     const cleanUrl = url.trim()
-    if (!cleanUrl.includes('drive.google.com')) return null
+    
+    // Check for any google domain links
+    if (!cleanUrl.includes('google.com')) return null
 
-    const fileDMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
-    if (fileDMatch && fileDMatch[1]) {
-      return `https://drive.google.com/file/d/${fileDMatch[1]}/preview`
+    // Extract ID from /d/ID or /folders/ID or id=ID
+    const dMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
+    if (dMatch && dMatch[1]) {
+      const id = dMatch[1]
+      // Document, Spreadsheets, Presentations, etc.
+      if (cleanUrl.includes('/document/')) return `https://docs.google.com/document/d/${id}/preview`
+      if (cleanUrl.includes('/spreadsheets/')) return `https://docs.google.com/spreadsheets/d/${id}/preview`
+      if (cleanUrl.includes('/presentation/')) return `https://docs.google.com/presentation/d/${id}/preview`
+      return `https://drive.google.com/file/d/${id}/preview`
     }
 
     const folderMatch = cleanUrl.match(/\/folders\/([a-zA-Z0-9_-]+)/)
@@ -130,10 +138,11 @@ export default function PastEventsSection() {
 
     const idMatch = cleanUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/)
     if (idMatch && idMatch[1]) {
+      const id = idMatch[1]
       if (cleanUrl.includes('folders') || cleanUrl.includes('embeddedfolderview')) {
-        return `https://drive.google.com/embeddedfolderview?id=${idMatch[1]}#grid`
+        return `https://drive.google.com/embeddedfolderview?id=${id}#grid`
       }
-      return `https://drive.google.com/file/d/${idMatch[1]}/preview`
+      return `https://drive.google.com/file/d/${id}/preview`
     }
 
     return null

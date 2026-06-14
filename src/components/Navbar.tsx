@@ -85,8 +85,8 @@ const Navbar = () => {
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="lg:hidden">
-            <Button variant="ghost" size="icon" className="hover:bg-accent/5">
-              <Menu className="h-5 w-5" />
+            <Button variant="ghost" className="hover:bg-accent/5 font-sans font-black text-xs uppercase tracking-[0.2em] text-[#E07A5F] px-2.5 py-1">
+              Menu
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-72 border-l-border/30">

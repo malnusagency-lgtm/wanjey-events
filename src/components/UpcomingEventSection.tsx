@@ -71,27 +71,33 @@ const UpcomingEventSection = () => {
   const parseDriveEmbedUrl = (url: string | null | undefined): string | null => {
     if (!url) return null
     const cleanUrl = url.trim()
-    if (!cleanUrl.includes('drive.google.com')) return null
+    
+    // Check for any google domain links
+    if (!cleanUrl.includes('google.com')) return null
 
-    // File ID match
-    const fileDMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
-    if (fileDMatch && fileDMatch[1]) {
-      return `https://drive.google.com/file/d/${fileDMatch[1]}/preview`
+    // Extract ID from /d/ID or /folders/ID or id=ID
+    const dMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
+    if (dMatch && dMatch[1]) {
+      const id = dMatch[1]
+      // Document, Spreadsheets, Presentations, etc.
+      if (cleanUrl.includes('/document/')) return `https://docs.google.com/document/d/${id}/preview`
+      if (cleanUrl.includes('/spreadsheets/')) return `https://docs.google.com/spreadsheets/d/${id}/preview`
+      if (cleanUrl.includes('/presentation/')) return `https://docs.google.com/presentation/d/${id}/preview`
+      return `https://drive.google.com/file/d/${id}/preview`
     }
 
-    // Folder ID match
     const folderMatch = cleanUrl.match(/\/folders\/([a-zA-Z0-9_-]+)/)
     if (folderMatch && folderMatch[1]) {
       return `https://drive.google.com/embeddedfolderview?id=${folderMatch[1]}#grid`
     }
 
-    // Open/ID match
     const idMatch = cleanUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/)
     if (idMatch && idMatch[1]) {
+      const id = idMatch[1]
       if (cleanUrl.includes('folders') || cleanUrl.includes('embeddedfolderview')) {
-        return `https://drive.google.com/embeddedfolderview?id=${idMatch[1]}#grid`
+        return `https://drive.google.com/embeddedfolderview?id=${id}#grid`
       }
-      return `https://drive.google.com/file/d/${idMatch[1]}/preview`
+      return `https://drive.google.com/file/d/${id}/preview`
     }
 
     return null
@@ -166,20 +172,22 @@ const UpcomingEventSection = () => {
     return () => clearInterval(t)
   }, [bgSources.length])
 
+  // Preload background images to prevent loading flashes (SSR safe)
+  useEffect(() => {
+    if (typeof window === 'undefined' || bgSources.length === 0) return
+    bgSources.forEach(item => {
+      if (item.type === 'image') {
+        const img = new Image()
+        img.src = parseImageUrl(item.src)
+      }
+    })
+  }, [bgSources])
+
   const renderTitle = (title: string) => {
     const words = title.trim().split(/\s+/)
     if (words.length <= 1) return title
     const last = words.pop()
     return <>{words.join(' ')} <em className="italic font-light text-white">{last}</em></>
-  }
-
-  // Show nothing while loading to avoid flash
-  if (loading) {
-    return (
-      <section className="relative h-[75vh] md:h-[95vh] w-full bg-[#130B07] flex items-center justify-center">
-        <div className="h-12 w-12 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-      </section>
-    )
   }
 
   // Render Background slideshow markup
@@ -239,240 +247,254 @@ const UpcomingEventSection = () => {
     </div>
   )
 
-  // No active event scheduled -> render minimal services listing with gallery slideshow
-  if (!eventData) {
-    return (
-      <section className="relative min-h-[640px] h-[85vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
-        {renderBackgroundSlideshow()}
+  // Minimal Services overlay (shown if no eventData after loading completes)
+  const renderNoEventContent = () => (
+    <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center max-w-4xl mx-auto">
+      {/* "Book Us" CTA replacing the text label */}
+      <AnimatedSection delay={0.1}>
+        <Link href="/packages" className="inline-block mb-3 sm:mb-4">
+          <Button
+            size="sm"
+            className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
+          >
+            Book Us
+          </Button>
+        </Link>
+      </AnimatedSection>
 
-        {/* Minimal Services List Overlay */}
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center max-w-4xl mx-auto">
-          {/* "Book Us" CTA replacing the text label */}
-          <AnimatedSection delay={0.1}>
-            <Link href="/packages" className="inline-block mb-3 sm:mb-4">
-              <Button
-                size="sm"
-                className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
-              >
-                Book Us
-              </Button>
+      {/* Minimal Title */}
+      <AnimatedSection delay={0.25}>
+        <h2 className="font-serif text-2xl sm:text-5xl md:text-6xl font-black leading-tight text-white tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+          Crafting Premium Experiences
+        </h2>
+      </AnimatedSection>
+
+      {/* Minimal Services Grid */}
+      <AnimatedSection delay={0.4} className="mt-6 sm:mt-8 w-full max-w-2xl px-2">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 text-left">
+          {[
+            { title: "Corporate Events", desc: "Product launches, conferences & dinners." },
+            { title: "Brand Activations", desc: "Experiential marketing & campaigns." },
+            { title: "Digital Marketing", desc: "Social strategy & content production." },
+            { title: "Event Amplification", desc: "Live coverage & influencer integration." }
+          ].map((service, idx) => (
+            <Link href="/services" key={idx} className="block group h-full">
+              <div className="p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-accent/25 bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] transition-all duration-300 flex flex-col justify-center h-full hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                <h3 className="font-serif font-bold text-[11px] sm:text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
+                <p className="hidden sm:block text-xs mt-1 leading-relaxed opacity-90">{service.desc}</p>
+              </div>
             </Link>
-          </AnimatedSection>
+          ))}
+        </div>
+      </AnimatedSection>
 
-          {/* Minimal Title */}
-          <AnimatedSection delay={0.25}>
-            <h2 className="font-serif text-2xl sm:text-5xl md:text-6xl font-black leading-tight text-white tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-              Crafting Premium Experiences
-            </h2>
-          </AnimatedSection>
+      {/* CTAs */}
+      <AnimatedSection delay={0.6} className="w-full max-w-md">
+        <div className="mt-8 sm:mt-10 flex flex-row gap-3 sm:gap-4 justify-center items-center px-2">
+          <Link href="/contact" className="flex-1">
+            <MagneticButton intensity={20}>
+              <Button
+                size="lg"
+                className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-3 sm:px-10 h-11 sm:h-14 text-[10px] sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500"
+              >
+                Consult
+                <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+              </Button>
+            </MagneticButton>
+          </Link>
+          
+          <Link href="/packages" className="flex-1">
+            <MagneticButton intensity={15}>
+              <Button
+                size="lg"
+                className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-3 sm:px-10 h-11 sm:h-14 text-[10px] sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+              >
+                Packages
+              </Button>
+            </MagneticButton>
+          </Link>
+        </div>
+      </AnimatedSection>
+    </div>
+  )
 
-          {/* Minimal Services Grid */}
-          <AnimatedSection delay={0.4} className="mt-6 sm:mt-8 w-full max-w-2xl px-2">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 text-left">
+  // Active Event overlay (shown if eventData is loaded)
+  const renderActiveEventContent = () => {
+    if (!eventData) return null
+    const showCountdown = !!eventData.date_iso && !countdown.expired
+
+    return (
+      <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
+        {/* "Book Us" CTA replacing the text label */}
+        <AnimatedSection delay={0.1}>
+          <Link href="/packages" className="inline-block mb-4 md:mb-6">
+            <Button
+              size="sm"
+              className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
+            >
+              Book Us
+            </Button>
+          </Link>
+        </AnimatedSection>
+
+        {/* Event title */}
+        <AnimatedSection delay={0.25}>
+          <h2 className="font-serif text-4xl font-black leading-none text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl uppercase">
+            {renderTitle(eventData.title)}
+          </h2>
+        </AnimatedSection>
+
+        <AnimatedSection delay={0.4}>
+          <p className="mt-3 font-sans text-base font-black uppercase tracking-[0.2em] text-white/70 sm:text-xl drop-shadow-md text-balance">
+            {eventData.subtitle}
+          </p>
+        </AnimatedSection>
+
+        {/* Date block */}
+        <AnimatedSection delay={0.5}>
+          <div className="mt-6 md:mt-8 flex flex-col items-center">
+            <div className="h-px w-20 mb-4"
+              style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
+            <span className="font-serif text-5xl font-black text-white sm:text-8xl md:text-[7rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
+              {eventData.event_date}
+            </span>
+            <span className="mt-2 text-xs font-bold uppercase tracking-[0.6em] text-white/60 sm:text-sm">
+              {eventData.save_the_date_text}
+            </span>
+            <div className="h-px w-20 mt-4"
+              style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
+          </div>
+        </AnimatedSection>
+
+        {/* Location badge */}
+        {eventData.location && (
+          <AnimatedSection delay={0.55}>
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
+              <MapPin className="h-3 w-3 text-accent" />
+              <span className="text-xs font-bold uppercase tracking-[0.15em] text-white/70">{eventData.location}</span>
+            </div>
+          </AnimatedSection>
+        )}
+
+        {/* ── Countdown Timer ── */}
+        {showCountdown && (
+          <AnimatedSection delay={0.6}>
+            <div className="mt-6 md:mt-8 flex items-center gap-3 md:gap-5">
               {[
-                { title: "Corporate Events", desc: "Product launches, conferences & dinners." },
-                { title: "Brand Activations", desc: "Experiential marketing & campaigns." },
-                { title: "Digital Marketing", desc: "Social strategy & content production." },
-                { title: "Event Amplification", desc: "Live coverage & influencer integration." }
-              ].map((service, idx) => (
-                <Link href="/services" key={idx} className="block group h-full">
-                  <div className="p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-accent/25 bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] transition-all duration-300 flex flex-col justify-center h-full hover:scale-[1.02] active:scale-[0.98] shadow-lg">
-                    <h3 className="font-serif font-bold text-[11px] sm:text-sm md:text-base uppercase tracking-wider">{service.title}</h3>
-                    <p className="hidden sm:block text-xs mt-1 leading-relaxed opacity-90">{service.desc}</p>
+                { val: countdown.days, label: 'Days' },
+                { val: countdown.hours, label: 'Hrs' },
+                { val: countdown.mins, label: 'Min' },
+                { val: countdown.secs, label: 'Sec' },
+              ].map(({ val, label }, i) => (
+                <div key={label} className="flex items-center gap-3 md:gap-5">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="flex h-14 w-14 md:h-20 md:w-20 items-center justify-center rounded-xl font-serif font-black text-2xl md:text-4xl text-white"
+                      style={{
+                        background: 'linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02))',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        backdropFilter: 'blur(20px)',
+                      }}
+                    >
+                      {String(val).padStart(2, '0')}
+                    </div>
+                    <span className="mt-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">{label}</span>
                   </div>
-                </Link>
+                  {i < 3 && <span className="font-serif text-2xl font-black text-accent/60 -mt-5">:</span>}
+                </div>
               ))}
             </div>
           </AnimatedSection>
+        )}
 
-          {/* CTAs */}
-          <AnimatedSection delay={0.6} className="w-full max-w-md">
-            <div className="mt-8 sm:mt-10 flex flex-row gap-3 sm:gap-4 justify-center items-center px-2">
-              <Link href="/contact" className="flex-1">
-                <MagneticButton intensity={20}>
-                  <Button
-                    size="lg"
-                    className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-3 sm:px-10 h-11 sm:h-14 text-[10px] sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500"
-                  >
-                    Consult
-                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                  </Button>
-                </MagneticButton>
-              </Link>
-              
-              <Link href="/packages" className="flex-1">
-                <MagneticButton intensity={15}>
-                  <Button
-                    size="lg"
-                    className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-3 sm:px-10 h-11 sm:h-14 text-[10px] sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
-                  >
-                    Packages
-                  </Button>
-                </MagneticButton>
-              </Link>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
-    )
-  }
-
-  const showCountdown = !!eventData.date_iso && !countdown.expired
-
-  return (
-    <>
-      <section className="relative h-[75vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
-        {renderBackgroundSlideshow()}
-
-        {/* ── Content Overlay ── */}
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
-          {/* "Book Us" CTA replacing the text label */}
-          <AnimatedSection delay={0.1}>
-            <Link href="/packages" className="inline-block mb-4 md:mb-6">
-              <Button
-                size="sm"
-                className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
-              >
-                Book Us
-              </Button>
-            </Link>
-          </AnimatedSection>
-
-          {/* Event title */}
-          <AnimatedSection delay={0.25}>
-            <h2 className="font-serif text-4xl font-black leading-none text-white sm:text-7xl md:text-9xl tracking-tighter drop-shadow-2xl uppercase">
-              {renderTitle(eventData.title)}
-            </h2>
-          </AnimatedSection>
-
-          <AnimatedSection delay={0.4}>
-            <p className="mt-3 font-sans text-base font-black uppercase tracking-[0.2em] text-white/70 sm:text-xl drop-shadow-md text-balance">
-              {eventData.subtitle}
-            </p>
-          </AnimatedSection>
-
-          {/* Date block */}
-          <AnimatedSection delay={0.5}>
-            <div className="mt-6 md:mt-8 flex flex-col items-center">
-              <div className="h-px w-20 mb-4"
-                style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
-              <span className="font-serif text-5xl font-black text-white sm:text-8xl md:text-[7rem] tracking-tighter drop-shadow-2xl uppercase leading-none">
-                {eventData.event_date}
-              </span>
-              <span className="mt-2 text-xs font-bold uppercase tracking-[0.6em] text-white/60 sm:text-sm">
-                {eventData.save_the_date_text}
-              </span>
-              <div className="h-px w-20 mt-4"
-                style={{ background: 'linear-gradient(90deg, transparent, hsl(43 45% 55%), transparent)' }} />
-            </div>
-          </AnimatedSection>
-
-          {/* Location badge */}
-          {eventData.location && (
-            <AnimatedSection delay={0.55}>
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
-                <MapPin className="h-3 w-3 text-accent" />
-                <span className="text-xs font-bold uppercase tracking-[0.15em] text-white/70">{eventData.location}</span>
-              </div>
-            </AnimatedSection>
-          )}
-
-          {/* ── Countdown Timer ── */}
-          {showCountdown && (
-            <AnimatedSection delay={0.6}>
-              <div className="mt-6 md:mt-8 flex items-center gap-3 md:gap-5">
-                {[
-                  { val: countdown.days, label: 'Days' },
-                  { val: countdown.hours, label: 'Hrs' },
-                  { val: countdown.mins, label: 'Min' },
-                  { val: countdown.secs, label: 'Sec' },
-                ].map(({ val, label }, i) => (
-                  <div key={label} className="flex items-center gap-3 md:gap-5">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className="flex h-14 w-14 md:h-20 md:w-20 items-center justify-center rounded-xl font-serif font-black text-2xl md:text-4xl text-white"
-                        style={{
-                          background: 'linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02))',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                          backdropFilter: 'blur(20px)',
-                        }}
-                      >
-                        {String(val).padStart(2, '0')}
-                      </div>
-                      <span className="mt-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">{label}</span>
-                    </div>
-                    {i < 3 && <span className="font-serif text-2xl font-black text-accent/60 -mt-5">:</span>}
-                  </div>
-                ))}
-              </div>
-            </AnimatedSection>
-          )}
-
-          {/* CTA Buttons — Display main ticket link AND consult/packages dashboard links */}
-          <AnimatedSection delay={0.7}>
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 w-full max-w-2xl">
-              {eventData.booking_link ? (
-                driveEmbedUrl ? (
-                  <MagneticButton intensity={40} className="flex-1 w-full">
-                    <Button
-                      onClick={() => setIsDriveOpen(true)}
-                      size="lg"
-                      className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                    >
-                      {eventData.cta_text || 'Watch Video'}
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-                    </Button>
-                  </MagneticButton>
-                ) : (
-                  <Link href={eventData.booking_link} target="_blank" rel="noopener noreferrer" className="flex-1 w-full">
-                    <MagneticButton intensity={40}>
-                      <Button
-                        size="lg"
-                        className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                      >
-                        {eventData.cta_text || 'Get Tickets'}
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-                      </Button>
-                    </MagneticButton>
-                  </Link>
-                )
-              ) : (
+        {/* CTA Buttons — Display main ticket link AND consult/packages dashboard links */}
+        <AnimatedSection delay={0.7}>
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 w-full max-w-2xl">
+            {eventData.booking_link ? (
+              driveEmbedUrl ? (
                 <MagneticButton intensity={40} className="flex-1 w-full">
                   <Button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => setIsDriveOpen(true)}
                     size="lg"
                     className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                   >
-                    {eventData.cta_text || 'Join the Movement'}
+                    {eventData.cta_text || 'Watch Video'}
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </Button>
                 </MagneticButton>
-              )}
+              ) : (
+                <Link href={eventData.booking_link} target="_blank" rel="noopener noreferrer" className="flex-1 w-full">
+                  <MagneticButton intensity={40}>
+                    <Button
+                      size="lg"
+                      className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                    >
+                      {eventData.cta_text || 'Get Tickets'}
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                    </Button>
+                  </MagneticButton>
+                </Link>
+              )
+            ) : (
+              <MagneticButton intensity={40} className="flex-1 w-full">
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  size="lg"
+                  className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                >
+                  {eventData.cta_text || 'Join the Movement'}
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                </Button>
+              </MagneticButton>
+            )}
 
-              <Link href="/contact" className="flex-1 w-full">
-                <MagneticButton intensity={20}>
-                  <Button
-                    size="lg"
-                    className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
-                  >
-                    Consult
-                  </Button>
-                </MagneticButton>
-              </Link>
+            <Link href="/contact" className="flex-1 w-full">
+              <MagneticButton intensity={20}>
+                <Button
+                  size="lg"
+                  className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+                >
+                  Consult
+                </Button>
+              </MagneticButton>
+            </Link>
 
-              <Link href="/packages" className="flex-1 w-full">
-                <MagneticButton intensity={15}>
-                  <Button
-                    size="lg"
-                    className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
-                  >
-                    Packages
-                  </Button>
-                </MagneticButton>
-              </Link>
-            </div>
-          </AnimatedSection>
-        </div>
+            <Link href="/packages" className="flex-1 w-full">
+              <MagneticButton intensity={15}>
+                <Button
+                  size="lg"
+                  className="w-full bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] rounded-full border border-white/10 backdrop-blur-sm transition-all duration-500"
+                >
+                  Packages
+                </Button>
+              </MagneticButton>
+            </Link>
+          </div>
+        </AnimatedSection>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <section className="relative min-h-[640px] h-[85vh] md:h-[95vh] w-full overflow-hidden bg-[#130B07]">
+        {/* Background slideshow renders immediately */}
+        {renderBackgroundSlideshow()}
+
+        {/* Content fades in once data loading is complete */}
+        <AnimatePresence mode="wait">
+          {!loading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="absolute inset-0 z-30 flex items-center justify-center"
+            >
+              {eventData ? renderActiveEventContent() : renderNoEventContent()}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
       <MediaModal
@@ -480,8 +502,8 @@ const UpcomingEventSection = () => {
         onClose={() => setIsModalOpen(false)}
         items={[...mediaItems]}
         bgVideos={mediaItems.filter(i => i.type === 'video')}
-        title={eventData.title}
-        subtitle={eventData.subtitle}
+        title={eventData?.title || 'Wanjey'}
+        subtitle={eventData?.subtitle || 'Events & Marketing'}
       />
 
       {/* ── Google Drive Embed Modal ── */}
