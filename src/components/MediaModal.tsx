@@ -15,9 +15,11 @@ interface Props {
   items: MediaItem[];
   initialIndex?: number;
   bgVideos?: { src: string }[];
+  title?: string;
+  subtitle?: string;
 }
 
-const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [] }: Props) => {
+const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [], title = "Wanjey", subtitle = "Events & Marketing" }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPlaying, setIsPlaying] = useState(true);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -109,9 +111,13 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [] }:
 
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 z-[110] flex items-center justify-between p-4 sm:p-8 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-            <div className="flex flex-col">
-              <h3 className="font-serif text-xl sm:text-2xl font-black text-white tracking-tighter uppercase drop-shadow-lg">BIGVOICES <span className="text-accent italic font-light ml-2">FEST</span></h3>
-              <p className="text-[10px] sm:text-xs text-white/60 font-bold uppercase tracking-[0.3em] mt-1">Join The Movement</p>
+            <div className="flex flex-col text-left">
+              <h3 className="font-serif text-xl sm:text-2xl font-black text-white tracking-tighter uppercase drop-shadow-lg">
+                {title}
+              </h3>
+              <p className="text-[10px] sm:text-xs text-white/60 font-bold uppercase tracking-[0.3em] mt-1">
+                {subtitle}
+              </p>
             </div>
             <div className="flex items-center gap-4">
               <button 
@@ -162,7 +168,7 @@ const MediaModal = ({ isOpen, onClose, items, initialIndex = 0, bgVideos = [] }:
                   <div className="relative h-full w-full flex items-center justify-center">
                     <Image 
                       src={currentItem.src} 
-                      alt="BigVoices Media" 
+                      alt={`${title} Media`} 
                       fill 
                       className="object-contain md:max-h-[80vh] rounded-2xl drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
                       quality={100}

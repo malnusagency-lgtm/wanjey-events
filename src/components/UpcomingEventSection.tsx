@@ -405,6 +405,8 @@ const UpcomingEventSection = () => {
         onClose={() => setIsModalOpen(false)}
         items={[...mediaItems]}
         bgVideos={bgVideos}
+        title={eventData.title}
+        subtitle={eventData.subtitle}
       />
     </>
   )
