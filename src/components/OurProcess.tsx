@@ -8,13 +8,13 @@ const steps = [
     icon: MessageSquare,
     title: "Consult",
     desc: "We start with a deep dive into your brand objectives, audience, and vision. Strategic alignment is our first priority.",
-    color: "bg-blue-500/10 text-blue-500"
+    color: "bg-accent/10 text-accent"
   },
   {
     icon: Layout,
     title: "Plan",
     desc: "Every detail—from vendor selection to digital integration—is meticulously mapped out in a comprehensive project blueprint.",
-    color: "bg-purple-500/10 text-purple-500"
+    color: "bg-accent/10 text-accent"
   },
   {
     icon: Activity,
@@ -26,7 +26,7 @@ const steps = [
     icon: BarChart2,
     title: "Amplify",
     desc: "Post-event marketing and performance reports ensure your investment continues to deliver value and visibility.",
-    color: "bg-green-500/10 text-green-500"
+    color: "bg-accent/10 text-accent"
   }
 ];
 

@@ -182,7 +182,7 @@ export default function PastEventsSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col items-center max-w-4xl bg-[#130B07]/75 backdrop-blur-md border border-[#CAA365]/35 p-6 sm:p-10 md:p-12 rounded-3xl shadow-2xl relative z-10"
+            className="flex flex-col items-center max-w-5xl relative z-10"
           >
             {/* Label */}
             <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4 md:mb-6">
@@ -245,7 +245,7 @@ export default function PastEventsSection() {
                     <Button
                       onClick={() => setIsModalOpen(true)}
                       size="lg"
-                      className="bg-white/10 text-white hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] transition-all duration-500 rounded-full border border-white/10 backdrop-blur-sm"
+                      className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                     >
                       View More Media
                     </Button>
@@ -258,7 +258,7 @@ export default function PastEventsSection() {
                     size="lg"
                     className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-16 sm:h-20 sm:text-xl font-black uppercase tracking-[0.3em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.6)] transition-all duration-500 group rounded-full border border-white/10"
                   >
-                    {activeEvent.cta_text || 'Explore Gallery'}
+                    {activeEvent.cta_text || 'Explore More'}
                     <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </Button>
                 </MagneticButton>
