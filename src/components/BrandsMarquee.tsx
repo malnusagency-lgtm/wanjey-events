@@ -17,7 +17,7 @@ export default function BrandsMarquee() {
   return (
     <div className="relative flex w-full overflow-hidden border-y border-[#CAA365]/30 bg-transparent py-5 md:py-6 z-10 shadow-sm">
       <motion.div
-        className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#CAA365] sm:text-2xl md:text-4xl"
+        className="flex whitespace-nowrap font-serif text-lg font-black tracking-widest text-[#CAA365] sm:text-2xl md:text-4xl will-change-transform transform-gpu"
         initial={{ x: "0%" }}
         animate={{ x: "-50%" }}
         transition={{

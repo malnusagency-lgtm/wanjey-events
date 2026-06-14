@@ -152,7 +152,7 @@ export default function PastEventsSection() {
           return (
             <div
               key={src}
-              className={`absolute inset-0 transition-all duration-[6000ms] ease-in-out transform ${
+              className={`absolute inset-0 transition-opacity transition-transform duration-[6000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
                 isActive 
                   ? `opacity-100 z-20 scale-105 ${trans}` 
                   : isPrev 

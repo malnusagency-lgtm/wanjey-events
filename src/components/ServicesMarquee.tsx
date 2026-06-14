@@ -11,7 +11,7 @@ const services = [
 export default function ServicesMarquee() {
   return (
     <div className="relative flex overflow-hidden py-12 border-y border-[#CAA365]/30 bg-transparent shadow-sm my-6 rounded-2xl">
-      <div className="flex animate-marquee whitespace-nowrap gap-6 px-6">
+      <div className="flex animate-marquee whitespace-nowrap gap-6 px-6 will-change-transform transform-gpu">
         {/* Double items for seamless loop */}
         {[...services, ...services].map((s, i) => (
           <div key={i} className="min-w-[300px] md:min-w-[350px]">

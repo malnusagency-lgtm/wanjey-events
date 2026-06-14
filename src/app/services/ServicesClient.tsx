@@ -136,7 +136,7 @@ export default function ServicesClient() {
         </div>
 
         <div className="relative flex overflow-hidden py-6">
-          <div className="flex animate-marquee whitespace-nowrap gap-6 px-6">
+          <div className="flex animate-marquee whitespace-nowrap gap-6 px-6 will-change-transform transform-gpu">
             {/* Double the items for seamless loop */}
             {[...testimonials, ...testimonials].map((t, i) => (
               <div key={i} className="min-w-[320px] md:min-w-[400px]">

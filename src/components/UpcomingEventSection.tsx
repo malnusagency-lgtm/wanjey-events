@@ -167,7 +167,7 @@ const UpcomingEventSection = () => {
             return (
               <div
                 key={src}
-                className={`absolute inset-0 transition-all duration-[6000ms] ease-in-out transform ${
+                className={`absolute inset-0 transition-opacity transition-transform duration-[6000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
                   isActive 
                     ? 'opacity-100 z-20 scale-105 translate-x-1' 
                     : isPrev 
@@ -179,16 +179,13 @@ const UpcomingEventSection = () => {
                 <img
                   src={parseImageUrl(src)}
                   alt="Gallery Background"
-                  className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
+                  className="h-full w-full object-cover contrast-[1.02]"
                 />
               </div>
             )
           })}
-          {/* Gold & Chocolate Gradient Overlay */}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/90 via-[#CAA365]/35 to-[#130B07]/60" />
-          {/* Gold Radial Vignette */}
-          <div className="absolute inset-0 z-20"
-            style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 40%, rgba(202, 163, 101, 0.35) 100%)' }} />
+          {/* Clear, subtle vignette overlay for maximum image clarity and color vibrancy */}
+          <div className="absolute inset-0 z-20 bg-black/25" />
         </div>
 
         {/* Minimal Services List Overlay */}
@@ -271,7 +268,7 @@ const UpcomingEventSection = () => {
             return (
               <div
                 key={item.src}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out will-change-[opacity] ${
                   isActive 
                     ? 'opacity-100 z-20' 
                     : isPrev 
@@ -283,16 +280,13 @@ const UpcomingEventSection = () => {
                   src={item.src}
                   autoPlay muted loop playsInline
                   preload={idx <= 1 ? 'auto' : 'none'}
-                  className="h-full w-full object-cover grayscale-[0.15] contrast-[1.08]"
+                  className="h-full w-full object-cover contrast-[1.02]"
                 />
               </div>
             )
           })}
-          {/* Gold & Chocolate Gradient Overlay */}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#130B07]/85 via-[#CAA365]/35 to-[#130B07]/55" />
-          {/* Gold Radial Vignette */}
-          <div className="absolute inset-0 z-20"
-            style={{ background: 'radial-gradient(ellipse 80% 100% at 50% 50%, transparent 45%, rgba(202, 163, 101, 0.3) 100%)' }} />
+          {/* Clear, subtle vignette overlay for maximum video clarity and color vibrancy */}
+          <div className="absolute inset-0 z-20 bg-black/25" />
         </div>
 
         {/* ── Content Overlay ── */}
