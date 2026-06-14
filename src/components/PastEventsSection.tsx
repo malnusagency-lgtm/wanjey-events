@@ -97,6 +97,15 @@ export default function PastEventsSection() {
     return () => clearInterval(t)
   }, [uploadedImages.length])
 
+  // Preload background images to prevent loading flashes (SSR safe)
+  useEffect(() => {
+    if (typeof window === 'undefined' || bgSources.length === 0) return
+    bgSources.forEach(src => {
+      const img = new window.Image()
+      img.src = parseImageUrl(src)
+    })
+  }, [bgSources])
+
   const handlePrev = () => {
     setCurrentIndex(prev => (prev === 0 ? events.length - 1 : prev - 1))
   }
@@ -118,7 +127,7 @@ export default function PastEventsSection() {
     const cleanUrl = url.trim()
     
     // Check for any google domain links
-    if (!cleanUrl.includes('google.com')) return null
+    if (!cleanUrl.includes('google.')) return null
 
     // Extract ID from /d/ID or /folders/ID or id=ID
     const dMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
@@ -191,8 +200,8 @@ export default function PastEventsSection() {
           
           return (
             <div
-              key={src}
-              className={`absolute inset-0 transition-opacity transition-transform duration-[2000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
+              key={src + '_' + idx}
+              className={`absolute inset-0 transition duration-[2000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
                 isActive 
                   ? `opacity-100 z-20 scale-105 ${trans}` 
                   : isPrev 
@@ -204,8 +213,8 @@ export default function PastEventsSection() {
               <img
                 src={parseImageUrl(src)}
                 alt="Past Event Background"
-                loading={idx === 0 ? 'eager' : 'lazy'}
-                fetchPriority={idx === 0 ? 'high' : 'low'}
+                loading="eager"
+                fetchPriority={isActive ? 'high' : 'low'}
                 className="h-full w-full object-cover contrast-[1.02]"
               />
             </div>

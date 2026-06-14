@@ -67,13 +67,13 @@ const UpcomingEventSection = () => {
 
   const countdown = useCountdown(eventData?.date_iso)
 
-  // Google Drive Embed Parser
+  // Google Drive Embed Parser (Country-Agnostic)
   const parseDriveEmbedUrl = (url: string | null | undefined): string | null => {
     if (!url) return null
     const cleanUrl = url.trim()
     
-    // Check for any google domain links
-    if (!cleanUrl.includes('google.com')) return null
+    // Check for any google domain links (e.g. google.com, google.co.ke, google.co.uk)
+    if (!cleanUrl.includes('google.')) return null
 
     // Extract ID from /d/ID or /folders/ID or id=ID
     const dMatch = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
@@ -160,10 +160,10 @@ const UpcomingEventSection = () => {
     fetchGallery()
   }, [])
 
-  // Unified background media slideshow sources
+  // Combined background sources for continuous image/video transitions
   const bgSources: MediaItem[] = mediaItems.length > 0 
-    ? mediaItems 
-    : galleryImages.map(src => ({ type: 'image', src }))
+    ? [...mediaItems, ...galleryImages.map(src => ({ type: 'image' as const, src }))]
+    : galleryImages.map(src => ({ type: 'image' as const, src }))
 
   // Slideshow interval for backgrounds
   useEffect(() => {
@@ -213,8 +213,8 @@ const UpcomingEventSection = () => {
 
         return (
           <div
-            key={item.src}
-            className={`absolute inset-0 transition-opacity transition-transform duration-[3000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
+            key={item.src + '_' + idx}
+            className={`absolute inset-0 transition duration-[3000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
               isActive 
                 ? `opacity-100 z-20 scale-105 ${trans}` 
                 : isPrev 
@@ -234,8 +234,8 @@ const UpcomingEventSection = () => {
               <img
                 src={parseImageUrl(item.src)}
                 alt="Event Background"
-                loading={idx === 0 ? 'eager' : 'lazy'}
-                fetchPriority={idx === 0 ? 'high' : 'low'}
+                loading="eager"
+                fetchPriority={isActive ? 'high' : 'low'}
                 className="h-full w-full object-cover contrast-[1.02]"
               />
             )}
