@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import AnimatedSection from './AnimatedSection'
-import { ArrowLeft, ArrowRight, Trophy, Calendar } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Trophy, Calendar, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import MagneticButton from './MagneticButton'
 import { parseImageUrl } from '@/lib/utils'
@@ -34,6 +34,7 @@ export default function PastEventsSection() {
   const [mediaItems, setMediaItems] = useState<any[]>([])
   const [bgVideos, setBgVideos] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDriveOpen, setIsDriveOpen] = useState(false)
   const [bgIndex, setBgIndex] = useState(0)
 
   // Fetch past events media
@@ -111,6 +112,33 @@ export default function PastEventsSection() {
     return <>{words.join(' ')} <em className="italic font-light text-accent">{last}</em></>
   }
 
+  // Google Drive Embed Parser
+  const parseDriveEmbedUrl = (url: string | null | undefined): string | null => {
+    if (!url) return null
+    const cleanUrl = url.trim()
+    if (!cleanUrl.includes('drive.google.com')) return null
+
+    const fileDMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
+    if (fileDMatch && fileDMatch[1]) {
+      return `https://drive.google.com/file/d/${fileDMatch[1]}/preview`
+    }
+
+    const folderMatch = cleanUrl.match(/\/folders\/([a-zA-Z0-9_-]+)/)
+    if (folderMatch && folderMatch[1]) {
+      return `https://drive.google.com/embeddedfolderview?id=${folderMatch[1]}#grid`
+    }
+
+    const idMatch = cleanUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/)
+    if (idMatch && idMatch[1]) {
+      if (cleanUrl.includes('folders') || cleanUrl.includes('embeddedfolderview')) {
+        return `https://drive.google.com/embeddedfolderview?id=${idMatch[1]}#grid`
+      }
+      return `https://drive.google.com/file/d/${idMatch[1]}/preview`
+    }
+
+    return null
+  }
+
   if (loading) {
     return (
       <section className="relative h-[75vh] md:h-[95vh] w-full bg-[#130B07] flex items-center justify-center">
@@ -122,6 +150,7 @@ export default function PastEventsSection() {
   if (events.length === 0) return null
 
   const activeEvent = events[currentIndex]
+  const activeDriveEmbedUrl = parseDriveEmbedUrl(activeEvent?.cta_link)
 
   return (
     <section
@@ -241,21 +270,34 @@ export default function PastEventsSection() {
 
               {/* If a video/google link is provided, show the redirect button */}
               {activeEvent.cta_link && (
-                <Link 
-                  href={activeEvent.cta_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                activeDriveEmbedUrl ? (
                   <MagneticButton intensity={20}>
                     <Button
+                      onClick={() => setIsDriveOpen(true)}
                       size="lg"
                       className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                     >
-                      {activeEvent.cta_text || (activeEvent.cta_link.includes('drive.google.com') ? 'Watch on Drive' : 'Watch Videos')}
+                      {activeEvent.cta_text || 'Watch Video'}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                     </Button>
                   </MagneticButton>
-                </Link>
+                ) : (
+                  <Link 
+                    href={activeEvent.cta_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MagneticButton intensity={20}>
+                      <Button
+                        size="lg"
+                        className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {activeEvent.cta_text || 'Watch Videos'}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                      </Button>
+                    </MagneticButton>
+                  </Link>
+                )
               )}
             </div>
           </motion.div>
@@ -298,6 +340,49 @@ export default function PastEventsSection() {
         title={activeEvent?.title}
         subtitle={activeEvent?.category}
       />
+
+      {/* ── Google Drive Embed Modal ── */}
+      <AnimatePresence>
+        {isDriveOpen && activeDriveEmbedUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 sm:p-8"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              className="relative w-full max-w-5xl h-[80vh] rounded-2xl border border-accent/30 bg-[#160E0A] overflow-hidden flex flex-col shadow-2xl"
+            >
+              {/* Header */}
+              <div className="px-6 py-4 bg-[#2D1A10] border-b border-accent/20 flex justify-between items-center z-10">
+                <span className="font-serif text-xs sm:text-sm font-bold text-white uppercase tracking-widest text-left">
+                  Event Media • Google Drive Player
+                </span>
+                <button
+                  onClick={() => setIsDriveOpen(false)}
+                  className="text-white/60 hover:text-white transition-colors p-1"
+                  aria-label="Close Player"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              
+              {/* Iframe */}
+              <div className="flex-1 bg-black">
+                <iframe
+                  src={activeDriveEmbedUrl}
+                  className="w-full h-full border-none"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
