@@ -56,9 +56,6 @@ const UpcomingEventSection = () => {
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [loading, setLoading] = useState(true)
   const [iframeLoading, setIframeLoading] = useState(true)
-  const [isPhotosLoading, setIsPhotosLoading] = useState(false)
-  const [photosMediaItems, setPhotosMediaItems] = useState<MediaItem[]>([])
-  const [isPhotosModalOpen, setIsPhotosModalOpen] = useState(false)
   const [activeDriveUrl, setActiveDriveUrl] = useState<string | null>(null)
 
   // Gallery slideshow state for fallback
@@ -133,7 +130,7 @@ const UpcomingEventSection = () => {
       return {
         link,
         text: text || defaultLabel,
-        isPhotos,
+        isPhotos: false,
         driveUrl
       }
     })
@@ -143,27 +140,6 @@ const UpcomingEventSection = () => {
     if (!url) return false
     const cleanUrl = url.trim()
     return cleanUrl.includes('photos.app.goo.gl') || cleanUrl.includes('photos.google.com')
-  }
-
-  const handlePhotosClick = async (url: string) => {
-    setIsPhotosLoading(true)
-    try {
-      const response = await fetch(`/api/media/google-photos?url=${encodeURIComponent(url)}`)
-      if (response.ok) {
-        const data = await response.json()
-        if (data?.success && data.media && data.media.length > 0) {
-          setPhotosMediaItems(data.media)
-          setIsPhotosModalOpen(true)
-        } else {
-          window.open(url, '_blank')
-        }
-      } else {
-        window.open(url, '_blank')
-      }
-    } catch {
-      window.open(url, '_blank')
-    }
-    setIsPhotosLoading(false)
   }
 
   useEffect(() => {
@@ -485,28 +461,6 @@ const UpcomingEventSection = () => {
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 w-full max-w-2xl">
             {eventData.booking_link ? (
               getCtaButtons(eventData.booking_link, eventData.cta_text).map((btn, idx) => {
-                if (btn.isPhotos) {
-                  return (
-                    <MagneticButton key={idx} intensity={40} className="flex-1 w-full">
-                      <Button
-                        onClick={() => handlePhotosClick(btn.link)}
-                        disabled={isPhotosLoading}
-                        size="lg"
-                        className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                      >
-                        {isPhotosLoading ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
-                            Scraping Album...
-                          </span>
-                        ) : (
-                          btn.text
-                        )}
-                        {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
-                      </Button>
-                    </MagneticButton>
-                  )
-                }
 
                 if (btn.driveUrl) {
                   return (
@@ -612,14 +566,7 @@ const UpcomingEventSection = () => {
         subtitle={eventData?.subtitle || 'Events & Marketing'}
       />
 
-      <MediaModal
-        isOpen={isPhotosModalOpen}
-        onClose={() => setIsPhotosModalOpen(false)}
-        items={photosMediaItems}
-        bgVideos={[]}
-        title={eventData?.title || 'Wanjey'}
-        subtitle="Shared Google Photos Album"
-      />
+
 
       {/* ── Google Drive Embed Modal ── */}
       <AnimatePresence>

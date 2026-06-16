@@ -101,7 +101,7 @@ const ChatbotWidget = () => {
     // Contact details
     if (text.match(/\b(contact|email|phone|whatsapp|number|address|reach|location|office|nairobi|kenya|mail|hello)\b/)) {
       return {
-        text: "Here is how you can reach our coordinators directly:\n\n📧 Email: hello@misswanjey.co.ke\n📞 Phone/WhatsApp: +254 790 381 039\n📍 Location: Nairobi, Kenya\n\nOr click below to send us a direct message via our website form!",
+        text: "Here is how you can reach our coordinators directly:\n\n📧 Email: theweventsmarketing@gmail.com\n📞 Phone/WhatsApp: +254 790 381 039\n📍 Location: Nairobi, Kenya\n\nOr click below to send us a direct message via our website form!",
         actions: [
           { label: "Open Contact Form", href: "/contact", type: "link" as const },
           { label: "WhatsApp Chat", href: "https://wa.me/254790381039", type: "link" as const }

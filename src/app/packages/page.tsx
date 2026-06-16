@@ -69,7 +69,7 @@ export default function PackagesPage() {
               <AnimatedSection key={pkg.name} delay={i * 0.08}>
                 <div className={`glass-card relative flex h-full flex-col p-8 transition-all duration-500 ${
                   pkg.featured 
-                    ? "border-2 border-accent bg-[#CAA365]/10 shadow-[0_15px_45px_rgba(202,163,101,0.25)] md:scale-105 md:-translate-y-3 z-10" 
+                    ? "border-2 border-accent bg-[#CAA365]/10 shadow-[0_15px_45px_rgba(202,163,101,0.25)] md:scale-105 md:-translate-y-3 z-10 !overflow-visible" 
                     : ""
                 }`}>
                   {pkg.featured && (

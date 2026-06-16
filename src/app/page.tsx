@@ -18,12 +18,12 @@ import OurProcess from "@/components/OurProcess";
 import { Calendar, Megaphone, BarChart3, Zap, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Strategic Events & Marketing That Elevate Your Brand",
+  title: "Wanjey Events & Marketing | Corporate Events & Brand Activations Nairobi, Kenya",
   description:
-    "Wanjey Events & Marketing — corporate events, brand activations, and digital marketing in Nairobi, Kenya. Book a consultation today.",
+    "Wanjey Events & Marketing is a premium events management and brand marketing agency in Nairobi, Kenya. We plan, execute, and amplify corporate events, product launches, brand activations, and digital campaigns.",
   openGraph: {
-    title: "Wanjey Events & Marketing",
-    description: "Premium event management and brand marketing in Kenya.",
+    title: "Wanjey Events & Marketing | Corporate Events & Brand Activations Kenya",
+    description: "Premium events management, brand activations, and digital marketing agency in Nairobi, Kenya.",
     url: "https://wanjeyevents.com",
   },
 };

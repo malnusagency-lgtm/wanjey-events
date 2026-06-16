@@ -57,7 +57,7 @@ export default function RootLayout({
               "@id": "https://wanjeyevents.com/#localbusiness",
               "url": "https://wanjeyevents.com",
               "telephone": "+254790381039",
-              "email": "hello@misswanjey.co.ke",
+              "email": "theweventsmarketing@gmail.com",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Nairobi",

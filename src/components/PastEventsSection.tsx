@@ -37,9 +37,6 @@ export default function PastEventsSection() {
   const [isDriveOpen, setIsDriveOpen] = useState(false)
   const [bgIndex, setBgIndex] = useState(0)
   const [iframeLoading, setIframeLoading] = useState(true)
-  const [isPhotosLoading, setIsPhotosLoading] = useState(false)
-  const [photosMediaItems, setPhotosMediaItems] = useState<any[]>([])
-  const [isPhotosModalOpen, setIsPhotosModalOpen] = useState(false)
   const [activeDriveUrl, setActiveDriveUrl] = useState<string | null>(null)
 
   // Fetch past events media
@@ -175,27 +172,6 @@ export default function PastEventsSection() {
     return cleanUrl.includes('photos.app.goo.gl') || cleanUrl.includes('photos.google.com')
   }
 
-  const handlePhotosClick = async (url: string) => {
-    setIsPhotosLoading(true)
-    try {
-      const response = await fetch(`/api/media/google-photos?url=${encodeURIComponent(url)}`)
-      if (response.ok) {
-        const data = await response.json()
-        if (data?.success && data.media && data.media.length > 0) {
-          setPhotosMediaItems(data.media)
-          setIsPhotosModalOpen(true)
-        } else {
-          window.open(url, '_blank')
-        }
-      } else {
-        window.open(url, '_blank')
-      }
-    } catch {
-      window.open(url, '_blank')
-    }
-    setIsPhotosLoading(false)
-  }
-
   // Helper to parse multiple comma-separated CTA links and texts
   const getCtaButtons = (ctaLink: string | null | undefined, ctaText: string | null | undefined) => {
     if (!ctaLink) return []
@@ -223,7 +199,7 @@ export default function PastEventsSection() {
       return {
         link,
         text: text || defaultLabel,
-        isPhotos,
+        isPhotos: false,
         driveUrl
       }
     })
@@ -361,28 +337,6 @@ export default function PastEventsSection() {
 
               {/* Render each parsed CTA button */}
               {getCtaButtons(activeEvent.cta_link, activeEvent.cta_text).map((btn, idx) => {
-                if (btn.isPhotos) {
-                  return (
-                    <MagneticButton key={idx} intensity={20}>
-                      <Button
-                        onClick={() => handlePhotosClick(btn.link)}
-                        disabled={isPhotosLoading}
-                        size="lg"
-                        className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                      >
-                        {isPhotosLoading ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
-                            Scraping...
-                          </span>
-                        ) : (
-                          btn.text
-                        )}
-                        {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
-                      </Button>
-                    </MagneticButton>
-                  )
-                }
 
                 if (btn.driveUrl) {
                   return (
@@ -464,14 +418,7 @@ export default function PastEventsSection() {
         subtitle={activeEvent?.category}
       />
 
-      <MediaModal
-        isOpen={isPhotosModalOpen}
-        onClose={() => setIsPhotosModalOpen(false)}
-        items={photosMediaItems}
-        bgVideos={[]}
-        title={activeEvent?.title}
-        subtitle="Shared Google Photos Album"
-      />
+
 
       {/* ── Google Drive Embed Modal ── */}
       <AnimatePresence>
