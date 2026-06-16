@@ -55,6 +55,10 @@ const UpcomingEventSection = () => {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([])
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [iframeLoading, setIframeLoading] = useState(true)
+  const [isPhotosLoading, setIsPhotosLoading] = useState(false)
+  const [photosMediaItems, setPhotosMediaItems] = useState<MediaItem[]>([])
+  const [isPhotosModalOpen, setIsPhotosModalOpen] = useState(false)
 
   // Gallery slideshow state for fallback
   const [galleryImages, setGalleryImages] = useState<string[]>([
@@ -104,6 +108,33 @@ const UpcomingEventSection = () => {
   }
 
   const driveEmbedUrl = parseDriveEmbedUrl(eventData?.booking_link)
+
+  const isPhotosLink = (url: string | null | undefined): boolean => {
+    if (!url) return false
+    const cleanUrl = url.trim()
+    return cleanUrl.includes('photos.app.goo.gl') || cleanUrl.includes('photos.google.com')
+  }
+
+  const handlePhotosClick = async (url: string) => {
+    setIsPhotosLoading(true)
+    try {
+      const response = await fetch(`/api/media/google-photos?url=${encodeURIComponent(url)}`)
+      if (response.ok) {
+        const data = await response.json()
+        if (data?.success && data.media && data.media.length > 0) {
+          setPhotosMediaItems(data.media)
+          setIsPhotosModalOpen(true)
+        } else {
+          window.open(url, '_blank')
+        }
+      } else {
+        window.open(url, '_blank')
+      }
+    } catch {
+      window.open(url, '_blank')
+    }
+    setIsPhotosLoading(false)
+  }
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -411,10 +442,32 @@ const UpcomingEventSection = () => {
         <AnimatedSection delay={0.7}>
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 w-full max-w-2xl">
             {eventData.booking_link ? (
-              driveEmbedUrl ? (
+              isPhotosLink(eventData.booking_link) ? (
                 <MagneticButton intensity={40} className="flex-1 w-full">
                   <Button
-                    onClick={() => setIsDriveOpen(true)}
+                    onClick={() => handlePhotosClick(eventData.booking_link!)}
+                    disabled={isPhotosLoading}
+                    size="lg"
+                    className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                  >
+                    {isPhotosLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
+                        Scraping Album...
+                      </span>
+                    ) : (
+                      eventData.cta_text || 'Watch Video'
+                    )}
+                    {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
+                  </Button>
+                </MagneticButton>
+              ) : driveEmbedUrl ? (
+                <MagneticButton intensity={40} className="flex-1 w-full">
+                  <Button
+                    onClick={() => {
+                      setIframeLoading(true)
+                      setIsDriveOpen(true)
+                    }}
                     size="lg"
                     className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                   >
@@ -506,6 +559,15 @@ const UpcomingEventSection = () => {
         subtitle={eventData?.subtitle || 'Events & Marketing'}
       />
 
+      <MediaModal
+        isOpen={isPhotosModalOpen}
+        onClose={() => setIsPhotosModalOpen(false)}
+        items={photosMediaItems}
+        bgVideos={[]}
+        title={eventData?.title || 'Wanjey'}
+        subtitle="Shared Google Photos Album"
+      />
+
       {/* ── Google Drive Embed Modal ── */}
       <AnimatePresence>
         {isDriveOpen && driveEmbedUrl && (
@@ -535,10 +597,19 @@ const UpcomingEventSection = () => {
                 </button>
               </div>
               
-              {/* Iframe */}
-              <div className="flex-1 bg-black">
+              {/* Iframe Container */}
+              <div className="flex-1 bg-black relative">
+                {iframeLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#130B07] z-30">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="h-10 w-10 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/60 animate-pulse">Loading Media...</span>
+                    </div>
+                  </div>
+                )}
                 <iframe
                   src={driveEmbedUrl}
+                  onLoad={() => setIframeLoading(false)}
                   className="w-full h-full border-none"
                   allow="autoplay; encrypted-media"
                   allowFullScreen
