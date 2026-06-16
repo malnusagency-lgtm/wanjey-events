@@ -237,25 +237,15 @@ export default function PastEventsSection() {
           
           if (!isActive && !isPrev) return null
           
-          // Cinematic pan/zoom directions based on index
-          const translateClasses = [
-            'translate-x-1 translate-y-0.5',
-            '-translate-x-1 -translate-y-0.5',
-            'translate-x-0.5 -translate-y-1',
-            '-translate-x-0.5 translate-y-1',
-            'translate-x-1 -translate-y-1',
-          ]
-          const trans = translateClasses[idx % translateClasses.length]
-          
           return (
             <div
               key={src}
-              className={`absolute inset-0 transition duration-[2000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
+              className={`absolute inset-0 transition duration-[2000ms] ease-in-out will-change-opacity ${
                 isActive 
-                  ? `opacity-100 z-20 scale-105 ${trans}` 
+                  ? 'opacity-100 z-20' 
                   : isPrev 
-                    ? 'opacity-100 z-10 scale-100' 
-                    : 'opacity-0 z-0 scale-100'
+                    ? 'opacity-100 z-10' 
+                    : 'opacity-0 z-0'
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -285,7 +275,7 @@ export default function PastEventsSection() {
             className="flex flex-col items-center max-w-5xl relative z-10"
           >
             {/* Label */}
-            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-accent/80 mb-4 md:mb-6">
+            <p className="text-sm md:text-base font-black uppercase tracking-[0.4em] text-white mb-4 md:mb-6">
               ✦ Past Event Highlight ✦
             </p>
 
@@ -295,8 +285,8 @@ export default function PastEventsSection() {
                 {activeEvent.category}
               </span>
               {activeEvent.highlight_stat && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/20 border border-accent/30 px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent backdrop-blur-sm">
-                  <Trophy className="h-3 w-3" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white backdrop-blur-sm">
+                  <Trophy className="h-3.5 w-3.5 text-white" />
                   {activeEvent.highlight_stat}
                 </span>
               )}

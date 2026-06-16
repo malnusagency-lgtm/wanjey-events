@@ -8,13 +8,16 @@ const WhatsAppWidget = () => {
   const pathname = usePathname();
   const [ctaText, setCtaText] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
+  const [triggerKey, setTriggerKey] = useState(0);
   const fullCta = "Chat on WhatsApp! ✦";
 
   useEffect(() => {
     if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
       return;
     }
-    // Typewriter effect after 5.5s delay to stagger with Chatbot
+    // Stagger delay only on first run (triggerKey === 0) to separate from Chatbot
+    const initialDelay = triggerKey === 0 ? 5500 : 0;
+    
     const timer = setTimeout(() => {
       setShowTooltip(true);
       let index = 0;
@@ -24,17 +27,20 @@ const WhatsAppWidget = () => {
           index++;
         } else {
           clearInterval(interval);
-          // Auto-hide tooltip 6 seconds after typing completes
+          // Show full text for 5 seconds, then hide and trigger next loop after 3 seconds
           setTimeout(() => {
             setShowTooltip(false);
-          }, 6000);
+            setTimeout(() => {
+              setTriggerKey(prev => prev + 1);
+            }, 3000);
+          }, 5000);
         }
       }, 60);
       return () => clearInterval(interval);
-    }, 5500);
+    }, initialDelay);
 
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, [pathname, triggerKey]);
 
   if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
     return null;

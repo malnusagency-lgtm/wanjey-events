@@ -250,25 +250,15 @@ const UpcomingEventSection = () => {
 
         if (!isActive && !isPrev) return null
 
-        // Pan/zoom Ken Burns styles based on index
-        const translateClasses = [
-          'translate-x-1 translate-y-0.5',
-          '-translate-x-1 -translate-y-0.5',
-          'translate-x-0.5 -translate-y-1',
-          '-translate-x-0.5 translate-y-1',
-          'translate-x-1 -translate-y-1',
-        ]
-        const trans = translateClasses[idx % translateClasses.length]
-
         return (
           <div
             key={item.src}
-            className={`absolute inset-0 transition duration-[3000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
+            className={`absolute inset-0 transition duration-[3000ms] ease-in-out will-change-opacity ${
               isActive 
-                ? `opacity-100 z-20 scale-105 ${trans}` 
+                ? 'opacity-100 z-20' 
                 : isPrev 
-                  ? 'opacity-100 z-10 scale-100' 
-                  : 'opacity-0 z-0 scale-100'
+                  ? 'opacity-100 z-10' 
+                  : 'opacity-0 z-0'
             }`}
           >
             {item.type === 'video' ? (
