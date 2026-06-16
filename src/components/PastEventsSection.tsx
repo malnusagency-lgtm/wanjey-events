@@ -104,14 +104,19 @@ export default function PastEventsSection() {
     return () => clearInterval(t)
   }, [uploadedImages.length])
 
-  // Preload background images to prevent loading flashes (SSR safe)
+  // Preload only the next upcoming image to prevent visual flashes without overloading the network
   useEffect(() => {
-    if (typeof window === 'undefined' || bgSources.length === 0) return
-    bgSources.forEach(src => {
+    if (typeof window === 'undefined' || bgSources.length <= 1) return
+    const currentBgIndex = uploadedImages.length > 0
+      ? bgIndex % (uploadedImages.length || 1)
+      : currentIndex
+    const nextBgIndex = (currentBgIndex + 1) % bgSources.length
+    const nextSrc = bgSources[nextBgIndex]
+    if (nextSrc) {
       const img = new window.Image()
-      img.src = parseImageUrl(src)
-    })
-  }, [bgSources])
+      img.src = parseImageUrl(nextSrc)
+    }
+  }, [bgIndex, currentIndex, bgSources, uploadedImages.length])
 
   const handlePrev = () => {
     setCurrentIndex(prev => (prev === 0 ? events.length - 1 : prev - 1))
@@ -253,6 +258,8 @@ export default function PastEventsSection() {
             : (currentIndex === 0 ? events.length - 1 : currentIndex - 1)
           const isActive = idx === currentBgIndex
           const isPrev = idx === prevBgIndex
+          
+          if (!isActive && !isPrev) return null
           
           // Cinematic pan/zoom directions based on index
           const translateClasses = [

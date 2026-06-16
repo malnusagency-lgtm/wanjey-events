@@ -29,7 +29,7 @@ const ChatbotWidget = () => {
   // Typewriter CTA tooltip state
   const [ctaText, setCtaText] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
-  const fullCta = "Let's plan your event! ✦";
+  const fullCta = "Ask me anything! ✦";
 
   useEffect(() => {
     if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
@@ -45,6 +45,10 @@ const ChatbotWidget = () => {
           index++;
         } else {
           clearInterval(interval);
+          // Auto-hide tooltip 6 seconds after typing completes
+          setTimeout(() => {
+            setShowTooltip(false);
+          }, 6000);
         }
       }, 60);
       return () => clearInterval(interval);
@@ -144,7 +148,7 @@ const ChatbotWidget = () => {
             initial={{ opacity: 0, x: 10, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="mr-3 hidden sm:flex items-center rounded-xl bg-black/80 border border-accent/40 text-[#CAA365] px-3.5 py-2 text-xs font-bold shadow-lg whitespace-nowrap backdrop-blur-md relative"
+            className="mr-2 sm:mr-3 flex items-center rounded-xl bg-black/90 border border-accent/40 text-[#CAA365] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-bold shadow-lg whitespace-nowrap backdrop-blur-md relative"
           >
             {ctaText}
             <span className="inline-block w-1.5 h-3.5 bg-[#CAA365] ml-1.5 animate-pulse" />

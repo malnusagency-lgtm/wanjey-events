@@ -242,16 +242,17 @@ const UpcomingEventSection = () => {
     return () => clearInterval(t)
   }, [bgSources.length])
 
-  // Preload background images to prevent loading flashes (SSR safe)
+  // Preload only the next upcoming image to prevent visual flashes without overloading the network
   useEffect(() => {
-    if (typeof window === 'undefined' || bgSources.length === 0) return
-    bgSources.forEach(item => {
-      if (item.type === 'image') {
-        const img = new Image()
-        img.src = parseImageUrl(item.src)
-      }
-    })
-  }, [bgSources])
+    if (typeof window === 'undefined' || bgSources.length <= 1) return
+    const currentBgIndex = bgIndex % (bgSources.length || 1)
+    const nextBgIndex = (currentBgIndex + 1) % bgSources.length
+    const nextItem = bgSources[nextBgIndex]
+    if (nextItem && nextItem.type === 'image') {
+      const img = new Image()
+      img.src = parseImageUrl(nextItem.src)
+    }
+  }, [bgIndex, bgSources])
 
   const renderTitle = (title: string) => {
     const words = title.trim().split(/\s+/)
@@ -270,6 +271,8 @@ const UpcomingEventSection = () => {
           : 0
         const isActive = idx === currentBgIndex
         const isPrev = idx === prevBgIndex
+
+        if (!isActive && !isPrev) return null
 
         // Pan/zoom Ken Burns styles based on index
         const translateClasses = [

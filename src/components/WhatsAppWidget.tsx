@@ -8,13 +8,13 @@ const WhatsAppWidget = () => {
   const pathname = usePathname();
   const [ctaText, setCtaText] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
-  const fullCta = "Let's plan your event! ✦";
+  const fullCta = "Chat on WhatsApp! ✦";
 
   useEffect(() => {
     if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
       return;
     }
-    // Typewriter effect after 2.5s delay
+    // Typewriter effect after 5.5s delay to stagger with Chatbot
     const timer = setTimeout(() => {
       setShowTooltip(true);
       let index = 0;
@@ -24,10 +24,14 @@ const WhatsAppWidget = () => {
           index++;
         } else {
           clearInterval(interval);
+          // Auto-hide tooltip 6 seconds after typing completes
+          setTimeout(() => {
+            setShowTooltip(false);
+          }, 6000);
         }
       }, 60);
       return () => clearInterval(interval);
-    }, 2500);
+    }, 5500);
 
     return () => clearTimeout(timer);
   }, [pathname]);
@@ -45,7 +49,7 @@ const WhatsAppWidget = () => {
             initial={{ opacity: 0, x: 10, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="mr-3 hidden sm:flex items-center rounded-xl bg-black/80 border border-[#25D366]/40 text-[#25D366] px-3.5 py-2 text-xs font-bold shadow-lg whitespace-nowrap backdrop-blur-md relative"
+            className="mr-2 sm:mr-3 flex items-center rounded-xl bg-black/90 border border-[#25D366]/40 text-[#25D366] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-bold shadow-lg whitespace-nowrap backdrop-blur-md relative"
           >
             {ctaText}
             <span className="inline-block w-1.5 h-3.5 bg-[#25D366] ml-1.5 animate-pulse" />

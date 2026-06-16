@@ -133,18 +133,16 @@ export default function HomePage() {
       <OurProcess />
 
       {/* CTA */}
-      <section className="relative py-14 md:py-20 overflow-hidden w-full" style={{ clipPath: 'inset(0)' }}>
-        <div
-          className="fixed inset-0 z-[-1] bg-cover bg-no-repeat w-full pointer-events-none"
-          style={{
-            backgroundImage: 'url("/assets/lets-build.jpg")',
-            height: '100vh',
-            width: '100vw',
-            backgroundPosition: '80% 0%',
-            transform: 'translateZ(0)',
-            willChange: 'transform'
-          }}
-        />
+      <section className="relative py-14 md:py-20 overflow-hidden w-full md:[clip-path:inset(0)]">
+        <div className="absolute md:fixed inset-0 z-[-1] w-full h-full md:h-[100vh] md:w-[100vw] pointer-events-none">
+          <Image
+            src="/assets/lets-build.jpg"
+            alt="Let's build something impactful"
+            fill
+            className="object-cover object-[80%_0%]"
+            sizes="100vw"
+          />
+        </div>
         <div className="absolute inset-0 z-[1] bg-white/20" />
         <div className="container relative z-10 text-center">
           <AnimatedSection delay={0.1}>
