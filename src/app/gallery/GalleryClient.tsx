@@ -200,7 +200,7 @@ export default function GalleryClient() {
                         onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
                         className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 shadow-lg shadow-accent/20"
                       >
-                        View More ({images.length - visibleCount} remaining)
+                        View More
                       </Button>
                     </AnimatedSection>
                   )}
@@ -251,7 +251,7 @@ export default function GalleryClient() {
                         onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
                         className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-10 shadow-lg shadow-accent/20"
                       >
-                        View More ({images.length - visibleCount} remaining)
+                        View More
                       </Button>
                     </AnimatedSection>
                   )}

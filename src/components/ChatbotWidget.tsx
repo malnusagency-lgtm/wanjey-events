@@ -19,7 +19,7 @@ const ChatbotWidget = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'bot',
-      text: "Hi there! I am your Wanjey Events AI Assistant. How can we help elevate your next corporate or lifestyle event today?\n\nAsk me about our *services*, *packages*, *pricing*, or *contact details*!",
+      text: "Hi there! I am your Wanjey Events AI Assistant. How can we help elevate your next corporate or lifestyle event today?\n\nAsk me about our *services*, *booking*, *contact details*, or *what we do*!",
     }
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -239,7 +239,7 @@ const ChatbotWidget = () => {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask about pricing, packages, services..."
+                placeholder="Ask me how we can plan your event..."
                 className="flex-1 bg-[#1C120C] border border-accent/20 rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-accent font-sans"
               />
               <Button
