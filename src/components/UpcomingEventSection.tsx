@@ -59,6 +59,7 @@ const UpcomingEventSection = () => {
   const [isPhotosLoading, setIsPhotosLoading] = useState(false)
   const [photosMediaItems, setPhotosMediaItems] = useState<MediaItem[]>([])
   const [isPhotosModalOpen, setIsPhotosModalOpen] = useState(false)
+  const [activeDriveUrl, setActiveDriveUrl] = useState<string | null>(null)
 
   // Gallery slideshow state for fallback
   const [galleryImages, setGalleryImages] = useState<string[]>([
@@ -107,7 +108,36 @@ const UpcomingEventSection = () => {
     return null
   }
 
-  const driveEmbedUrl = parseDriveEmbedUrl(eventData?.booking_link)
+  // Helper to parse multiple comma-separated CTA links and texts
+  const getCtaButtons = (ctaLink: string | null | undefined, ctaText: string | null | undefined) => {
+    if (!ctaLink) return []
+    const links = ctaLink.split(',').map(l => l.trim()).filter(Boolean)
+    const texts = ctaText ? ctaText.split(',').map(t => t.trim()).filter(Boolean) : []
+    
+    return links.map((link, idx) => {
+      const text = texts[idx] || ''
+      const isPhotos = isPhotosLink(link)
+      const driveUrl = parseDriveEmbedUrl(link)
+      
+      let defaultLabel = 'Get Tickets'
+      if (isPhotos) {
+        defaultLabel = 'View Photos'
+      } else if (driveUrl) {
+        defaultLabel = 'Open Drive'
+      } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
+        defaultLabel = 'Watch Highlights'
+      } else if (link.includes('instagram.com')) {
+        defaultLabel = 'View Reel'
+      }
+      
+      return {
+        link,
+        text: text || defaultLabel,
+        isPhotos,
+        driveUrl
+      }
+    })
+  }
 
   const isPhotosLink = (url: string | null | undefined): boolean => {
     if (!url) return false
@@ -192,9 +222,18 @@ const UpcomingEventSection = () => {
   }, [])
 
   // Combined background sources for continuous image/video transitions
-  const bgSources: MediaItem[] = mediaItems.length > 0 
+  const rawBgSources: MediaItem[] = mediaItems.length > 0 
     ? [...mediaItems, ...galleryImages.map(src => ({ type: 'image' as const, src }))]
     : galleryImages.map(src => ({ type: 'image' as const, src }))
+
+  // De-duplicate background sources to avoid duplicate key issues in React and prevent transition restarts
+  const bgSourcesMap = new Map<string, MediaItem>()
+  rawBgSources.forEach(item => {
+    if (!bgSourcesMap.has(item.src)) {
+      bgSourcesMap.set(item.src, item)
+    }
+  })
+  const bgSources = Array.from(bgSourcesMap.values())
 
   // Slideshow interval for backgrounds
   useEffect(() => {
@@ -244,7 +283,7 @@ const UpcomingEventSection = () => {
 
         return (
           <div
-            key={item.src + '_' + idx}
+            key={item.src}
             className={`absolute inset-0 transition duration-[3000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
               isActive 
                 ? `opacity-100 z-20 scale-105 ${trans}` 
@@ -442,52 +481,63 @@ const UpcomingEventSection = () => {
         <AnimatedSection delay={0.7}>
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 w-full max-w-2xl">
             {eventData.booking_link ? (
-              isPhotosLink(eventData.booking_link) ? (
-                <MagneticButton intensity={40} className="flex-1 w-full">
-                  <Button
-                    onClick={() => handlePhotosClick(eventData.booking_link!)}
-                    disabled={isPhotosLoading}
-                    size="lg"
-                    className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                  >
-                    {isPhotosLoading ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
-                        Scraping Album...
-                      </span>
-                    ) : (
-                      eventData.cta_text || 'Watch Video'
-                    )}
-                    {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
-                  </Button>
-                </MagneticButton>
-              ) : driveEmbedUrl ? (
-                <MagneticButton intensity={40} className="flex-1 w-full">
-                  <Button
-                    onClick={() => {
-                      setIframeLoading(true)
-                      setIsDriveOpen(true)
-                    }}
-                    size="lg"
-                    className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                  >
-                    {eventData.cta_text || 'Watch Video'}
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-                  </Button>
-                </MagneticButton>
-              ) : (
-                <Link href={eventData.booking_link} target="_blank" rel="noopener noreferrer" className="flex-1 w-full">
-                  <MagneticButton intensity={40}>
-                    <Button
-                      size="lg"
-                      className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                    >
-                      {eventData.cta_text || 'Get Tickets'}
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-                    </Button>
-                  </MagneticButton>
-                </Link>
-              )
+              getCtaButtons(eventData.booking_link, eventData.cta_text).map((btn, idx) => {
+                if (btn.isPhotos) {
+                  return (
+                    <MagneticButton key={idx} intensity={40} className="flex-1 w-full">
+                      <Button
+                        onClick={() => handlePhotosClick(btn.link)}
+                        disabled={isPhotosLoading}
+                        size="lg"
+                        className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {isPhotosLoading ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
+                            Scraping Album...
+                          </span>
+                        ) : (
+                          btn.text
+                        )}
+                        {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
+                      </Button>
+                    </MagneticButton>
+                  )
+                }
+
+                if (btn.driveUrl) {
+                  return (
+                    <MagneticButton key={idx} intensity={40} className="flex-1 w-full">
+                      <Button
+                        onClick={() => {
+                          setIframeLoading(true)
+                          setActiveDriveUrl(btn.driveUrl)
+                          setIsDriveOpen(true)
+                        }}
+                        size="lg"
+                        className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {btn.text}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                      </Button>
+                    </MagneticButton>
+                  )
+                }
+
+                return (
+                  <Link key={idx} href={btn.link} target="_blank" rel="noopener noreferrer" className="flex-1 w-full">
+                    <MagneticButton intensity={40}>
+                      <Button
+                        size="lg"
+                        className="w-full bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] h-12 sm:h-14 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_50px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {btn.text}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                      </Button>
+                    </MagneticButton>
+                  </Link>
+                )
+              })
             ) : (
               <MagneticButton intensity={40} className="flex-1 w-full">
                 <Button
@@ -570,7 +620,7 @@ const UpcomingEventSection = () => {
 
       {/* ── Google Drive Embed Modal ── */}
       <AnimatePresence>
-        {isDriveOpen && driveEmbedUrl && (
+        {isDriveOpen && activeDriveUrl && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -589,7 +639,10 @@ const UpcomingEventSection = () => {
                   Event Media • Google Drive Player
                 </span>
                 <button
-                  onClick={() => setIsDriveOpen(false)}
+                  onClick={() => {
+                    setIsDriveOpen(false)
+                    setActiveDriveUrl(null)
+                  }}
                   className="text-white/60 hover:text-white transition-colors p-1"
                   aria-label="Close Player"
                 >
@@ -608,7 +661,7 @@ const UpcomingEventSection = () => {
                   </div>
                 )}
                 <iframe
-                  src={driveEmbedUrl}
+                  src={activeDriveUrl}
                   onLoad={() => setIframeLoading(false)}
                   className="w-full h-full border-none"
                   allow="autoplay; encrypted-media"

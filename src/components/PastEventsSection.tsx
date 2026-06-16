@@ -40,6 +40,7 @@ export default function PastEventsSection() {
   const [isPhotosLoading, setIsPhotosLoading] = useState(false)
   const [photosMediaItems, setPhotosMediaItems] = useState<any[]>([])
   const [isPhotosModalOpen, setIsPhotosModalOpen] = useState(false)
+  const [activeDriveUrl, setActiveDriveUrl] = useState<string | null>(null)
 
   // Fetch past events media
   useEffect(() => {
@@ -88,9 +89,11 @@ export default function PastEventsSection() {
   }, [events.length, hovered])
 
   const uploadedImages = mediaItems.filter(i => i.type === 'image').map(i => i.src)
-  const bgSources = uploadedImages.length > 0 
+  const rawBgSources = uploadedImages.length > 0 
     ? uploadedImages 
     : events.map(ev => ev.image_url)
+  // De-duplicate background sources to avoid duplicate key issues in React
+  const bgSources = Array.from(new Set(rawBgSources))
 
   // Background slideshow interval (only runs if we have custom uploaded folder images)
   useEffect(() => {
@@ -188,6 +191,39 @@ export default function PastEventsSection() {
     setIsPhotosLoading(false)
   }
 
+  // Helper to parse multiple comma-separated CTA links and texts
+  const getCtaButtons = (ctaLink: string | null | undefined, ctaText: string | null | undefined) => {
+    if (!ctaLink) return []
+    const links = ctaLink.split(',').map(l => l.trim()).filter(Boolean)
+    const texts = ctaText ? ctaText.split(',').map(t => t.trim()).filter(Boolean) : []
+    
+    return links.map((link, idx) => {
+      const text = texts[idx] || ''
+      const isPhotos = isPhotosLink(link)
+      const driveUrl = parseDriveEmbedUrl(link)
+      
+      let defaultLabel = 'Watch Video'
+      if (isPhotos) {
+        defaultLabel = 'View Photos'
+      } else if (driveUrl) {
+        defaultLabel = 'Open Drive'
+      } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
+        defaultLabel = 'Watch Highlights'
+      } else if (link.includes('instagram.com')) {
+        defaultLabel = 'View Reel'
+      } else {
+        defaultLabel = 'Explore Media'
+      }
+      
+      return {
+        link,
+        text: text || defaultLabel,
+        isPhotos,
+        driveUrl
+      }
+    })
+  }
+
   if (loading) {
     return (
       <section className="relative h-[75vh] md:h-[95vh] w-full bg-[#130B07] flex items-center justify-center">
@@ -199,7 +235,6 @@ export default function PastEventsSection() {
   if (events.length === 0) return null
 
   const activeEvent = events[currentIndex]
-  const activeDriveEmbedUrl = parseDriveEmbedUrl(activeEvent?.cta_link)
 
   return (
     <section
@@ -231,7 +266,7 @@ export default function PastEventsSection() {
           
           return (
             <div
-              key={src + '_' + idx}
+              key={src}
               className={`absolute inset-0 transition duration-[2000ms] ease-in-out will-change-[opacity,transform] transform-gpu ${
                 isActive 
                   ? `opacity-100 z-20 scale-105 ${trans}` 
@@ -317,44 +352,54 @@ export default function PastEventsSection() {
                 </Button>
               </MagneticButton>
 
-              {/* If a video/google link is provided, show the redirect button */}
-              {activeEvent.cta_link && (
-                isPhotosLink(activeEvent.cta_link) ? (
-                  <MagneticButton intensity={20}>
-                    <Button
-                      onClick={() => handlePhotosClick(activeEvent.cta_link!)}
-                      disabled={isPhotosLoading}
-                      size="lg"
-                      className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                    >
-                      {isPhotosLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
-                          Scraping...
-                        </span>
-                      ) : (
-                        activeEvent.cta_text || 'Watch Video'
-                      )}
-                      {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
-                    </Button>
-                  </MagneticButton>
-                ) : activeDriveEmbedUrl ? (
-                  <MagneticButton intensity={20}>
-                    <Button
-                      onClick={() => {
-                        setIframeLoading(true)
-                        setIsDriveOpen(true)
-                      }}
-                      size="lg"
-                      className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
-                    >
-                      {activeEvent.cta_text || 'Watch Video'}
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-                    </Button>
-                  </MagneticButton>
-                ) : (
+              {/* Render each parsed CTA button */}
+              {getCtaButtons(activeEvent.cta_link, activeEvent.cta_text).map((btn, idx) => {
+                if (btn.isPhotos) {
+                  return (
+                    <MagneticButton key={idx} intensity={20}>
+                      <Button
+                        onClick={() => handlePhotosClick(btn.link)}
+                        disabled={isPhotosLoading}
+                        size="lg"
+                        className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {isPhotosLoading ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2D1A10] border-t-transparent" />
+                            Scraping...
+                          </span>
+                        ) : (
+                          btn.text
+                        )}
+                        {!isPhotosLoading && <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />}
+                      </Button>
+                    </MagneticButton>
+                  )
+                }
+
+                if (btn.driveUrl) {
+                  return (
+                    <MagneticButton key={idx} intensity={20}>
+                      <Button
+                        onClick={() => {
+                          setIframeLoading(true)
+                          setActiveDriveUrl(btn.driveUrl)
+                          setIsDriveOpen(true)
+                        }}
+                        size="lg"
+                        className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
+                      >
+                        {btn.text}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                      </Button>
+                    </MagneticButton>
+                  )
+                }
+
+                return (
                   <Link 
-                    href={activeEvent.cta_link}
+                    key={idx}
+                    href={btn.link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -363,13 +408,13 @@ export default function PastEventsSection() {
                         size="lg"
                         className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-8 h-14 text-sm sm:px-12 sm:h-16 font-black uppercase tracking-[0.2em] shadow-[0_0_60px_-5px_rgba(202,163,101,0.5)] transition-all duration-500 group rounded-full border border-white/10"
                       >
-                        {activeEvent.cta_text || 'Watch Videos'}
+                        {btn.text}
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                       </Button>
                     </MagneticButton>
                   </Link>
                 )
-              )}
+              })}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -423,7 +468,7 @@ export default function PastEventsSection() {
 
       {/* ── Google Drive Embed Modal ── */}
       <AnimatePresence>
-        {isDriveOpen && activeDriveEmbedUrl && (
+        {isDriveOpen && activeDriveUrl && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -442,7 +487,10 @@ export default function PastEventsSection() {
                   Event Media • Google Drive Player
                 </span>
                 <button
-                  onClick={() => setIsDriveOpen(false)}
+                  onClick={() => {
+                    setIsDriveOpen(false)
+                    setActiveDriveUrl(null)
+                  }}
                   className="text-white/60 hover:text-white transition-colors p-1"
                   aria-label="Close Player"
                 >
@@ -461,7 +509,7 @@ export default function PastEventsSection() {
                   </div>
                 )}
                 <iframe
-                  src={activeDriveEmbedUrl}
+                  src={activeDriveUrl}
                   onLoad={() => setIframeLoading(false)}
                   className="w-full h-full border-none"
                   allow="autoplay; encrypted-media"
