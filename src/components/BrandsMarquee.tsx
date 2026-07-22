@@ -2,10 +2,14 @@
 import { motion } from "framer-motion";
 
 const items = [
-  "Big Voices Festival",
+  "Adequate Safaris",
+  "Phoneplace Kenya",
+  "Big Voices Fest",
+  "Bandari Beauty",
+  "Jaggy Kienyeji Chicken",
+  "Afya King",
   "The Don Effect",
   "Sunday Hangout",
-  "Desagu Goat Eating",
   "Corporate & Hospitality Campaigns",
   "Influencer & Brand Ambassador Programs",
   "Talent Management & Partnerships",

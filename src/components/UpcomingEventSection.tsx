@@ -364,14 +364,14 @@ const UpcomingEventSection = () => {
 
     return (
       <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-4 sm:px-6 text-center">
-        {/* "Book Us" CTA replacing the text label */}
+        {/* CTA label shown when an event is active */}
         <AnimatedSection delay={0.1}>
           <Link href="/packages" className="inline-block mb-4 md:mb-6">
             <Button
               size="sm"
               className="bg-accent text-accent-foreground hover:bg-[#FFD6C5] hover:text-[#2D1A10] px-5 h-9 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/10 shadow-[0_0_30px_rgba(202,163,101,0.4)] transition-all duration-500 hover:scale-105 active:scale-95"
             >
-              Book Us
+              Our Upcoming Events
             </Button>
           </Link>
         </AnimatedSection>

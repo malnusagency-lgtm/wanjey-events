@@ -44,11 +44,12 @@ export default function PastEventsSection({ phase = 'actual' }: PastEventsSectio
   const [iframeLoading, setIframeLoading] = useState(true)
   const [activeDriveUrl, setActiveDriveUrl] = useState<string | null>(null)
 
-  // Fetch past events media
+  // Fetch past events media — each phase has its own folder
   useEffect(() => {
+    const folder = phase === 'preparation' ? 'preparation' : 'past'
     const fetchMedia = async () => {
       try {
-        const r = await fetch('/api/media?folder=past')
+        const r = await fetch(`/api/media?folder=${folder}`)
         if (r.ok) {
           const data = await r.json()
           const items = data.media?.map((item: any) => ({ type: item.type, src: item.url })) ?? []
@@ -58,7 +59,7 @@ export default function PastEventsSection({ phase = 'actual' }: PastEventsSectio
       } catch {}
     }
     fetchMedia()
-  }, [])
+  }, [phase])
 
   // Fetch past events
   useEffect(() => {

@@ -334,6 +334,17 @@ export default function MediaManagerPage() {
           Past Events
         </button>
         <button
+          onClick={() => setActiveFolder('preparation')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors whitespace-nowrap ${
+            activeFolder === 'preparation' 
+              ? 'bg-accent text-white shadow-sm' 
+              : 'text-zinc-500 hover:text-[#2D1A10] hover:bg-accent/5'
+          }`}
+        >
+          <Folder size={18} />
+          🎬 Preparation
+        </button>
+        <button
           onClick={() => setActiveFolder('upcoming')}
           className={`flex items-center gap-2 px-4 py-2 rounded-md font-semibold transition-colors whitespace-nowrap ${
             activeFolder === 'upcoming' 
