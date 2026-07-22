@@ -517,6 +517,11 @@ export default function EventsPage() {
                 </div>
                 <div className="px-5 pb-5">
                   <button onClick={saveUpcoming} disabled={savingUpcoming}
+                    className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-lg text-sm">
+                    {savingUpcoming ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                    {savingUpcoming ? 'Saving…' : 'Save & Publish'}
+                  </button>
+                </div>
               </div>
             </>
           )}
