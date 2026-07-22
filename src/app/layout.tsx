@@ -4,6 +4,7 @@ import "./globals.css";
 import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -76,6 +77,7 @@ export default function RootLayout({
       </head>
       <body>
         <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
+        <AnalyticsTracker />
         <Toaster />
         <Sonner />
       </body>

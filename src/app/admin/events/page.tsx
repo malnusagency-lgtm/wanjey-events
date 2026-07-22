@@ -18,6 +18,7 @@ type PastEvent = {
   highlight_stat: string
   event_month_year: string
   display_order: number
+  event_phase?: string
   cta_link?: string
   cta_text?: string
 }
@@ -71,6 +72,7 @@ function PastEventForm({
     event_month_year: initial?.event_month_year ?? '',
     cta_link: initial?.cta_link ?? '',
     cta_text: initial?.cta_text ?? '',
+    event_phase: initial?.event_phase ?? 'actual',
   })
 
   const field = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
@@ -90,6 +92,15 @@ function PastEventForm({
           <select value={form.category} onChange={field('category')}
             className={inputCls}>
             {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Event Phase</label>
+          <select value={form.event_phase} onChange={field('event_phase')}
+            className={inputCls}>
+            <option value="actual">Actual Event</option>
+            <option value="preparation">Preparation</option>
           </select>
         </div>
 
@@ -457,6 +468,7 @@ export default function EventsPage() {
   highlight_stat text,
   event_month_year text,
   display_order integer DEFAULT 0,
+  event_phase text DEFAULT 'actual',
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 ALTER TABLE past_events ENABLE ROW LEVEL SECURITY;
@@ -521,9 +533,12 @@ CREATE POLICY "Allow authenticated delete" ON past_events FOR DELETE USING (auth
                       )}
                       {/* Details */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
+                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                           <span className="font-bold text-[#2D1A10] text-sm truncate">{ev.title}</span>
                           <span className="text-[10px] text-accent font-bold uppercase tracking-wider shrink-0 bg-accent/10 px-2 py-0.5 rounded-full">{ev.category}</span>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 px-2 py-0.5 rounded-full ${ev.event_phase === 'preparation' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                            {ev.event_phase === 'preparation' ? '🎬 Preparation' : '✦ Actual Event'}
+                          </span>
                         </div>
                         <div className="flex items-center gap-3 text-xs text-zinc-500 font-medium">
                           <span>{ev.event_month_year}</span>

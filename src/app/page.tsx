@@ -101,7 +101,7 @@ export default function HomePage() {
       </section>
 
       {/* What We Do */}
-      <section className="relative py-12 overflow-hidden md:py-16">
+      <section id="services" className="relative py-12 overflow-hidden md:py-16">
         <AmbientGlow />
         <div className="container relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto mb-8 md:mb-12">
@@ -125,7 +125,13 @@ export default function HomePage() {
 
       <BrandsMarquee />
 
-      <PastEventsSection />
+      <div id="past-events" data-track="Past Event Preparation">
+        <PastEventsSection phase="preparation" />
+      </div>
+
+      <div data-track="Past Event Actual">
+        <PastEventsSection phase="actual" />
+      </div>
 
 
 

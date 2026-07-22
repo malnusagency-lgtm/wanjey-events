@@ -21,9 +21,14 @@ type PastEvent = {
   display_order: number
   cta_link?: string
   cta_text?: string
+  event_phase?: string
 }
 
-export default function PastEventsSection() {
+interface PastEventsSectionProps {
+  phase?: 'actual' | 'preparation'
+}
+
+export default function PastEventsSection({ phase = 'actual' }: PastEventsSectionProps) {
   const [events, setEvents] = useState<PastEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -61,7 +66,8 @@ export default function PastEventsSection() {
       .then(r => r.json())
       .then(data => {
         if (data?.events) {
-          const sorted = [...data.events].sort((a, b) => a.display_order - b.display_order)
+          const filtered = data.events.filter((ev: PastEvent) => (ev.event_phase || 'actual') === phase)
+          const sorted = [...filtered].sort((a, b) => a.display_order - b.display_order)
           setEvents(sorted)
         }
       })
@@ -276,7 +282,7 @@ export default function PastEventsSection() {
           >
             {/* Label */}
             <p className="text-sm md:text-base font-black uppercase tracking-[0.4em] text-white mb-4 md:mb-6">
-              ✦ Past Event Highlight ✦
+              {phase === 'preparation' ? '🎬 Behind The Scenes — Event Preparation' : '✦ Past Event Highlight ✦'}
             </p>
 
             {/* Category and Stat badges */}

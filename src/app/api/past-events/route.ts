@@ -107,6 +107,7 @@ export async function POST(request: Request) {
         highlight_stat: body.highlight_stat,
         event_month_year: body.event_month_year,
         display_order: body.display_order ?? 0,
+        event_phase: body.event_phase ?? 'actual',
         cta_link: body.cta_link,
         cta_text: body.cta_text,
       })
@@ -138,6 +139,7 @@ export async function PUT(request: Request) {
         highlight_stat: body.highlight_stat,
         event_month_year: body.event_month_year,
         display_order: body.display_order,
+        event_phase: body.event_phase ?? 'actual',
         cta_link: body.cta_link,
         cta_text: body.cta_text,
       })
