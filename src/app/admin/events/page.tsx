@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   CalendarDays, Save, Eye, Loader2, Plus, Trash2,
-  Edit3, X, ChevronUp, ChevronDown, ImageIcon, AlertCircle,
+  Edit3, X, ChevronUp, ChevronDown, ImageIcon, AlertCircle, Link as LinkIcon,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
@@ -63,6 +63,15 @@ function PastEventForm({
   onCancel: () => void
   saving: boolean
 }) {
+  // Parse comma-separated CTA links/texts into arrays for editing
+  const parseLinks = (str?: string) =>
+    str ? str.split(',').map(s => s.trim()).filter(Boolean) : ['']
+  const parseTexts = (str?: string, count = 1) => {
+    const arr = str ? str.split(',').map(s => s.trim()) : []
+    while (arr.length < count) arr.push('')
+    return arr
+  }
+
   const [form, setForm] = useState({
     title: initial?.title ?? '',
     category: initial?.category ?? 'Festival',
@@ -70,13 +79,40 @@ function PastEventForm({
     image_url: initial?.image_url ?? '',
     highlight_stat: initial?.highlight_stat ?? '',
     event_month_year: initial?.event_month_year ?? '',
-    cta_link: initial?.cta_link ?? '',
-    cta_text: initial?.cta_text ?? '',
     event_phase: initial?.event_phase ?? 'actual',
+  })
+
+  const [ctaRows, setCtaRows] = useState<{ link: string; text: string }[]>(() => {
+    const links = parseLinks(initial?.cta_link)
+    const texts = parseTexts(initial?.cta_text, links.length)
+    return links.map((link, i) => ({ link, text: texts[i] ?? '' }))
   })
 
   const field = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm(p => ({ ...p, [k]: e.target.value }))
+
+  const updateRow = (idx: number, key: 'link' | 'text', value: string) =>
+    setCtaRows(rows => rows.map((r, i) => i === idx ? { ...r, [key]: value } : r))
+
+  const addRow = () => setCtaRows(rows => [...rows, { link: '', text: '' }])
+  const removeRow = (idx: number) => setCtaRows(rows => rows.filter((_, i) => i !== idx))
+
+  const handleSave = () => {
+    const cta_link = ctaRows.map(r => r.link).filter(Boolean).join(',')
+    const cta_text = ctaRows.map(r => r.text).join(',')
+    onSave({ ...form, cta_link, cta_text })
+  }
+
+  const getLinkHint = (link: string) => {
+    if (!link) return null
+    if (link.includes('drive.google.com') || link.includes('docs.google.com')) return '📂 Google Drive — will open in embedded viewer'
+    if (link.includes('photos.app.goo.gl') || link.includes('photos.google.com')) return '📷 Google Photos'
+    if (link.includes('youtube.com') || link.includes('youtu.be')) return '▶️ YouTube — opens in new tab'
+    if (link.includes('instagram.com')) return '📸 Instagram — opens in new tab'
+    if (link.includes('tiktok.com')) return '🎵 TikTok — opens in new tab'
+    if (link.startsWith('http')) return '🔗 External link — opens in new tab'
+    return null
+  }
 
   return (
     <div className="space-y-4">
@@ -105,7 +141,7 @@ function PastEventForm({
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Month & Year</label>
+          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Month &amp; Year</label>
           <input value={form.event_month_year} onChange={field('event_month_year')} placeholder="e.g. June 2023"
             className={inputCls} />
         </div>
@@ -130,20 +166,65 @@ function PastEventForm({
           )}
         </div>
 
-        <div className="space-y-1.5 sm:col-span-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-            Custom CTA Link (Optional)
-          </label>
-          <input value={form.cta_link} onChange={field('cta_link')} placeholder="e.g. YouTube video link or Drive folder (defaults to Gallery redirect)"
-            className={inputCls + ' font-mono'} />
-        </div>
+        {/* ── Multi-link CTA Builder ── */}
+        <div className="sm:col-span-2 space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-2">
+              <LinkIcon size={12} className="text-accent" /> CTA Buttons (Optional)
+            </label>
+            <button
+              type="button"
+              onClick={addRow}
+              className="flex items-center gap-1.5 text-xs font-bold text-[#8C1B11] hover:text-[#a12015] bg-[#8C1B11]/5 hover:bg-[#8C1B11]/10 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              <Plus size={13} /> Add Link
+            </button>
+          </div>
+          <p className="text-[11px] text-zinc-400 leading-relaxed -mt-1">
+            Add one or more buttons — any link works: Google Drive, YouTube, Instagram, TikTok, or any URL.
+          </p>
 
-        <div className="space-y-1.5 sm:col-span-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-            Custom CTA Button Text (Optional)
-          </label>
-          <input value={form.cta_text} onChange={field('cta_text')} placeholder="e.g. Watch Video (defaults to Explore Gallery)"
-            className={inputCls} />
+          <div className="space-y-3">
+            {ctaRows.map((row, idx) => (
+              <div key={idx} className="rounded-xl border border-accent/15 bg-zinc-50/60 p-3 space-y-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Button {idx + 1}</span>
+                  {ctaRows.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeRow(idx)}
+                      className="ml-auto text-zinc-400 hover:text-red-500 transition-colors p-1 rounded"
+                    >
+                      <X size={13} />
+                    </button>
+                  )}
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Link URL *</label>
+                    <input
+                      value={row.link}
+                      onChange={e => updateRow(idx, 'link', e.target.value)}
+                      placeholder="https://... (Google Drive, YouTube, Instagram, TikTok, any URL)"
+                      className={inputCls + ' font-mono text-xs'}
+                    />
+                    {getLinkHint(row.link) && (
+                      <p className="text-[10px] text-[#8C1B11] font-semibold mt-0.5">{getLinkHint(row.link)}</p>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Button Label</label>
+                    <input
+                      value={row.text}
+                      onChange={e => updateRow(idx, 'text', e.target.value)}
+                      placeholder="e.g. Watch Highlights, View Photos, See Reel"
+                      className={inputCls + ' text-xs'}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-1.5 sm:col-span-2">
@@ -155,7 +236,7 @@ function PastEventForm({
       </div>
 
       <div className="flex items-center gap-3 pt-2">
-        <button onClick={() => onSave(form)} disabled={saving || !form.title}
+        <button onClick={handleSave} disabled={saving || !form.title}
           className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-6 py-2.5 rounded-lg font-bold transition-colors text-sm shadow-md">
           {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
           {saving ? 'Saving…' : 'Save Event'}
