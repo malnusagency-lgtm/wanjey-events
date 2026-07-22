@@ -219,7 +219,25 @@ export default function PastEventsSection({ phase = 'actual' }: PastEventsSectio
     )
   }
 
-  if (events.length === 0) return null
+  if (events.length === 0) {
+    return (
+      <section className="relative h-[40vh] w-full overflow-hidden bg-[#130B07] flex items-center justify-center">
+        <div className="text-center px-6">
+          <p className="text-sm font-black uppercase tracking-[0.4em] text-white/40 mb-3">
+            {phase === 'preparation' ? '🎬 Behind The Scenes — Event Preparation' : '✦ Past Event Highlights ✦'}
+          </p>
+          <h2 className="font-serif text-2xl md:text-4xl font-black text-white/20 uppercase tracking-tighter">
+            Coming Soon
+          </h2>
+          <p className="text-white/30 text-sm mt-3 font-medium">
+            {phase === 'preparation'
+              ? 'Preparation content will appear here once events are added.'
+              : 'Past event highlights will appear here once events are added.'}
+          </p>
+        </div>
+      </section>
+    )
+  }
 
   const activeEvent = events[currentIndex]
 

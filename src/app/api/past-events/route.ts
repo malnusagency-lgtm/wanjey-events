@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic'
 // Hardcoded seed events — shown when the DB table doesn't exist yet
 // Uses existing gallery images for immediate visual impact
 export const SEED_PAST_EVENTS = [
+  // ── Actual Events ──────────────────────────────────────────────
   {
     id: 'seed-1',
     title: 'Big Voices Festival',
@@ -15,6 +16,7 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: '500+ Attendees',
     event_month_year: 'June 2023',
     display_order: 0,
+    event_phase: 'actual',
     cta_link: 'https://drive.google.com/drive/folders/1abc123',
     cta_text: 'Watch Festival Highlights',
   },
@@ -27,6 +29,7 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: 'Sold Out',
     event_month_year: 'October 2023',
     display_order: 1,
+    event_phase: 'actual',
     cta_link: 'https://drive.google.com/drive/folders/2def456',
     cta_text: 'Watch Brand Recap',
   },
@@ -39,6 +42,7 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: '200+ Guests',
     event_month_year: 'March 2024',
     display_order: 2,
+    event_phase: 'actual',
     cta_link: 'https://drive.google.com/drive/folders/3ghi789',
     cta_text: 'Watch Event Reel',
   },
@@ -51,10 +55,52 @@ export const SEED_PAST_EVENTS = [
     highlight_stat: 'Viral Moment',
     event_month_year: 'August 2023',
     display_order: 3,
+    event_phase: 'actual',
     cta_link: 'https://drive.google.com/drive/folders/4jkl012',
     cta_text: 'Watch Highlights',
   },
+  // ── Preparation Events ─────────────────────────────────────────
+  {
+    id: 'seed-prep-1',
+    title: 'Big Voices Festival — Setup',
+    category: 'Festival',
+    description: 'Behind the scenes of the Big Voices Festival — from stage construction and lighting rigs to décor placement and sound checks. Every detail crafted to perfection.',
+    image_url: '/assets/gallery/event-31.jpg',
+    highlight_stat: '3 Days Setup',
+    event_month_year: 'June 2023',
+    display_order: 0,
+    event_phase: 'preparation',
+    cta_link: '',
+    cta_text: 'View Behind the Scenes',
+  },
+  {
+    id: 'seed-prep-2',
+    title: 'The Don Effect — Venue Dressing',
+    category: 'Brand Activation',
+    description: 'Transforming a blank canvas into an immersive brand world. Venue dressing, custom brand installations and ambient lighting come together days before the doors open.',
+    image_url: '/assets/gallery/event-12.jpg',
+    highlight_stat: '72hrs of Prep',
+    event_month_year: 'October 2023',
+    display_order: 1,
+    event_phase: 'preparation',
+    cta_link: '',
+    cta_text: 'See the Transformation',
+  },
+  {
+    id: 'seed-prep-3',
+    title: 'Sunday Hangout — Curation',
+    category: 'Lifestyle Event',
+    description: 'From sourcing premium outdoor furniture to curating floral arrangements and staging the photo booth — the hidden work that makes every guest experience feel effortless.',
+    image_url: '/assets/gallery/event-50.jpg',
+    highlight_stat: 'Full Day Setup',
+    event_month_year: 'March 2024',
+    display_order: 2,
+    event_phase: 'preparation',
+    cta_link: '',
+    cta_text: 'Behind the Scenes',
+  },
 ]
+
 
 export async function GET() {
   try {
@@ -66,14 +112,16 @@ export async function GET() {
 
     if (error) {
       console.error('Database fetch error:', error)
-      return new Response(JSON.stringify({ events: [], table_missing: true }), {
+      return new Response(JSON.stringify({ events: SEED_PAST_EVENTS, table_missing: true }), {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
         },
       });
     }
-    return new Response(JSON.stringify({ events: data || [], table_missing: false }), {
+    // If DB is empty fall back to seeds so the page always has content
+    const events = (data && data.length > 0) ? data : SEED_PAST_EVENTS
+    return new Response(JSON.stringify({ events, table_missing: false }), {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
@@ -81,7 +129,7 @@ export async function GET() {
     });
   } catch (err) {
     console.error('Fetch exception:', err)
-    return new Response(JSON.stringify({ events: [], table_missing: true }), {
+    return new Response(JSON.stringify({ events: SEED_PAST_EVENTS, table_missing: true }), {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=15, stale-while-revalidate=45',
