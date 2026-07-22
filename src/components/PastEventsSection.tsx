@@ -225,7 +225,7 @@ export default function PastEventsSection({ phase = 'actual' }: PastEventsSectio
       <section className="relative h-[40vh] w-full overflow-hidden bg-[#130B07] flex items-center justify-center">
         <div className="text-center px-6">
           <p className="text-sm font-black uppercase tracking-[0.4em] text-white/40 mb-3">
-            {phase === 'preparation' ? '🎬 Behind The Scenes — Event Preparation' : '✦ Past Event Highlights ✦'}
+            {phase === 'preparation' ? '✦ Event Preparation ✦' : '✦ Past Event Highlights ✦'}
           </p>
           <h2 className="font-serif text-2xl md:text-4xl font-black text-white/20 uppercase tracking-tighter">
             Coming Soon
@@ -301,7 +301,7 @@ export default function PastEventsSection({ phase = 'actual' }: PastEventsSectio
           >
             {/* Label */}
             <p className="text-sm md:text-base font-black uppercase tracking-[0.4em] text-white mb-4 md:mb-6">
-              {phase === 'preparation' ? '🎬 Behind The Scenes — Event Preparation' : '✦ Past Event Highlight ✦'}
+              {phase === 'preparation' ? '✦ Event Preparation ✦' : '✦ Past Event Highlight ✦'}
             </p>
 
             {/* Category and Stat badges */}

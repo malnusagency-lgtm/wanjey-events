@@ -532,7 +532,7 @@ export default function EventsPage() {
       {(activeTab === 'past' || activeTab === 'preparation') && (() => {
         const targetPhase = activeTab === 'preparation' ? 'preparation' : 'actual'
         const filteredEvents = pastEvents.filter(e => (e.event_phase || 'actual') === targetPhase)
-        const tabTitle = activeTab === 'preparation' ? 'Behind The Scenes — Event Preparation' : 'Past Event Highlights'
+        const tabTitle = activeTab === 'preparation' ? 'Event Preparation' : 'Past Event Highlights'
 
         return (
           <div className="space-y-4">

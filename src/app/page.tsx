@@ -14,6 +14,7 @@ import UpcomingEventSection from "@/components/UpcomingEventSection";
 import PastEventsSection from "@/components/PastEventsSection";
 import ServicesMarquee from "@/components/ServicesMarquee";
 import BrandsMarquee from "@/components/BrandsMarquee";
+import PackagesMarquee from "@/components/PackagesMarquee";
 import OurProcess from "@/components/OurProcess";
 import { Calendar, Megaphone, BarChart3, Zap, ArrowRight, Users, Star, Trophy, Clock } from "lucide-react";
 
@@ -128,6 +129,8 @@ export default function HomePage() {
       <div id="past-events" data-track="Past Event Preparation">
         <PastEventsSection phase="preparation" />
       </div>
+
+      <PackagesMarquee />
 
       <div data-track="Past Event Actual">
         <PastEventsSection phase="actual" />
