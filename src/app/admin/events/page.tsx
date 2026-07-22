@@ -264,7 +264,7 @@ export default function EventsPage() {
   const [savingPast, setSavingPast] = useState(false)
   const [isTableMissing, setIsTableMissing] = useState(false)
 
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming')
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past' | 'preparation'>('upcoming')
 
   // Load upcoming event
   useEffect(() => {
@@ -401,11 +401,13 @@ export default function EventsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-white/60 rounded-xl border border-accent/25 w-fit shadow-sm">
-        {(['upcoming', 'past'] as const).map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === tab ? 'bg-[#8C1B11] text-white shadow-md' : 'text-zinc-500 hover:text-[#2D1A10]'}`}>
-            {tab === 'upcoming' ? '📅 Upcoming Event' : '🏆 Past Events'}
+      <div className="flex gap-1 p-1 bg-white/60 rounded-xl border border-accent/25 w-fit shadow-sm overflow-x-auto">
+        {(['upcoming', 'past', 'preparation'] as const).map(tab => (
+          <button key={tab} onClick={() => { setActiveTab(tab); setShowAddForm(false); setEditingId(null) }}
+            className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
+              activeTab === tab ? 'bg-[#8C1B11] text-white shadow-md' : 'text-zinc-500 hover:text-[#2D1A10]'
+            }`}>
+            {tab === 'upcoming' ? '📅 Upcoming Event' : tab === 'past' ? '🏆 Past Events' : '🎬 Preparation'}
           </button>
         ))}
       </div>
@@ -515,32 +517,47 @@ export default function EventsPage() {
                 </div>
                 <div className="px-5 pb-5">
                   <button onClick={saveUpcoming} disabled={savingUpcoming}
-                    className="flex items-center gap-2 bg-[#8C1B11] hover:bg-[#a12015] disabled:opacity-60 text-white px-8 py-3 rounded-lg font-bold transition-colors shadow-lg text-sm">
-                    {savingUpcoming ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                    {savingUpcoming ? 'Saving…' : 'Save & Publish'}
-                  </button>
-                </div>
               </div>
             </>
           )}
         </div>
       )}
 
-      {/* ── PAST EVENTS TAB ── */}
-      {activeTab === 'past' && (
-        <div className="space-y-4">
-          {/* DB notice if table is missing */}
-          {isTableMissing && (
-            <div className="flex items-start gap-3 rounded-xl border border-amber-500/35 bg-amber-500/5 p-4 text-sm text-amber-900 shadow-sm">
-              <AlertCircle size={18} className="text-amber-600 mt-0.5 shrink-0" />
+      {/* ── PAST / PREPARATION EVENTS TAB ── */}
+      {(activeTab === 'past' || activeTab === 'preparation') && (() => {
+        const targetPhase = activeTab === 'preparation' ? 'preparation' : 'actual'
+        const filteredEvents = pastEvents.filter(e => (e.event_phase || 'actual') === targetPhase)
+        const tabTitle = activeTab === 'preparation' ? 'Behind The Scenes — Event Preparation' : 'Past Event Highlights'
+
+        return (
+          <div className="space-y-4">
+            {/* Phase header info */}
+            <div className="flex items-center justify-between bg-white/40 border border-accent/20 rounded-xl p-4 shadow-sm">
               <div>
-                <p className="font-bold text-amber-800">Database Table Missing</p>
-                <p className="text-amber-700/80 mt-1 text-xs leading-relaxed font-semibold">
-                  The `past_events` table does not exist in your database. Run the script in{' '}
-                  <code className="bg-zinc-100 px-1.5 py-0.5 rounded font-mono text-[11px] text-[#2D1A10]">scripts/create-past-events-table.sql</code> or execute this query in your{' '}
-                  <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline text-amber-900 hover:text-amber-950 font-bold">Supabase SQL Editor</a> to create it:
+                <h3 className="font-bold text-[#2D1A10] font-serif text-base">{tabTitle}</h3>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  {activeTab === 'preparation'
+                    ? 'Manage behind-the-scenes setup, staging and preparation photos shown on your homepage.'
+                    : 'Manage actual event highlights and recap videos shown on your homepage.'}
                 </p>
-                <code className="mt-2 block rounded-lg bg-amber-950/5 border border-amber-500/20 px-3 py-2 text-[10px] text-amber-900 leading-relaxed font-mono whitespace-pre overflow-x-auto">{`CREATE TABLE past_events (
+              </div>
+              <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full shrink-0 ${activeTab === 'preparation' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}`}>
+                {filteredEvents.length} Event{filteredEvents.length === 1 ? '' : 's'}
+              </span>
+            </div>
+
+            {/* DB notice if table is missing */}
+            {isTableMissing && (
+              <div className="flex items-start gap-3 rounded-xl border border-amber-500/35 bg-amber-500/5 p-4 text-sm text-amber-900 shadow-sm">
+                <AlertCircle size={18} className="text-amber-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-bold text-amber-800">Database Table Missing</p>
+                  <p className="text-amber-700/80 mt-1 text-xs leading-relaxed font-semibold">
+                    The `past_events` table does not exist in your database. Run the script in{' '}
+                    <code className="bg-zinc-100 px-1.5 py-0.5 rounded font-mono text-[11px] text-[#2D1A10]">scripts/create-past-events-table.sql</code> or execute this query in your{' '}
+                    <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline text-amber-900 hover:text-amber-950 font-bold">Supabase SQL Editor</a> to create it:
+                  </p>
+                  <code className="mt-2 block rounded-lg bg-amber-950/5 border border-amber-500/20 px-3 py-2 text-[10px] text-amber-900 leading-relaxed font-mono whitespace-pre overflow-x-auto">{`CREATE TABLE past_events (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   title text NOT NULL,
   category text DEFAULT 'Event',
@@ -557,94 +574,105 @@ CREATE POLICY "Allow public read" ON past_events FOR SELECT USING (true);
 CREATE POLICY "Allow authenticated insert" ON past_events FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated update" ON past_events FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated delete" ON past_events FOR DELETE USING (auth.role() = 'authenticated');`}</code>
-              </div>
-            </div>
-          )}
-
-
-          {/* Add button */}
-          {!showAddForm && (
-            <button onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-2 border border-dashed border-accent/30 hover:border-[#8C1B11] bg-white/40 hover:bg-[#8C1B11]/5 text-[#2D1A10]/70 hover:text-[#8C1B11] px-5 py-3 rounded-xl font-bold transition-all duration-200 text-sm w-full justify-center group shadow-sm">
-              <Plus size={16} className="group-hover:rotate-90 transition-transform duration-200" /> Add Past Event
-            </button>
-          )}
-
-          {/* Add form */}
-          {showAddForm && (
-            <div className="bg-white/60 border border-accent/25 rounded-xl p-5 shadow-sm">
-              <h3 className="font-bold text-[#2D1A10] mb-4 flex items-center gap-2 font-serif"><Plus size={16} className="text-[#8C1B11]" /> New Past Event</h3>
-              <PastEventForm onSave={addPastEvent} onCancel={() => setShowAddForm(false)} saving={savingPast} />
-            </div>
-          )}
-
-          {/* Past events list */}
-          {loadingPast ? (
-            <div className="flex h-40 items-center justify-center"><Loader2 className="animate-spin text-[#8C1B11]" /></div>
-          ) : pastEvents.length === 0 ? (
-            <div className="text-center text-zinc-500 py-16">No past events yet. Add your first one above.</div>
-          ) : (
-            <div className="space-y-3">
-              {pastEvents.map((ev, idx) => (
-                <div key={ev.id} className="bg-white/60 border border-accent/20 hover:border-accent/35 rounded-xl overflow-hidden shadow-sm transition-all duration-300">
-                  {editingId === ev.id ? (
-                    <div className="p-5">
-                      <h3 className="font-bold text-[#2D1A10] mb-4 flex items-center gap-2 font-serif"><Edit3 size={15} className="text-[#8C1B11]" /> Edit: {ev.title}</h3>
-                      <PastEventForm initial={ev} onSave={(data) => updatePastEvent(ev.id, data)} onCancel={() => setEditingId(null)} saving={savingPast} />
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-4 p-4">
-                      {/* Order controls */}
-                      <div className="flex flex-col gap-1">
-                        <button onClick={() => moveEvent(ev.id, 'up')} disabled={idx === 0}
-                          className="p-1 text-zinc-400 hover:text-[#8C1B11] disabled:opacity-20 transition-colors">
-                          <ChevronUp size={14} />
-                        </button>
-                        <button onClick={() => moveEvent(ev.id, 'down')} disabled={idx === pastEvents.length - 1}
-                          className="p-1 text-zinc-400 hover:text-[#8C1B11] disabled:opacity-20 transition-colors">
-                          <ChevronDown size={14} />
-                        </button>
-                      </div>
-                      {/* Image thumbnail */}
-                      {ev.image_url && (
-                        <div className="h-14 w-20 rounded-lg overflow-hidden bg-zinc-100 border border-accent/15 shrink-0">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={parseImageUrl(ev.image_url)} alt={ev.title} className="w-full h-full object-cover" />
-                        </div>
-                      )}
-                      {/* Details */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                          <span className="font-bold text-[#2D1A10] text-sm truncate">{ev.title}</span>
-                          <span className="text-[10px] text-accent font-bold uppercase tracking-wider shrink-0 bg-accent/10 px-2 py-0.5 rounded-full">{ev.category}</span>
-                          <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 px-2 py-0.5 rounded-full ${ev.event_phase === 'preparation' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                            {ev.event_phase === 'preparation' ? '🎬 Preparation' : '✦ Actual Event'}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-zinc-500 font-medium">
-                          <span>{ev.event_month_year}</span>
-                          {ev.highlight_stat && <span className="text-[#8C1B11] font-semibold">🏆 {ev.highlight_stat}</span>}
-                        </div>
-                      </div>
-                      {/* Actions */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        <button onClick={() => setEditingId(ev.id)}
-                          className="p-2 text-zinc-500 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 rounded-lg transition-colors">
-                          <Edit3 size={15} />
-                        </button>
-                        <button onClick={() => deletePastEvent(ev.id)}
-                          className="p-2 text-zinc-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </div>
-                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+              </div>
+            )}
+
+            {/* Add button */}
+            {!showAddForm && (
+              <button onClick={() => setShowAddForm(true)}
+                className="flex items-center gap-2 border border-dashed border-accent/30 hover:border-[#8C1B11] bg-white/40 hover:bg-[#8C1B11]/5 text-[#2D1A10]/70 hover:text-[#8C1B11] px-5 py-3 rounded-xl font-bold transition-all duration-200 text-sm w-full justify-center group shadow-sm">
+                <Plus size={16} className="group-hover:rotate-90 transition-transform duration-200" /> Add {activeTab === 'preparation' ? 'Preparation Event' : 'Past Event'}
+              </button>
+            )}
+
+            {/* Add form */}
+            {showAddForm && (
+              <div className="bg-white/60 border border-accent/25 rounded-xl p-5 shadow-sm">
+                <h3 className="font-bold text-[#2D1A10] mb-4 flex items-center gap-2 font-serif">
+                  <Plus size={16} className="text-[#8C1B11]" /> New {activeTab === 'preparation' ? 'Preparation Event' : 'Past Event'}
+                </h3>
+                <PastEventForm
+                  initial={{ event_phase: targetPhase }}
+                  onSave={addPastEvent}
+                  onCancel={() => setShowAddForm(false)}
+                  saving={savingPast}
+                />
+              </div>
+            )}
+
+            {/* Events list */}
+            {loadingPast ? (
+              <div className="flex h-40 items-center justify-center"><Loader2 className="animate-spin text-[#8C1B11]" /></div>
+            ) : filteredEvents.length === 0 ? (
+              <div className="text-center text-zinc-500 py-16">
+                No {activeTab === 'preparation' ? 'preparation events' : 'past events'} yet. Click above to add your first one.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {filteredEvents.map((ev, idx) => (
+                  <div key={ev.id} className="bg-white/60 border border-accent/20 hover:border-accent/35 rounded-xl overflow-hidden shadow-sm transition-all duration-300">
+                    {editingId === ev.id ? (
+                      <div className="p-5">
+                        <h3 className="font-bold text-[#2D1A10] mb-4 flex items-center gap-2 font-serif">
+                          <Edit3 size={15} className="text-[#8C1B11]" /> Edit: {ev.title}
+                        </h3>
+                        <PastEventForm initial={ev} onSave={(data) => updatePastEvent(ev.id, data)} onCancel={() => setEditingId(null)} saving={savingPast} />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-4 p-4">
+                        {/* Order controls */}
+                        <div className="flex flex-col gap-1">
+                          <button onClick={() => moveEvent(ev.id, 'up')} disabled={idx === 0}
+                            className="p-1 text-zinc-400 hover:text-[#8C1B11] disabled:opacity-20 transition-colors">
+                            <ChevronUp size={14} />
+                          </button>
+                          <button onClick={() => moveEvent(ev.id, 'down')} disabled={idx === filteredEvents.length - 1}
+                            className="p-1 text-zinc-400 hover:text-[#8C1B11] disabled:opacity-20 transition-colors">
+                            <ChevronDown size={14} />
+                          </button>
+                        </div>
+                        {/* Image thumbnail */}
+                        {ev.image_url && (
+                          <div className="h-14 w-20 rounded-lg overflow-hidden bg-zinc-100 border border-accent/15 shrink-0">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={parseImageUrl(ev.image_url)} alt={ev.title} className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        {/* Details */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                            <span className="font-bold text-[#2D1A10] text-sm truncate">{ev.title}</span>
+                            <span className="text-[10px] text-accent font-bold uppercase tracking-wider shrink-0 bg-accent/10 px-2 py-0.5 rounded-full">{ev.category}</span>
+                            <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 px-2 py-0.5 rounded-full ${ev.event_phase === 'preparation' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                              {ev.event_phase === 'preparation' ? '🎬 Preparation' : '✦ Actual Event'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-xs text-zinc-500 font-medium">
+                            <span>{ev.event_month_year}</span>
+                            {ev.highlight_stat && <span className="text-[#8C1B11] font-semibold">🏆 {ev.highlight_stat}</span>}
+                          </div>
+                        </div>
+                        {/* Actions */}
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button onClick={() => setEditingId(ev.id)}
+                            className="p-2 text-zinc-500 hover:text-[#8C1B11] hover:bg-[#8C1B11]/5 rounded-lg transition-colors">
+                            <Edit3 size={15} />
+                          </button>
+                          <button onClick={() => deletePastEvent(ev.id)}
+                            className="p-2 text-zinc-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      })()}
     </div>
   )
 }
